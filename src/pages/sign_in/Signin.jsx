@@ -6,6 +6,7 @@ import google from "../../assets/search.png"
 
 const Signin = () => {
 
+    const user = '';
     const [showPassword, setShowPassword] = useState(false);
 
     const handleClickShowPassword = () => setShowPassword((show) => !show);
