@@ -13,23 +13,25 @@ import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import { useEffect, useState } from "react";
 import { LuSearch } from 'react-icons/lu';
+import useAuth from '../hooks/useAuth';
 
 const pages = [
     { title: 'Home', url: '/' },
     { title: 'Agencies', url: '/search' },
     { title: 'Support', url: '/services' }
 ];
-const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
+const settings = ['Profile', 'Account', 'Dashboard'];
 
 const Navbar = () => {
 
-    const user = false;
-
+    const { user, logOut } = useAuth();
     const [previousScrollY, setPreviousScrollY] = useState(0);
     const [showNavbar, setShowNavbar] = useState(true);
     const [shadow, setShadow] = useState(false);
     const [anchorElNav, setAnchorElNav] = React.useState(null);
     const [anchorElUser, setAnchorElUser] = React.useState(null);
+
+    console.log(user);
 
     const handleOpenNavMenu = (event) => {
         setAnchorElNav(event.currentTarget);
@@ -93,7 +95,7 @@ const Navbar = () => {
                                     textDecoration: 'none',
                                 }}
                             >
-                                go<span className='text-[#F58300]'>Car</span> 
+                                go<span className='text-[#F58300]'>Car</span>
                             </Typography>
 
                             <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
@@ -130,7 +132,7 @@ const Navbar = () => {
                                         </MenuItem>
                                     ))}
                                     {
-                                        !user && 
+                                        !user &&
                                         <MenuItem onClick={handleCloseNavMenu}>
                                             <Typography sx={{ textAlign: 'center', color: "black" }} component="a" href={'/sign-in'}>Login</Typography>
                                         </MenuItem>
@@ -154,8 +156,6 @@ const Navbar = () => {
                                     textDecoration: 'none',
                                 }}
                             >
-                                
-                                
                                 Go<span className='text-secondary'>Car</span>
                             </Typography>
                             <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' }, justifyContent: 'end' }}>
@@ -170,9 +170,9 @@ const Navbar = () => {
                                     </Button>
                                 ))}
                             </Box>
-                            <Box>
+                            <Box sx={{mr: 3, ml: 3 }}>
                                 <IconButton>
-                                    <LuSearch className='mx-3'/>
+                                    <LuSearch />
                                 </IconButton>
                             </Box>
                             {
@@ -204,16 +204,19 @@ const Navbar = () => {
                                                 <Typography sx={{ textAlign: 'center', color: "black" }}>{setting}</Typography>
                                             </MenuItem>
                                         ))}
+                                        <MenuItem onClick={logOut}>
+                                            <Typography sx={{ textAlign: 'center', color: "black" }}>Logout</Typography>
+                                        </MenuItem>
                                     </Menu>
                                 </Box>
                             }
                             {
                                 !user &&
-                                <Box sx={{display: { xs: 'none', md: 'flex' }}}>
+                                <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
                                     <Button
                                         onClick={handleCloseNavMenu}
                                         href={'/sign-in'}
-                                        sx={{ my: 2, color: 'white', display: 'block', fontWeight: 700, textTransform: "none", background: '#F58300', fontSize: { xs: 14, md: 16 }, ml: { xs: 0, sm: 2} }}
+                                        sx={{ my: 2, color: 'white', display: 'block', fontWeight: 700, textTransform: "none", background: '#F58300', fontSize: { xs: 14, md: 16 }, ml: { xs: 0, sm: 2 } }}
                                     >
                                         Sign in
                                     </Button>
