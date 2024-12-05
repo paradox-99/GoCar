@@ -12,7 +12,7 @@ import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import { useEffect, useState } from "react";
-import { SearchOutlined } from '@mui/icons-material';
+import { LuSearch } from 'react-icons/lu';
 
 const pages = [
     { title: 'Home', url: '/' },
@@ -129,6 +129,12 @@ const Navbar = () => {
                                             <Typography sx={{ textAlign: 'center', color: "black" }} component="a" href={page.url}>{page.title}</Typography>
                                         </MenuItem>
                                     ))}
+                                    {
+                                        !user && 
+                                        <MenuItem onClick={handleCloseNavMenu}>
+                                            <Typography sx={{ textAlign: 'center', color: "black" }} component="a" href={'/sign-in'}>Login</Typography>
+                                        </MenuItem>
+                                    }
                                 </Menu>
                             </Box>
                             <Box sx={{ display: { xs: 'flex', md: 'none' } }} >
@@ -166,7 +172,7 @@ const Navbar = () => {
                             </Box>
                             <Box>
                                 <IconButton>
-                                    <SearchOutlined/>
+                                    <LuSearch className='mx-3'/>
                                 </IconButton>
                             </Box>
                             {
@@ -203,11 +209,11 @@ const Navbar = () => {
                             }
                             {
                                 !user &&
-                                <Box>
+                                <Box sx={{display: { xs: 'none', md: 'flex' }}}>
                                     <Button
                                         onClick={handleCloseNavMenu}
                                         href={'/sign-in'}
-                                        sx={{ my: 2, color: 'white', display: 'block', fontWeight: 700, textTransform: "none", background: '#F58300', fontSize: { xs: 14, md: 16 }, ml: { xs: 0, sm: 2 } }}
+                                        sx={{ my: 2, color: 'white', display: 'block', fontWeight: 700, textTransform: "none", background: '#F58300', fontSize: { xs: 14, md: 16 }, ml: { xs: 0, sm: 2} }}
                                     >
                                         Sign in
                                     </Button>

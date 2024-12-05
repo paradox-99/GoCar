@@ -4,7 +4,7 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import google from "../../assets/search.png"
 
-const Signin = () => {
+const Signup = () => {
 
     const [showPassword, setShowPassword] = useState(false);
 
@@ -21,7 +21,7 @@ const Signin = () => {
     return (
         <div className="pt-8 lg:pt-20 flex justify-center items-center h-screen">
             <div className="lg:border rounded-lg lg:shadow-md lg:w-1/4 h-fit px-10 py-6">
-                <h1 className="text-3xl text-center mb-5 font-bold">Sign in</h1>
+                <h1 className="text-3xl text-center mb-5 font-bold">Sign up</h1>
                 <div className="space-y-4">
                     <TextField id="email" label="Email" variant="outlined" type="email" fullWidth size="small"/>
                     <FormControl variant="outlined" fullWidth size="small">
@@ -51,16 +51,16 @@ const Signin = () => {
                     <div className="">
                         <Link>Forgotten password?</Link>
                     </div>
-                    <Button variant="contained" fullWidth sx={{ backgroundColor: '#F58300', fontWeight: 700 }}>Sign in</Button>
+                    <Button variant="contained" fullWidth sx={{ backgroundColor: '#F58300', fontWeight: 700 }}>Sign up</Button>
                     <div>
-                        <p className="text-center">Don&rsquo;t have an account? <Link to={'/sign-up'} className="text-[#F58300]">Create new</Link></p>
+                        <p className="text-center">Already have an account? <Link to={'/sign-in'} className="text-[#F58300]">Log in</Link></p>
                     </div>
                     <Divider>OR</Divider>
                     <div className="w-full">
                         <Link>
                             <div className="border border-gray-400 rounded p-2 flex gap-2 text-lg font-medium justify-center items-center">
                                 <img src={google} alt="" className="w-6" />
-                                <p>Sign in with Google</p>
+                                <p>Sign up with Google</p>
                             </div>
                         </Link>
                     </div>
@@ -70,4 +70,4 @@ const Signin = () => {
     );
 };
 
-export default Signin;
+export default Signup;
