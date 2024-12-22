@@ -31,8 +31,6 @@ const Navbar = () => {
     const [anchorElNav, setAnchorElNav] = React.useState(null);
     const [anchorElUser, setAnchorElUser] = React.useState(null);
 
-    console.log(user);
-
     const handleOpenNavMenu = (event) => {
         setAnchorElNav(event.currentTarget);
     };
@@ -79,7 +77,7 @@ const Navbar = () => {
                     <Container maxWidth="xl" sx={{ paddingLeft: 0, paddingRight: 1 }}>
                         <Toolbar disableGutters>
                             <Box sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} >
-                                <img src="/car.png" alt="" className='w-10' />
+                                <img src="/logo.gif" alt="" className='w-14' />
                             </Box>
                             <Typography
                                 variant="h4"
@@ -140,7 +138,7 @@ const Navbar = () => {
                                 </Menu>
                             </Box>
                             <Box sx={{ display: { xs: 'flex', md: 'none' } }} >
-                                <img src="/ECH_logo.png" alt="" className='w-6' />
+                                <img src="/logo.gif" alt="" className='w-6' />
                             </Box>
                             <Typography
                                 variant="h6"
@@ -170,7 +168,10 @@ const Navbar = () => {
                                     </Button>
                                 ))}
                             </Box>
-                            <Box sx={{mr: 3, ml: 3 }}>
+                            <Box sx={{
+                                    mr: { md: 3},
+                                    ml: { md: 3}
+                            }}>
                                 <IconButton>
                                     <LuSearch />
                                 </IconButton>
