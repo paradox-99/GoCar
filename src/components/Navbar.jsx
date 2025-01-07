@@ -12,19 +12,19 @@ import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import { useEffect, useState } from "react";
-import { SearchOutlined } from '@mui/icons-material';
+import { LuSearch } from 'react-icons/lu';
+import useAuth from '../hooks/useAuth';
 
 const pages = [
     { title: 'Home', url: '/' },
     { title: 'Agencies', url: '/search' },
     { title: 'Support', url: '/services' }
 ];
-const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
+const settings = ['Profile', 'Account', 'Dashboard'];
 
 const Navbar = () => {
 
-    const user = false;
-
+    const { user, logOut } = useAuth();
     const [previousScrollY, setPreviousScrollY] = useState(0);
     const [showNavbar, setShowNavbar] = useState(true);
     const [shadow, setShadow] = useState(false);
@@ -77,7 +77,7 @@ const Navbar = () => {
                     <Container maxWidth="xl" sx={{ paddingLeft: 0, paddingRight: 1 }}>
                         <Toolbar disableGutters>
                             <Box sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} >
-                                <img src="/car.png" alt="" className='w-10' />
+                                <img src="/logo.gif" alt="" className='w-14' />
                             </Box>
                             <Typography
                                 variant="h4"
@@ -93,7 +93,7 @@ const Navbar = () => {
                                     textDecoration: 'none',
                                 }}
                             >
-                                go<span className='text-[#F58300]'>Car</span> 
+                                go<span className='text-[#F58300]'>Car</span>
                             </Typography>
 
                             <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
@@ -129,10 +129,16 @@ const Navbar = () => {
                                             <Typography sx={{ textAlign: 'center', color: "black" }} component="a" href={page.url}>{page.title}</Typography>
                                         </MenuItem>
                                     ))}
+                                    {
+                                        !user &&
+                                        <MenuItem onClick={handleCloseNavMenu}>
+                                            <Typography sx={{ textAlign: 'center', color: "black" }} component="a" href={'/sign-in'}>Login</Typography>
+                                        </MenuItem>
+                                    }
                                 </Menu>
                             </Box>
-                            <Box sx={{ display: { xs: 'flex', md: 'none' } }} >
-                                <img src="/ECH_logo.png" alt="" className='w-6' />
+                            <Box sx={{ display: { xs: 'flex', md: 'none', alignItems:"center" } }} >
+                                <img src="/logo.gif" alt="" className='w-10' />
                             </Box>
                             <Typography
                                 variant="h6"
@@ -146,11 +152,10 @@ const Navbar = () => {
                                     fontWeight: 700,
                                     color: 'inherit',
                                     textDecoration: 'none',
+                                    fontSize: 30
                                 }}
                             >
-                                
-                                
-                                Go<span className='text-secondary'>Car</span>
+                                go<span className='text-[#F58300]'>Car</span>
                             </Typography>
                             <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' }, justifyContent: 'end' }}>
                                 {pages.map((page) => (
@@ -164,9 +169,12 @@ const Navbar = () => {
                                     </Button>
                                 ))}
                             </Box>
-                            <Box>
+                            <Box sx={{
+                                    mr: { md: 3},
+                                    ml: { md: 3}
+                            }}>
                                 <IconButton>
-                                    <SearchOutlined/>
+                                    <LuSearch />
                                 </IconButton>
                             </Box>
                             {
@@ -198,12 +206,15 @@ const Navbar = () => {
                                                 <Typography sx={{ textAlign: 'center', color: "black" }}>{setting}</Typography>
                                             </MenuItem>
                                         ))}
+                                        <MenuItem onClick={logOut}>
+                                            <Typography sx={{ textAlign: 'center', color: "black" }}>Logout</Typography>
+                                        </MenuItem>
                                     </Menu>
                                 </Box>
                             }
                             {
                                 !user &&
-                                <Box>
+                                <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
                                     <Button
                                         onClick={handleCloseNavMenu}
                                         href={'/sign-in'}
