@@ -137,8 +137,8 @@ const Navbar = () => {
                                     }
                                 </Menu>
                             </Box>
-                            <Box sx={{ display: { xs: 'flex', md: 'none' } }} >
-                                <img src="/logo.gif" alt="" className='w-6' />
+                            <Box sx={{ display: { xs: 'flex', md: 'none', alignItems:"center" } }} >
+                                <img src="/logo.gif" alt="" className='w-10' />
                             </Box>
                             <Typography
                                 variant="h6"
@@ -152,9 +152,10 @@ const Navbar = () => {
                                     fontWeight: 700,
                                     color: 'inherit',
                                     textDecoration: 'none',
+                                    fontSize: 30
                                 }}
                             >
-                                Go<span className='text-secondary'>Car</span>
+                                go<span className='text-[#F58300]'>Car</span>
                             </Typography>
                             <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' }, justifyContent: 'end' }}>
                                 {pages.map((page) => (

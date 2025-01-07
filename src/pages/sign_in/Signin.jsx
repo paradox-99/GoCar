@@ -93,7 +93,7 @@ const Signin = () => {
                             />
                         </FormControl>
                         <div className="">
-                            <Link>Forgotten password?</Link>
+                            <Link className="hover:underline">Forgotten password?</Link>
                         </div>
                         <Button variant="contained" type="submit" fullWidth sx={{ backgroundColor: '#F58300', fontWeight: 700 }}>Sign in</Button>
                     </form>

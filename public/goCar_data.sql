@@ -20,13 +20,7 @@ INSERT INTO users (
 -- User 9
 ('USER-1734755975383', 'Rafiq Ahmed', 'rafiq.ahmed@outlook.com', '01890123456', 'Male', '9234567890123456', '1980-10-09', 'images/rafiq.jpg', 'user', TRUE, 'Active', NULL, NULL, NULL, 'Add-1734757354604'),
 -- User 10
-('USER-1734755976078', 'Jannat Ara', 'jannat.ara@gmail.com', '01701234567', 'Female', '0234567890123456', '1993-06-25', 'images/jannat.jpg', 'user', TRUE, 'Active', NULL, NULL, NULL, 'Add-1734757354332');
-
-
-INSERT INTO users (
-    _id, name, email, phone, gender, nid, dob, image, userRole, verified, accountStatus, license_number, expire_date, experience, address_id
-) VALUES
--- User 1
+('USER-1734755976078', 'Jannat Ara', 'jannat.ara@gmail.com', '01701234567', 'Female', '0234567890123456', '1993-06-25', 'images/jannat.jpg', 'user', TRUE, 'Active', NULL, NULL, NULL, 'Add-1734757354332'),
 ('USER-1734755975741', 'Aminul Islam', 'aminul.islam@gmail.com', '01711223344', 'Male', '1234567890123412', '1990-09-12', 'images/aminul.jpg', 'user', TRUE, 'Active', NULL, NULL, NULL, 'Add-1734757354552'),
 -- User 2
 ('USER-1734755975524', 'Shahana Akter', 'shahana.akter@yahoo.com', '01899887766', 'Female', '2234567890123413', '1988-03-21', 'images/shahana.jpg', 'user', FALSE, 'Inactive', NULL, NULL, NULL, 'Add-1734757354815'),
@@ -37,7 +31,7 @@ INSERT INTO users (
 -- User 5
 ('USER-1734755975720', 'Shahidul Alam', 'shahidul.alam@yahoo.com', '01844556677', 'Male', '5234567890123416', '1991-12-02', 'images/shahidul.jpg', 'user', TRUE, 'Active', 'DL778899001', '2025-04-25', 9, 'Add-1734757354124'),
 -- User 6
-('USER-1734755976169', 'Rina Parvin', 'rina.parvin@gmail.com', '01555667788', 'Female', '6234567890123417', '1999-01-11', 'images/rina.jpg', 'user', TRUE, 'Active', NULL, NULL, NULL, 'Add-1734757354213'),
+('USER-1734755976169', 'Rina Parvin', 'rina.parvin@gmail.com', '01555662788', 'Female', '6234567890123417', '1999-01-11', 'images/rina.jpg', 'user', TRUE, 'Active', NULL, NULL, NULL, 'Add-1734757354213'),
 -- User 7
 ('USER-1734755975981', 'Mahfuz Alam', 'mahfuz.alam@gmail.com', '01766778899', 'Male', '7234567890123418', '1984-08-14', 'images/mahfuz.jpg', 'user', TRUE, 'Active', 'DL889900112', '2026-02-18', 12, 'Add-1734757354513'),
 -- User 8
@@ -45,13 +39,7 @@ INSERT INTO users (
 -- User 9
 ('USER-1734755976094', 'Ashik Mahmud', 'ashik.mahmud@outlook.com', '01688990011', 'Male', '9234567890123420', '1987-07-19', 'images/ashik.jpg', 'user', TRUE, 'Active', NULL, NULL, NULL, 'Add-1734757354802'),
 -- User 10
-('USER-1734755976247', 'Sadia Khatun', 'sadia.khatun@gmail.com', '01999001122', 'Female', '0234567890123421', '1996-03-30', 'images/sadia.jpg', 'user', TRUE, 'Active', NULL, NULL, NULL, 'Add-1734757355019');
-
-
-INSERT INTO users (
-    _id, name, email, phone, gender, nid, dob, image, userRole, verified, accountStatus, license_number, expire_date, experience, address_id
-) VALUES
--- User 1
+('USER-1734755976247', 'Sadia Khatun', 'sadia.khatun@gmail.com', '01999001122', 'Female', '0234567890123421', '1996-03-30', 'images/sadia.jpg', 'user', TRUE, 'Active', NULL, NULL, NULL, 'Add-1734757355019'),
 ('USER-1734755975497', 'Kamrul Hasan', 'kamrul.hasan@gmail.com', '01712365489', 'Male', '1234567890123422', '1989-12-18', 'images/kamrul.jpg', 'user', TRUE, 'Active', NULL, NULL, NULL, 'Add-1734757354563'),
 -- User 2
 ('USER-1734755976353', 'Maliha Noor', 'maliha.noor@yahoo.com', '01898675432', 'Female', '2234567890123423', '1997-09-09', 'images/maliha.jpg', 'user', TRUE, 'Active', NULL, NULL, NULL, 'Add-1734757354523'),
@@ -70,22 +58,16 @@ INSERT INTO users (
 -- User 9
 ('USER-1734755975946', 'Shakil Ahmed', 'shakil.ahmed@gmail.com', '01777788899', 'Male', '9234567890123430', '1992-02-11', 'images/shakil.jpg', 'user', TRUE, 'Active', NULL, NULL, NULL, 'Add-1734757354095'),
 -- User 10
-('USER-1734755975622', 'Faria Yasmin', 'faria.yasmin@gmail.com', '01988990012', 'Female', '0234567890123431', '1998-04-08', 'images/faria.jpg', 'user', FALSE, 'Inactive', NULL, NULL, NULL, 'Add-1734757354799');
-
-
-INSERT INTO users (
-    _id, name, email, phone, gender, nid, dob, image, userRole, verified, accountStatus, license_number, expire_date, experience, address_id
-) VALUES
--- User 1
+('USER-1734755975622', 'Faria Yasmin', 'faria.yasmin@gmail.com', '01988990012', 'Female', '0234567890123431', '1998-04-08', 'images/faria.jpg', 'user', FALSE, 'Inactive', NULL, NULL, NULL, 'Add-1734757354799'),
 ('USER-1734783250617', 'Kamrunnahar Akter', 'kamrunnahar.akter@gmail.com', '01719876543', 'Female', '1234567890123432', '1990-05-16', 'images/kamrunnahar.jpg', 'agency', TRUE, 'Active', NULL, NULL, NULL, 'Add-1734757354523'),
 -- User 2
 ('USER-1734783250643', 'Rakib Hossain', 'rakib.hossain@yahoo.com', '01633445566', 'Male', '2234567890123433', '1985-08-22', 'images/rakib.jpg', 'agency', TRUE, 'Active', NULL, NULL, NULL, 'Add-1734757354633'),
 -- User 3
-('USER-1734783251356', 'Shamima Sultana', 'shamima.sultana@gmail.com', '01555667788', 'Female', '3234567890123434', '1988-12-05', 'images/shamima.jpg', 'agency', FALSE, 'Inactive', NULL, NULL, NULL, 'Add-1734757354186'),
+('USER-1734783251356', 'Shamima Sultana', 'shamima.sultana@gmail.com', '01505667788', 'Female', '3234567890123434', '1988-12-05', 'images/shamima.jpg', 'agency', FALSE, 'Inactive', NULL, NULL, NULL, 'Add-1734757354186'),
 -- User 4
 ('USER-1734783250779', 'Tarek Rahman', 'tarek.rahman@gmail.com', '01812398765', 'Male', '4234567890123435', '1989-04-30', 'images/tarek.jpg', 'agency', TRUE, 'Active', NULL, NULL, NULL, 'Add-1734757354508'),
 -- User 5
-('USER-1734783251259', 'Sumon Ahmed', 'sumon.ahmed@outlook.com', '01766778899', 'Male', '5234567890123436', '1993-11-10', 'images/sumon.jpg', 'agency', TRUE, 'Active', NULL, NULL, NULL, 'Add-1734757354521'),
+('USER-1734783251259', 'Sumon Ahmed', 'sumon.ahmed@outlook.com', '01766678899', 'Male', '5234567890123436', '1993-11-10', 'images/sumon.jpg', 'agency', TRUE, 'Active', NULL, NULL, NULL, 'Add-1734757354521'),
 -- User 6
 ('USER-1734783251120', 'Nazia Rahman', 'nazia.rahman@yahoo.com', '01999887766', 'Female', '6234567890123437', '1995-01-20', 'images/nazia.jpg', 'agency', TRUE, 'Active', NULL, NULL, NULL, 'Add-1734757354755'),
 -- User 7
@@ -93,15 +75,9 @@ INSERT INTO users (
 -- User 8
 ('USER-1734783251093', 'Mahmuda Khatun', 'mahmuda.khatun@gmail.com', '01755443322', 'Female', '8234567890123439', '1992-09-05', 'images/mahmuda.jpg', 'agency', FALSE, 'Suspended', NULL, NULL, NULL, 'Add-1734757354255'),
 -- User 9
-('USER-1734783250617', 'Shahinur Alam', 'shahinur.alam@gmail.com', '01988776655', 'Male', '9234567890123440', '1990-03-14', 'images/shahinur.jpg', 'agency', TRUE, 'Active', NULL, NULL, NULL, 'Add-1734757354558'),
+('USER-1734783259617', 'Shahinur Alam', 'shahinur.alam@gmail.com', '01988776655', 'Male', '9234567890123440', '1990-03-14', 'images/shahinur.jpg', 'agency', TRUE, 'Active', NULL, NULL, NULL, 'Add-1734757354558'),
 -- User 10
-('USER-1734783250521', 'Rokeya Begum', 'rokeya.begum@gmail.com', '01899887744', 'Female', '0234567890123441', '1986-02-18', 'images/rokeya.jpg', 'agency', TRUE, 'Active', NULL, NULL, NULL, 'Add-1734757354826');
-
-
-INSERT INTO users (
-    _id, name, email, phone, gender, nid, dob, image, userRole, verified, accountStatus, license_number, expire_date, experience, address_id
-) VALUES
--- User 1
+('USER-1734783250521', 'Rokeya Begum', 'rokeya.begum@gmail.com', '01899887744', 'Female', '0234567890123441', '1986-02-18', 'images/rokeya.jpg', 'agency', TRUE, 'Active', NULL, NULL, NULL, 'Add-1734757354826'),
 ('USER-1734783250950', 'Farzana Parvin', 'farzana.parvin@gmail.com', '01856789123', 'Female', '1234567890123442', '1991-03-25', 'images/farzana.jpg', 'agency', TRUE, 'Active', NULL, NULL, NULL, 'Add-1734757354101'),
 -- User 2
 ('USER-1734783250767', 'Ruhul Amin', 'ruhul.amin@yahoo.com', '01733445566', 'Male', '2234567890123443', '1987-08-12', 'images/ruhul.jpg', 'agency', TRUE, 'Active', NULL, NULL, NULL, 'Add-1734757354578'),
@@ -120,30 +96,24 @@ INSERT INTO users (
 -- User 9
 ('USER-1734783251371', 'Habibullah Khan', 'habibullah.khan@gmail.com', '01511223355', 'Male', '9234567890123450', '1988-01-14', 'images/habibullah.jpg', 'agency', TRUE, 'Active', NULL, NULL, NULL, 'Add-1734757354356'),
 -- User 10
-('USER-1734783250673', 'Anjuman Ara', 'anjuman.ara@gmail.com', '01744556677', 'Female', '0234567890123451', '1992-10-23', 'images/anjuman.jpg', 'agency', TRUE, 'Active', NULL, NULL, NULL, 'Add-1734757354877');
-
-
-INSERT INTO users (
-    _id, name, email, phone, gender, nid, dob, image, userRole, verified, accountStatus, license_number, expire_date, experience, address_id
-) VALUES
--- User 1
+('USER-1734783250673', 'Anjuman Ara', 'anjuman.ara@gmail.com', '01744556677', 'Female', '0234567890123451', '1992-10-23', 'images/anjuman.jpg', 'agency', TRUE, 'Active', NULL, NULL, NULL, 'Add-1734757354877'),
 ('USER-1734783251340', 'Sultana Akter', 'sultana.akter@gmail.com', '01799887744', 'Female', '1234567890123452', '1991-09-15', 'images/sultana.jpg', 'agency', TRUE, 'Active', NULL, NULL, NULL, 'Add-1734782537954'),
 -- User 2
 ('USER-1734783250864', 'Kamal Hossain', 'kamal.hossain@yahoo.com', '01655443322', 'Male', '2234567890123453', '1988-06-21', 'images/kamal.jpg', 'agency', TRUE, 'Active', NULL, NULL, NULL, 'Add-1734782538229'),
 -- User 3
-('USER-1734783250982', 'Nusrat Jahan', 'nusrat.jahan@gmail.com', '01899887766', 'Female', '3234567890123454', '1990-03-12', 'images/nusrat.jpg', 'agency', TRUE, 'Active', NULL, NULL, NULL, 'Add-1734782538410'),
+('USER-1734783250982', 'Nusrat Jahan', 'nusrat.jahan9@gmail.com', '0189988766', 'Female', '3234567890123454', '1990-03-12', 'images/nusrat.jpg', 'agency', TRUE, 'Active', NULL, NULL, NULL, 'Add-1734782538410'),
 -- User 4
 ('USER-1734783250517', 'Tanvir Rahman', 'tanvir.rahman@outlook.com', '01533445566', 'Male', '4234567890123455', '1987-12-08', 'images/tanvir.jpg', 'agency', TRUE, 'Inactive', NULL, NULL, NULL, 'Add-1734782537666'),
 -- User 5
-('USER-1734783250621', 'Mahfuza Sultana', 'mahfuza.sultana@gmail.com', '01911223344', 'Female', '5234567890123456', '1995-07-03', 'images/mahfuza.jpg', 'agency', TRUE, 'Active', NULL, NULL, NULL, 'Add-1734782538099'),
+('USER-1734783250621', 'Mahfuza Sultana', 'mahfuza.sultana@gmail.com', '01911223345', 'Female', '5234567890123456', '1995-07-03', 'images/mahfuza.jpg', 'agency', TRUE, 'Active', NULL, NULL, NULL, 'Add-1734782538099'),
 -- User 6
-('USER-1734783251155', 'Rokibul Hasan', 'rokibul.hasan@gmail.com', '01844556677', 'Male', '6234567890123457', '1993-04-27', 'images/rokibul.jpg', 'agency', TRUE, 'Active', NULL, NULL, NULL, 'Add-1734782537611'),
+('USER-1734783251155', 'Rokibul Hasan', 'rokibul.hasan@gmail.com', '01840556677', 'Male', '6234567890123457', '1993-04-27', 'images/rokibul.jpg', 'agency', TRUE, 'Active', NULL, NULL, NULL, 'Add-1734782537611'),
 -- User 7
 ('USER-1734783251177', 'Mokhlesur Rahman', 'mokhlesur.rahman@yahoo.com', '01711223388', 'Male', '7234567890123458', '1985-11-19', 'images/mokhlesur.jpg', 'agency', FALSE, 'Suspended', NULL, NULL, NULL, 'Add-1734782538330'),
 -- User 8
 ('USER-1734783250608', 'Fahmida Khatun', 'fahmida.khatun@gmail.com', '01699887711', 'Female', '8234567890123459', '1994-08-05', 'images/fahmida.jpg', 'agency', TRUE, 'Active', NULL, NULL, NULL, 'Add-1734782537654'),
 -- User 9
-('USER-1734783251299', 'Raihan Islam', 'raihan.islam@gmail.com', '01555667788', 'Male', '9234567890123460', '1986-02-14', 'images/raihan.jpg', 'agency', TRUE, 'Active', NULL, NULL, NULL, 'Add-1734782537546'),
+('USER-1734783251299', 'Raihan Islam', 'raihan.islam@gmail.com', '01555167788', 'Male', '9234567890123460', '1986-02-14', 'images/raihan.jpg', 'agency', TRUE, 'Active', NULL, NULL, NULL, 'Add-1734782537546'),
 -- User 10
 ('USER-1734783250901', 'Sharmin Akter', 'sharmin.akter@gmail.com', '01888776699', 'Female', '0234567890123461', '1992-10-11', 'images/sharmin.jpg', 'agency', TRUE, 'Active', NULL, NULL, NULL, 'Add-1734782538291');
 
@@ -166,9 +136,9 @@ INSERT INTO agencies (
 -- Agency 4
 ('AG-1734771688849', 'Speedy Rentals', 'info@speedyrentals.com.bd', 'USER-1734783250779', '01533445566', 'images/speedyrentals.jpg', 5, 'BRN-45678901', 'TIN-76543210', 'INS-78901234', '2019-11-10', '2024-11-10', 'suspended', FALSE, 'Add-1734757354508'),
 -- Agency 5
-('AG-1734771688632', 'Comfort Cars', 'hello@comfortcars.com.bd', 'USER-1734783251259', '01911223344', 'images/comfortcars.jpg', 15, 'BRN-56789012', 'TIN-65432109', 'INS-89012345', '2023-01-05', '2028-01-05', 'active', TRUE, 'Add-1734757354521'),
+('AG-1734771688632', 'Comfort Cars', 'hello@comfortcars.com.bd', 'USER-1734783251259', '01911223334', 'images/comfortcars.jpg', 15, 'BRN-56789012', 'TIN-65432109', 'INS-89012345', '2023-01-05', '2028-01-05', 'active', TRUE, 'Add-1734757354521'),
 -- Agency 6
-('AG-1734771688396', 'Smart Wheel Rentals', 'info@smartwheel.com.bd', 'USER-1734783251120', '01844556677', 'images/smartwheel.jpg', 7, 'BRN-67890123', 'TIN-54321098', 'INS-90123456', '2020-07-15', '2025-07-15', 'inactive', TRUE, 'Add-1734757354755'),
+('AG-1734771688396', 'Smart Wheel Rentals', 'info@smartwheel.com.bd', 'USER-1734783251120', '01844656677', 'images/smartwheel.jpg', 7, 'BRN-67890123', 'TIN-54321098', 'INS-90123456', '2020-07-15', '2025-07-15', 'inactive', TRUE, 'Add-1734757354755'),
 -- Agency 7
 ('AG-1734771688120', 'Elite Drive Services', 'contact@elitedrive.com.bd', 'USER-1734783250826', '01711223388', 'images/elitedrive.jpg', 9, 'BRN-78901234', 'TIN-43210987', 'INS-01234567', '2018-05-20', '2023-05-20', 'active', TRUE, 'Add-1734757354582'),
 -- Agency 8
@@ -176,13 +146,7 @@ INSERT INTO agencies (
 -- Agency 9
 ('AG-1734771687913', 'Royal Auto Rentals', 'support@royalauto.com.bd', 'USER-1734783250617', '01555667788', 'images/royalauto.jpg', 11, 'BRN-90123456', 'TIN-21098765', 'INS-23456789', '2022-02-08', '2027-02-08', 'inactive', TRUE, 'Add-1734757354558'),
 -- Agency 10
-('AG-1734771688740', 'Express Car Hire', 'hello@expresscarhire.com.bd', 'USER-1734783250521', '01888776699', 'images/expresscar.jpg', 13, 'BRN-01234567', 'TIN-10987654', 'INS-34567890', '2019-12-25', '2024-12-25', 'suspended', FALSE, 'Add-1734757354826');
-
-
-INSERT INTO agencies (
-    agency_id, agency_Name, agency_Email, owner_id, phone_Number, image, total_vehicles, businessRegNumber, TIN, insuranceNumber, registration_date, licenseExpireDate, status, verified, address_id
-) VALUES
--- Agency 1
+('AG-1734771688740', 'Express Car Hire', 'hello@expresscarhire.com.bd', 'USER-1734783250521', '01888776699', 'images/expresscar.jpg', 13, 'BRN-01234567', 'TIN-10987654', 'INS-34567890', '2019-12-25', '2024-12-25', 'suspended', FALSE, 'Add-1734757354826'),
 ('AG-1734771688269', 'Bangla Car Rentals', 'info@banglacars.com.bd', 'USER-1734783250950', '01712345670', 'images/banglacars.jpg', 10, 'BRN-12457896', 'TIN-98765432', 'INS-12345678', '2020-03-10', '2025-03-10', 'active', TRUE, 'Add-1734757354101'),
 -- Agency 2
 ('AG-1734771688544', 'Dhaka Drive Ltd.', 'contact@dhakadrive.com.bd', 'USER-1734783250767', '01665432109', 'images/dhakadrive.jpg', 8, 'BRN-23456781', 'TIN-87654321', 'INS-23456789', '2021-07-20', '2026-07-20', 'inactive', TRUE, 'Add-1734757354578'),
@@ -201,13 +165,7 @@ INSERT INTO agencies (
 -- Agency 9
 ('AG-1734771688065', 'Quick Wheels', 'quick@wheels.com.bd', 'USER-1734783251371', '01566778899', 'images/quickwheels.jpg', 6, 'BRN-90123458', 'TIN-10987654', 'INS-90123456', '2020-06-25', '2025-06-25', 'active', TRUE, 'Add-1734757354356'),
 -- Agency 10
-('AG-1734771688251', 'Zoom Car Rentals', 'zoom@carrentals.com.bd', 'USER-1734783250673', '01944556688', 'images/zoomcars.jpg', 13, 'BRN-01234569', 'TIN-09876543', 'INS-01234567', '2021-02-14', '2026-02-14', 'inactive', TRUE, 'Add-1734757354877');
-
-
-INSERT INTO agencies (
-    agency_id, agency_Name, agency_Email, owner_id, phone_Number, image, total_vehicles, businessRegNumber, TIN, insuranceNumber, registration_date, licenseExpireDate, status, verified, address_id
-) VALUES
--- Agency 1
+('AG-1734771688251', 'Zoom Car Rentals', 'zoom@carrentals.com.bd', 'USER-1734783250673', '01944556688', 'images/zoomcars.jpg', 13, 'BRN-01234569', 'TIN-09876543', 'INS-01234567', '2021-02-14', '2026-02-14', 'inactive', TRUE, 'Add-1734757354877'),
 ('AG-1734771688195', 'Safe Ride BD', 'contact@saferidebd.com.bd', 'USER-1734783251340', '01722334455', 'images/saferide.jpg', 10, 'BRN-11223344', 'TIN-99887766', 'INS-77665544', '2019-04-10', '2024-04-10', 'active', TRUE, 'Add-1734782537954'),
 -- Agency 2
 ('AG-1734771688313', 'Trust Car Rentals', 'info@trustcarrentals.com.bd', 'USER-1734783250864', '01699887766', 'images/trustcar.jpg', 8, 'BRN-22334455', 'TIN-88776655', 'INS-66554433', '2020-08-15', '2025-08-15', 'inactive', FALSE, 'Add-1734782538229'),
@@ -227,8 +185,6 @@ INSERT INTO agencies (
 ('AG-1734771688506', 'Fast Wheels', 'fast@wheels.com.bd', 'USER-1734783251299', '01733445566', 'images/fastwheels.jpg', 13, 'BRN-99001122', 'TIN-11009988', 'INS-99887766', '2019-09-22', '2024-09-22', 'active', TRUE, 'Add-1734782537546'),
 -- Agency 10
 ('AG-1734771688243', 'Reliable Auto Hire', 'info@reliableauto.com.bd', 'USER-1734783250901', '01666778899', 'images/reliableauto.jpg', 14, 'BRN-00112233', 'TIN-00998877', 'INS-88776655', '2021-02-18', '2026-02-18', 'inactive', TRUE, 'Add-1734782538291');
-
-
 
 
 
@@ -256,11 +212,7 @@ INSERT INTO address_info (address_id, user_id, agency_id, district, upazilla, ke
 -- Address 9
 ('Add-1734757354604', 'USER-1734755975383', NULL, 'Dhaka', 'Dhaka North', 'Khilkhet', 'Plot 25, Nikunja-2, Khilkhet, Dhaka North'),
 -- Address 10
-('Add-1734757354332', 'USER-1734755976078', NULL, 'Dhaka', 'Dhaka North', 'Tejgaon', 'Commercial Plot 9, Tejgaon Industrial Area, Dhaka North');
-
-
-INSERT INTO address_info (address_id, user_id, agency_id, district, upazilla, keyArea, area) VALUES
--- Address 1
+('Add-1734757354332', 'USER-1734755976078', NULL, 'Dhaka', 'Dhaka North', 'Tejgaon', 'Commercial Plot 9, Tejgaon Industrial Area, Dhaka North'),
 ('Add-1734757354552', 'USER-1734755975741', NULL, 'Dhaka', 'Dhaka South', 'Dhanmondi', 'House 12, Road 2, Dhanmondi, Dhaka South'),
 -- Address 2
 ('Add-1734757354815', 'USER-1734755975524', NULL, 'Dhaka', 'Dhaka South', 'Jatrabari', 'Building 23, Kajla Road, Jatrabari, Dhaka South'),
@@ -279,11 +231,7 @@ INSERT INTO address_info (address_id, user_id, agency_id, district, upazilla, ke
 -- Address 9
 ('Add-1734757354802', 'USER-1734755976094', NULL, 'Dhaka', 'Dhaka South', 'Gendaria', 'Plot 4, Railway Colony, Gendaria, Dhaka South'),
 -- Address 10
-('Add-1734757355019', 'USER-1734755976247', NULL, 'Dhaka', 'Dhaka South', 'New Market', 'Shop 23, New Market, Dhaka South');
-
-
-INSERT INTO address_info (address_id, user_id, agency_id, district, upazilla, keyArea, area) VALUES
--- Address 1 (Dhaka North)
+('Add-1734757355019', 'USER-1734755976247', NULL, 'Dhaka', 'Dhaka South', 'New Market', 'Shop 23, New Market, Dhaka South'),
 ('Add-1734757354563', 'USER-1734755975497', NULL, 'Dhaka', 'Dhaka North', 'Kafrul', 'Building 12, Kafrul, Dhaka North'),
 -- Address 2 (Dhaka North)
 ('Add-1734757354523', 'USER-1734755976353', NULL, 'Dhaka', 'Dhaka North', 'Kalachandpur', 'House 8, Kalachandpur, Dhaka North'),
@@ -302,12 +250,8 @@ INSERT INTO address_info (address_id, user_id, agency_id, district, upazilla, ke
 -- Address 9 (Dhaka North)
 ('Add-1734757354095', 'USER-1734755975946', NULL, 'Dhaka', 'Dhaka North', 'Tejgaon', 'Plot 21, Tejgaon Industrial Area, Dhaka North'),
 -- Address 10 (Dhaka North)
-('Add-1734757354799', 'USER-1734755975622', NULL, 'Dhaka', 'Dhaka North', 'Mohakhali', 'House 7, Mohakhali DOHS, Dhaka North');
-
-
-INSERT INTO address_info (address_id, user_id, agency_id, district, upazilla, keyArea, area) VALUES
--- Address 1
-('Add-1734757354523', NULL, 'AG-1734771688291', 'Dhaka', 'Dhaka North', 'Uttara', 'Sector 3, Uttara, Dhaka North'),
+('Add-1734757354799', 'USER-1734755975622', NULL, 'Dhaka', 'Dhaka North', 'Mohakhali', 'House 7, Mohakhali DOHS, Dhaka North'),
+('Add-1734757354533', NULL, 'AG-1734771688291', 'Dhaka', 'Dhaka North', 'Uttara', 'Sector 3, Uttara, Dhaka North'),
 -- Address 2
 ('Add-1734757354633', NULL, 'AG-1734771688557', 'Dhaka', 'Dhaka North', 'Mirpur', 'Block C, Mirpur 10, Dhaka North'),
 -- Address 3
@@ -317,7 +261,7 @@ INSERT INTO address_info (address_id, user_id, agency_id, district, upazilla, ke
 -- Address 5
 ('Add-1734757354521', NULL, 'AG-1734771688632', 'Dhaka', 'Dhaka North', 'Baridhara', 'Plot 7, Baridhara Diplomatic Zone, Dhaka North'),
 -- Address 6
-('Add-1734757354755', NULL, 'AG-1734771688396', 'Dhaka', 'Dhaka North', 'Mohakhali', 'House 12, Mohakhali DOHS, Dhaka North'),
+('Add-1734757354855', NULL, 'AG-1734771688396', 'Dhaka', 'Dhaka North', 'Mohakhali', 'House 12, Mohakhali DOHS, Dhaka North'),
 -- Address 7
 ('Add-1734757354582', NULL, 'AG-1734771688120', 'Dhaka', 'Dhaka North', 'Bashundhara', 'Block H, Bashundhara R/A, Dhaka North'),
 -- Address 8
@@ -325,11 +269,7 @@ INSERT INTO address_info (address_id, user_id, agency_id, district, upazilla, ke
 -- Address 9
 ('Add-1734757354558', NULL, 'AG-1734771687913', 'Dhaka', 'Dhaka North', 'Khilkhet', 'House 8, Khilkhet, Dhaka North'),
 -- Address 10
-('Add-1734757354826', NULL, 'AG-1734771688740', 'Dhaka', 'Dhaka North', 'Pallabi', 'Plot 18, Pallabi, Dhaka North');
-
-
-INSERT INTO address_info (address_id, user_id, agency_id, district, upazilla, keyArea, area) VALUES
--- Address 1
+('Add-1734757354826', NULL, 'AG-1734771688740', 'Dhaka', 'Dhaka North', 'Pallabi', 'Plot 18, Pallabi, Dhaka North'),
 (Add-1734757354101, NULL, 'AG-1734771688269', 'Dhaka', 'Dhaka South', 'Dhanmondi', 'Road 8, Dhanmondi, Dhaka South'),
 -- Address 2
 (Add-1734757354578, NULL, 'AG-1734771688544', 'Dhaka', 'Dhaka South', 'Jatrabari', 'Kajla, Jatrabari, Dhaka South'),
@@ -348,11 +288,7 @@ INSERT INTO address_info (address_id, user_id, agency_id, district, upazilla, ke
 -- Address 9
 (Add-1734757354356, NULL, 'AG-1734771688065', 'Dhaka', 'Dhaka South', 'Shahbagh', 'Bangladesh National Museum, Shahbagh, Dhaka South'),
 -- Address 10
-(Add-1734757354877, NULL, 'AG-1734771688251', 'Dhaka', 'Dhaka South', 'Hazaribagh', 'Rayerbazar, Hazaribagh, Dhaka South');
-
-
-INSERT INTO address_info (address_id, user_id, agency_id, district, upazilla, keyArea, area) VALUES
--- Address 1
+(Add-1734757354877, NULL, 'AG-1734771688251', 'Dhaka', 'Dhaka South', 'Hazaribagh', 'Rayerbazar, Hazaribagh, Dhaka South'),
 (Add-1734782537954, NULL, 'AG-1734771688195', 'Dhaka', 'Dhaka South', 'Sutrapur', 'Sutrapur Bazar Road, Dhaka South'),
 -- Address 2
 (Add-1734782538229, NULL, 'AG-1734771688313', 'Dhaka', 'Dhaka South', 'Gendaria', 'Dhakeshwari Road, Gendaria, Dhaka South'),
@@ -372,5 +308,4 @@ INSERT INTO address_info (address_id, user_id, agency_id, district, upazilla, ke
 (Add-1734782537546, NULL, 'AG-1734771688506', 'Dhaka', 'Dhaka South', 'Paltan', 'Kakrail Road, Paltan, Dhaka South'),
 -- Address 10
 (Add-1734782538291, NULL, 'AG-1734771688243', 'Dhaka', 'Dhaka South', 'Khilgaon', 'Goran, Khilgaon, Dhaka South');
-
 

@@ -41,15 +41,15 @@ const DateTime = ({getTime, time}) => {
      const UntilDate = time?.untilDate + "T" + time?.untilTime
 
      return (
-          <div className='flex flex-col md:flex-row gap-3 justify-between items-center mt-2'>
+          <div className='mt-2 md:mt-0 flex flex-col md:flex-row gap-3 md:items-center'>
                <LocalizationProvider dateAdapter={AdapterMoment}>
                     <DemoContainer components={['DateTimePicker']}>
-                         <DateTimePicker label="From" name='fromDate&Time' onChange={getFromDateAndTime} minDate={currentTime} maxDate={moment(currentTime.clone().add(3, "months"))} defaultValue={time && moment(FromDate)} slotProps={{ textField: { size: 'small', fullWidth: true, required:true }}}/>
+                         <DateTimePicker label="From" name='fromDate&Time' onChange={getFromDateAndTime} minDate={currentTime} maxDate={moment(currentTime.clone().add(3, "months"))} defaultValue={time && moment(FromDate)} slotProps={{ textField: { size: 'small', required:true }}}/>
                     </DemoContainer>
                </LocalizationProvider>
                <LocalizationProvider dateAdapter={AdapterMoment}>
                     <DemoContainer components={['DateTimePicker']} >
-                         <DateTimePicker label="Until" name='untilDate&Time' onChange={getUntilDateAndTime} minDate={currentTime} maxDate={moment(currentTime.clone().add(3, "months"))} defaultValue={time && moment(UntilDate)} slotProps={{ textField: { size: 'small', fullWidth: true, required:true }}}/>
+                         <DateTimePicker label="Until" name='untilDate&Time' onChange={getUntilDateAndTime} minDate={currentTime} maxDate={moment(currentTime.clone().add(3, "months"))} defaultValue={time && moment(UntilDate)} slotProps={{ textField: { size: 'small', required:true }}}/>
                     </DemoContainer>
                </LocalizationProvider>
           </div>

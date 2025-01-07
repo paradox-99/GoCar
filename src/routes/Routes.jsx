@@ -5,6 +5,7 @@ import Signin from "../pages/sign_in/Signin";
 import SearchPage from "../pages/search/SearchPage";
 import Signup from "../pages/sign_up/user_Sign_up/Signup";
 import Signup_part2 from "../pages/sign_up/user_Sign_up/Signup_part2";
+import AllBrands from "../pages/all_brands/AllBrands";
 
 const router = createBrowserRouter([
     {
@@ -30,6 +31,10 @@ const router = createBrowserRouter([
             {
                 path: "/sign-up/user-info",
                 element: <Signup_part2/>
+            },
+            {
+                path: '/view-all-brands',
+                element: <AllBrands></AllBrands>
             }
         ]
     }

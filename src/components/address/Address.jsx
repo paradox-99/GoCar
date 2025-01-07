@@ -21,7 +21,7 @@ const Address = ({ getAddress }) => {
     }
 
     return (
-        <div className='mt-4 flex gap-3 w-full'>
+        <div className='mt-4 md:mt-2 flex flex-col md:flex-row gap-3 w-full'>
             <Autocomplete
                 disablePortal
                 options={district}
@@ -31,7 +31,7 @@ const Address = ({ getAddress }) => {
                 }}
                 // value={districtValue}
                 fullWidth
-                renderInput={(params) => <TextField {...params} label="District" size='small' fullWidth sx={{minWidth: "200px"}} required/>}
+                renderInput={(params) => <TextField {...params} label="District" size='small'  sx={{minWidth: "200px"}} required/>}
             />
             <Autocomplete
                 disablePortal

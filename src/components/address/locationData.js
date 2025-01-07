@@ -1,11 +1,20 @@
-// import toyoto_car from "/src/assets/topBrands/toyoto_car.png"
-// import toyoto_logo from "/src/assets/topBrands/toyoto_logo.png"
-// import honda_car from "/src/assets/topBrands/honda_car.png"
-// import honda_logo from "/src/assets/topBrands/honda_logo.png"
-// import nissan_car from "/src/assets/topBrands/nissan_car.png"
-// import nissan_logo from "/src/assets/topBrands/nissan_logo.png"
-// import suzuki_car from "/src/assets/topBrands/suzuki_car.png"
-// import suzuki_logo from "/src/assets/topBrands/suzuki_logo.png"
+import toyoto_car from "/src/assets/topBrands/toyoto_car.png"
+import toyoto_logo from "/src/assets/topBrands/toyoto_logo.png"
+import honda_car from "/src/assets/topBrands/honda_car.png"
+import honda_logo from "/src/assets/topBrands/honda_logo.png"
+import nissan_car from "/src/assets/topBrands/nissan_car.png"
+import nissan_logo from "/src/assets/topBrands/nissan_logo.png"
+import suzuki_car from "/src/assets/topBrands/suzuki_car.png"
+import suzuki_logo from "/src/assets/topBrands/suzuki_logo.png"
+import Mitsubishi from "/src/assets/topBrands/Mitsubishi.png"
+import kia from "/src/assets/topBrands/kia.png"
+import hyundai from "/src/assets/topBrands/hyundai.png"
+import volkswagan from "/src/assets/topBrands/Volkswagen.png"
+import tata from "/src/assets/topBrands/tata.png"
+import sedan from "/src/assets/topBrands/sedan.png"
+import hatchback from "/src/assets/topBrands/hatchback.png"
+import van from "/src/assets/topBrands/van.png"
+import minivan from "/src/assets/topBrands/minivan.png"
 
 export const locationData =
 {
@@ -309,25 +318,83 @@ export const carBrands = [
     { label: "Mazda" }
 ];
 
-// export const top_brands = [
-//     {
-//         name: "Toyota",
-//         image: toyoto_car,
-//         logo: toyoto_logo
-//     },
-//     {
-//         name: "Honda",
-//         image: honda_car,
-//         logo: honda_logo
-//     },
-//     {
-//         name: "Nissan",
-//         image: nissan_car,
-//         logo: nissan_logo
-//     },
-//     {
-//         name: "Suzuki",
-//         image: suzuki_car,
-//         logo: suzuki_logo
-//     }
-// ]
+export const top_brands = [
+    {
+        name: "Toyota",
+        image: toyoto_car,
+        logo: toyoto_logo
+    },
+    {
+        name: "Honda",
+        image: honda_car,
+        logo: honda_logo
+    },
+    {
+        name: "Nissan",
+        image: nissan_car,
+        logo: nissan_logo
+    },
+    {
+        name: "Suzuki",
+        image: suzuki_car,
+        logo: suzuki_logo
+    }
+]
+
+export const all_brands = [
+    {
+        name: "Toyota",
+        image: toyoto_car
+    },
+    {
+        name: "Honda",
+        image: honda_car
+    },
+    {
+        name: "Nissan",
+        image: nissan_car
+    },
+    {
+        name: "Suzuki",
+        image: suzuki_car
+    },
+    {
+        name: "Mitsubishi",
+        image: Mitsubishi
+    },
+    {
+        name: "Kia",
+        image: kia
+    },
+    {
+        name: "Hyundai",
+        image: hyundai
+    },
+    {
+        name: "Volkswagen",
+        image: volkswagan
+    },
+    {
+        name: "Tata",
+        image: tata
+    }
+]
+
+export const top_car_types = [
+    {
+        name: "Sedan",
+        image: sedan
+    },
+    {
+        name: "Hatchback",
+        image: hatchback
+    },
+    {
+        name: "Van",
+        image: van
+    },
+    {
+        name: "Minivan",
+        image: minivan
+    }
+]
