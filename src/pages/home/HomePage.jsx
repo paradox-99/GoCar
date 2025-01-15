@@ -3,6 +3,7 @@ import Banner from "./Banner";
 import TopBrands from "./TopBrands";
 import CarTypes from "./CarTypes";
 import Benefit from "./Benefit";
+import HowItWorks from "./HowItWorks";
 
 const HomePage = () => {
     return (
@@ -15,6 +16,7 @@ const HomePage = () => {
                 <Benefit></Benefit>
                 <TopBrands></TopBrands>
                 <CarTypes></CarTypes>
+                <HowItWorks></HowItWorks>
             </div>
         </div>
     );

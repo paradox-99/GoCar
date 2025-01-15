@@ -3,8 +3,8 @@ INSERT INTO vehicles (
     rental_price, transmission_type, about, air_conditioning, gps, Bluetooth, central_locking, heater, status, verified
 ) VALUES
 -- Cars for AG-1734771688291
-('CAR-1736216228975', 'AG-1734771688291', 'Toyota', 'Yaris', 'Hatchback', 'LE', 2021, 'images/toyota_yaris.jpg', 
- 5, 28.50, 5, 'Petrol', 350, 'Manual', 
+('CAR-1736216228975', 'AG-1734771688291', 'Toyota', 'Yaris', 'Hatchback', 'LE', 2021, 'https://i.imghippo.com/files/jW4194Ry.png',
+ 5, 28.50, 5, 'Petrol', 350, 'Manual',
  'Efficient hatchback with great mileage and affordability.', 
  TRUE, TRUE, TRUE, TRUE, TRUE, 'available', TRUE),
 ('CAR-1736216229321', 'AG-1734771688291', 'Suzuki', 'Swift', 'Hatchback', 'VXI', 2022, 'images/suzuki_swift.jpg', 
@@ -138,7 +138,7 @@ INSERT INTO vehicles (
  'Spacious minivan for group or family travel.', 
  TRUE, TRUE, TRUE, TRUE, TRUE, 'available', TRUE),
 -- Cars for AG-1734771688740
-('CAR-1736216228870', 'AG-1734771688740', 'Toyota', 'Yaris', 'Hatchback', 'J', 2022, 'images/toyota_yaris.jpg', 
+('CAR-1736216228870', 'AG-1734771688740', 'Toyota', 'Yaris', 'Hatchback', 'J', 2022, 'https://i.imghippo.com/files/jW4194Ry.png', 
  5, 29.00, 6, 'Petrol', 400, 'Manual', 
  'Compact hatchback offering comfort and fuel efficiency.', 
  TRUE, TRUE, TRUE, TRUE, TRUE, 'available', TRUE),
@@ -226,7 +226,7 @@ INSERT INTO vehicles (
  'Premium hatchback with excellent build quality.', 
  TRUE, TRUE, TRUE, TRUE, TRUE, 'available', TRUE),
 -- Cars for AG-1734771688755
-('CAR-1736216254116', 'AG-1734771688755', 'Toyota', 'Yaris', 'Hatchback', 'J', 2022, 'images/toyota_yaris.jpg', 
+('CAR-1736216254116', 'AG-1734771688755', 'Toyota', 'Yaris', 'Hatchback', 'J', 2022, 'https://i.imghippo.com/files/jW4194Ry.png', 
  5, 30.00, 6, 'Petrol', 400, 'Manual', 
  'Compact and fuel-efficient hatchback.', 
  TRUE, TRUE, TRUE, TRUE, TRUE, 'available', TRUE),
@@ -338,7 +338,7 @@ INSERT INTO vehicles (
  'Compact hatchback with a sporty design.', 
  TRUE, TRUE, TRUE, TRUE, FALSE, 'available', TRUE),
 -- Cars for AG-1734771688313
-('CAR-1736216254652', 'AG-1734771688313', 'Toyota', 'Yaris', 'Hatchback', 'G', 2022, 'images/toyota_yaris.jpg', 
+('CAR-1736216254652', 'AG-1734771688313', 'Toyota', 'Yaris', 'Hatchback', 'G', 2022, 'https://i.imghippo.com/files/jW4194Ry.png', 
  5, 27.50, 6, 'Petrol', 400, 'Manual', 
  'Compact and reliable hatchback for urban use.', 
  TRUE, TRUE, TRUE, TRUE, TRUE, 'available', TRUE),

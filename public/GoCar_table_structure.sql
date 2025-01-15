@@ -1,3 +1,14 @@
+CREATE TABLE address_info(
+    address_id VARCHAR(20) PRIMARY KEY,
+    user_id VARCHAR(20),
+    agency_id VARCHAR(20),
+    district VARCHAR(15),
+    upazilla VARCHAR(20),
+    keyArea VARCHAR(15),
+    area VARCHAR(250)
+);
+
+
 CREATE TABLE users (
     _id VARCHAR(20) PRIMARY KEY,
     name VARCHAR(50) NOT NULL,
@@ -7,7 +18,7 @@ CREATE TABLE users (
     nid VARCHAR(16) UNIQUE NOT NULL,
     dob DATE,
     image VARCHAR(255),
-    userRole NOT NULL,
+    userRole VARCHAR(15) NOT NULL,
     verified BOOLEAN,
     accountStatus ENUM('Active', 'Inactive', 'Suspended'),
     license_number VARCHAR(20),
@@ -36,23 +47,9 @@ CREATE TABLE agencies (
     verified BOOLEAN,
     address_id VARCHAR(20),
 
-    FOREIGN KEY (owner_id) REFERENCES users(_id)
+    FOREIGN KEY (owner_id) REFERENCES users(_id),
     FOREIGN KEY (address_id) REFERENCES address_info(address_id)
 );
-
-
-CREATE TABLE address_info(
-    address_id INT AUTO_INCREMENT PRIMARY KEY,
-    user_id VARCHAR(20),
-    agency_id VARCHAR(20),
-    district VARCHAR(15),
-    upazilla VARCHAR(20),
-    keyArea VARCHAR(15),
-    area VARCHAR(250),
-
-    FOREIGN KEY (user_id) REFERENCES users(_id)
-    FOREIGN KEY (agency_id) REFERENCES agencies(agency_id)
-)
 
 
 CREATE TABLE vehicles (
@@ -85,7 +82,7 @@ CREATE TABLE vehicles (
 
 CREATE TABLE vehicle_documentation (
     documentation_id VARCHAR(20) PRIMARY KEY,
-    vehicle_id INT,
+    vehicle_id VARCHAR(20),
     license_number VARCHAR(30),
     expire_date DATE,
     fitness_certificate VARCHAR(30),
@@ -126,7 +123,7 @@ CREATE TABLE agency_reviews_and_ratings (
 CREATE TABLE bookings (
     user_id VARCHAR(20),
     booking_id VARCHAR(20),
-    bookings_date DATE
+    bookings_date DATE,
 
     FOREIGN KEY (user_id) REFERENCES users
 )
@@ -140,7 +137,7 @@ CREATE TABLE booking_info (
     total_rent_hours INT,
     driver_cost DECIMAL(10,2),
     total_cost DECIMAL(10,2),
-    remaining_amount DECIMAL(10,2)
+    remaining_amount DECIMAL(10,2),
     
     FOREIGN KEY (user_id) REFERENCES users(_id),
     FOREIGN KEY (vehicle_id) REFERENCES vehicles(vehicle_id)
@@ -151,7 +148,7 @@ CREATE TABLE payment_info (
     payment_id VARCHAR(20) PRIMARY KEY,
     payment_method VARCHAR(50),
     paid_amount DECIMAL(10,2),
-    Trx_id VARCHAR(100),
+    Trx_id VARCHAR(100)
 );
 
 
@@ -160,7 +157,7 @@ CREATE TABLE booing_payment (
     payment_id VARCHAR(20),
     payment_date DATE,
 
-    FOREIGN KEY (booking_id) REFERENCES booking_info(booking_id)
+    FOREIGN KEY (booking_id) REFERENCES booking_info(booking_id),
     FOREIGN KEY (payment_id) REFERENCES payment_info(payment_id)
 )
 

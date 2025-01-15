@@ -10,7 +10,7 @@ INSERT INTO users (
 -- User 4
 ('USER-1734755975710', 'Nusrat Jahan', 'nusrat.jahan@gmail.com', '01945678901', 'Female', '4234567890123456', '1992-11-22', 'images/nusrat.jpg', 'user', TRUE, 'Active', NULL, NULL, NULL, 'Add-1734757354678'),
 -- User 5
-('USER-1734755975481', 'Ashraful Alam', 'ashraful.alam@yahoo.com', '01856789012', 'Male', '5234567890123456', '1985-04-19', 'images/ashraful.jpg', 'user', FALSE, 'Suspended', 'DL987654321', '2024-12-01', 8, 'Add-1734757354419'),
+('USER-1734755975481', 'Ashraful Alam', 'ashraful.alam@yahoo.com', '01856789012', 'Male', '5234567890122456', '1985-04-19', 'images/ashraful.jpg', 'user', FALSE, 'Suspended', 'DL987654321', '2024-12-01', 8, 'Add-1734757354419'),
 -- User 6
 ('USER-1734755975601', 'Taslima Begum', 'taslima.begum@gmail.com', '01567890123', 'Female', '6234567890123456', '1998-08-05', 'images/taslima.jpg', 'user', TRUE, 'Active', NULL, NULL, NULL, 'Add-1734757354246'),
 -- User 7
@@ -71,7 +71,7 @@ INSERT INTO users (
 -- User 6
 ('USER-1734783251120', 'Nazia Rahman', 'nazia.rahman@yahoo.com', '01999887766', 'Female', '6234567890123437', '1995-01-20', 'images/nazia.jpg', 'agency', TRUE, 'Active', NULL, NULL, NULL, 'Add-1734757354755'),
 -- User 7
-('USER-1734783250826', 'Rafiq Islam', 'rafiq.islam@gmail.com', '01611223344', 'Male', '7234567890123438', '1987-06-14', 'images/rafiq.jpg', 'agency', TRUE, 'Active', NULL, NULL, NULL, 'Add-1734757354582'),
+('USER-1734783250826', 'Rafiq Islam', 'rafiq.islam@gmail.com', '01611223354', 'Male', '7234567890123438', '1987-06-14', 'images/rafiq.jpg', 'agency', TRUE, 'Active', NULL, NULL, NULL, 'Add-1734757354582'),
 -- User 8
 ('USER-1734783251093', 'Mahmuda Khatun', 'mahmuda.khatun@gmail.com', '01755443322', 'Female', '8234567890123439', '1992-09-05', 'images/mahmuda.jpg', 'agency', FALSE, 'Suspended', NULL, NULL, NULL, 'Add-1734757354255'),
 -- User 9
@@ -161,7 +161,7 @@ INSERT INTO agencies (
 -- Agency 7
 ('AG-1734771688628', 'Prime Auto Hire', 'prime@autohire.com.bd', 'USER-1734783250568', '01644556677', 'images/primeauto.jpg', 9, 'BRN-78901236', 'TIN-32109876', 'INS-78901234', '2018-04-22', '2023-04-22', 'active', TRUE, 'Add-1734757354641'),
 -- Agency 8
-('AG-1734771688680', 'DriveX BD', 'info@drivexbd.com.bd', 'USER-1734783251333', '01855443322', 'images/drivex.jpg', 11, 'BRN-89012347', 'TIN-21098765', 'INS-89012345', '2019-11-11', '2024-11-11', 'suspended', FALSE, 'Add-1734757354201'),
+('AG-1734771688680', 'DriveX BD', 'info@drivexbd.com.bd', 'USER-1734783251333', '01855443222', 'images/drivex.jpg', 11, 'BRN-89012347', 'TIN-21098765', 'INS-89012345', '2019-11-11', '2024-11-11', 'suspended', FALSE, 'Add-1734757354201'),
 -- Agency 9
 ('AG-1734771688065', 'Quick Wheels', 'quick@wheels.com.bd', 'USER-1734783251371', '01566778899', 'images/quickwheels.jpg', 6, 'BRN-90123458', 'TIN-10987654', 'INS-90123456', '2020-06-25', '2025-06-25', 'active', TRUE, 'Add-1734757354356'),
 -- Agency 10

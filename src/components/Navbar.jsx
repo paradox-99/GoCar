@@ -14,13 +14,36 @@ import MenuItem from '@mui/material/MenuItem';
 import { useEffect, useState } from "react";
 import { LuSearch } from 'react-icons/lu';
 import useAuth from '../hooks/useAuth';
+import useRole from '../hooks/useRole';
 
 const pages = [
     { title: 'Home', url: '/' },
-    { title: 'Agencies', url: '/search' },
+    { title: 'Agencies', url: '/agencies' },
     { title: 'Support', url: '/services' }
 ];
-const settings = ['Profile', 'Account', 'Dashboard'];
+
+const userDropdown = [
+    { title: 'Profile', url: '/dashboard/profile' },
+    { title: 'Dashboard', url: '/dashboard' },
+];
+
+const adminDropDown = [
+    { title: 'Profile', url: '/dashboard/admin-profile' },
+    { title: 'Dashboard', url: '/dashboard/admin' },
+    { title: 'Notifications', url: '/dashboard/notificationsAdmin' },
+]
+
+const agencyDropDown = [
+    { title: 'Profile', url: '/dashboard/agency-profile' },
+    { title: 'Dashboard', url: '/dashboard/agency' },
+    { title: 'Notifications', url: '/dashboard/notificationsAgency' }
+]
+
+const driverDropDown = [
+    { title: 'Profile', url: '/dashboard/driver-profile' },
+    { title: 'Dashboard', url: '/dashboard/driver' },
+    { title: 'Notifications', url: '/dashboard/notificationsDriver' },
+]
 
 const Navbar = () => {
 
@@ -30,6 +53,8 @@ const Navbar = () => {
     const [shadow, setShadow] = useState(false);
     const [anchorElNav, setAnchorElNav] = React.useState(null);
     const [anchorElUser, setAnchorElUser] = React.useState(null);
+    const data = useRole();
+    let dashboard = [''];
 
     const handleOpenNavMenu = (event) => {
         setAnchorElNav(event.currentTarget);
@@ -68,6 +93,22 @@ const Navbar = () => {
             window.removeEventListener('scroll', handleScroll);
         };
     }, [previousScrollY]);
+
+    if (data?.userRole === 'user') {
+        dashboard = userDropdown;
+    }
+    else if (data?.userRole === 'admin') {
+        dashboard = adminDropDown;
+    }
+    else if (data?.userRole === 'driver') {
+        dashboard = driverDropDown;
+    }
+    else if (data?.userRole === 'agency') {
+        dashboard = agencyDropDown;
+    }
+
+    // console.log(user);
+    
 
     return (
 
@@ -137,7 +178,7 @@ const Navbar = () => {
                                     }
                                 </Menu>
                             </Box>
-                            <Box sx={{ display: { xs: 'flex', md: 'none', alignItems:"center" } }} >
+                            <Box sx={{ display: { xs: 'flex', md: 'none', alignItems: "center" } }} >
                                 <img src="/logo.gif" alt="" className='w-10' />
                             </Box>
                             <Typography
@@ -170,8 +211,8 @@ const Navbar = () => {
                                 ))}
                             </Box>
                             <Box sx={{
-                                    mr: { md: 3},
-                                    ml: { md: 3}
+                                mr: { md: 3 },
+                                ml: { md: 3 }
                             }}>
                                 <IconButton>
                                     <LuSearch />
@@ -180,7 +221,7 @@ const Navbar = () => {
                             {
                                 user &&
                                 <Box sx={{ flexGrow: 0, color: "black", ml: 2 }}>
-                                    <Tooltip title="Open settings">
+                                    <Tooltip title="Menu">
                                         <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
                                             <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
                                         </IconButton>
@@ -201,13 +242,25 @@ const Navbar = () => {
                                         open={Boolean(anchorElUser)}
                                         onClose={handleCloseUserMenu}
                                     >
-                                        {settings.map((setting) => (
-                                            <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                                                <Typography sx={{ textAlign: 'center', color: "black" }}>{setting}</Typography>
+                                        {dashboard?.map((setting) => (
+                                            <MenuItem key={setting.title} onClick={handleCloseUserMenu}>
+                                                <Button
+                                                    key={setting.title}
+                                                    onClick={handleCloseNavMenu}
+                                                    href={setting.url}
+                                                    sx={{ color: 'black', display: 'block', fontWeight: 600, textTransform: "none", fontSize: 16 }}
+                                                >
+                                                    {setting.title}
+                                                </Button>
                                             </MenuItem>
                                         ))}
                                         <MenuItem onClick={logOut}>
-                                            <Typography sx={{ textAlign: 'center', color: "black" }}>Logout</Typography>
+                                        <Button
+                                                onClick={handleCloseNavMenu}
+                                                sx={{ color: 'black', display: 'block', fontWeight: 600, textTransform: "none", fontSize: 16 }}
+                                            >
+                                                Logout
+                                            </Button>
                                         </MenuItem>
                                     </Menu>
                                 </Box>

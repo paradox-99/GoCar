@@ -6,6 +6,11 @@ import SearchPage from "../pages/search/SearchPage";
 import Signup from "../pages/sign_up/user_Sign_up/Signup";
 import Signup_part2 from "../pages/sign_up/user_Sign_up/Signup_part2";
 import AllBrands from "../pages/all_brands/AllBrands";
+import BrandPage from "../components/BrandPage";
+import { DashboardRoutes } from "./DashboardRoutes";
+import Agencies from "../pages/agency/Agencies";
+import CarTypes from "../pages/home/CarTypes";
+import CarTypePage from "../components/CarTypePage";
 
 const router = createBrowserRouter([
     {
@@ -17,8 +22,8 @@ const router = createBrowserRouter([
                 element: <HomePage />
             },
             {
-                path: "/search",
-                element: <SearchPage />
+                path: "/agencies",
+                element: <Agencies />
             },
             {
                 path: "/sign-in",
@@ -35,9 +40,18 @@ const router = createBrowserRouter([
             {
                 path: '/view-all-brands',
                 element: <AllBrands></AllBrands>
+            },
+            {
+                path: '/brand/:brandName',
+                element: <BrandPage />
+            },
+            {
+                path: '/carType/:type',
+                element: <CarTypePage/>
             }
         ]
-    }
+    },
+    ...DashboardRoutes
 ])
 
 export default router;

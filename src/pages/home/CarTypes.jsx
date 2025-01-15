@@ -1,9 +1,12 @@
+import { Navigate, useNavigate } from "react-router-dom";
 import { top_car_types } from "../../components/address/locationData";
 
 const CarTypes = () => {
 
+     const navigate = useNavigate();
+
      const handleBrand = brand_name => {
-          // navigate(`/brand/${brand_name}`)
+          navigate(`/carType/${brand_name}`)
      }
 
      return (
