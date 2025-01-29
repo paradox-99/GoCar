@@ -2,11 +2,13 @@ import { Button } from "@mui/material";
 import Address from "../../components/address/Address";
 import { useState } from "react";
 import DateTime from "../../components/dateTime/DateTime";
+import { useNavigate } from "react-router-dom";
 
 const Banner = () => {
 
      const [address, setAddress] = useState();
      const [time, setTime] = useState();
+     const navigate = useNavigate();
 
      const getAddress = (address) => {
           setAddress(address);
@@ -15,6 +17,24 @@ const Banner = () => {
      const getTime = (timeAndDate) => {
           setTime(timeAndDate)
      }
+
+     console.log(address);
+     
+
+     const searchPage = () => {
+          const district = address.district;
+          const upazilla = address.upazilla;
+          const keyArea = address.area;
+          const fromDate = time.fromDate;
+          const fromTime = time.fromTime;
+          const untilDate = time.untilDate;
+          const untilTime = time.untilTime;
+          
+          const location = new URLSearchParams({ district: district, upazilla: upazilla, keyArea: keyArea});
+          const date = new URLSearchParams({fromDate: fromDate, fromTime: fromTime, untilDate: untilDate, untilTime: untilTime});
+          navigate(`/search/queries?${location}&${date}`)
+      }
+     
 
      return (
           <div className="bg-[#ececec] md:h-[85vh] lg:h-[83vh] py-10 md:py-0  bg-[url('/banner_image.png')] md:bg-[url('/banner_image2.png')] lg:bg-[url('/banner_image.png')] bg-right-top bg-contain md:bg-auto lg:bg-contain bg-no-repeat pl-3 md:pl-8 xl:pl-20 flex flex-col justify-center md:gap-5 lg:gap-10 xl:gap-14">
@@ -39,7 +59,7 @@ const Banner = () => {
                               <DateTime getTime={getTime}></DateTime>
                          </div>
                     </div>
-                    <Button variant="contained" sx={{ maxWidth: "fit-content", mt: 2, background: '#F58300', color: 'white' }}>Search</Button>
+                    <Button onClick={searchPage} variant="contained" sx={{ maxWidth: "fit-content", mt: 2, background: '#F58300', color: 'white' }}>Search</Button>
                </div>
           </div>
      );

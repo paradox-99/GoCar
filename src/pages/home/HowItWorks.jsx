@@ -7,7 +7,6 @@ const HowItWorks = () => {
      return (
           <div className="mt-28">
                <div className="text-center">
-                    <p className="tracking-[5px] inline-block px-4 py-[1px] rounded-full bg-[#FFEEE9] text-xs text-primary">PROCESS</p>
                     <h1 className="mt-4 text-5xl font-bold">How It Works</h1>
                     <p className="mt-5 mx-auto max-w-[600px] lg:w-[600px]">Select your car, book online, and pick it up hassle-free. Flexible rentals, easy payments, and 24/7 customer support.</p>
                </div>

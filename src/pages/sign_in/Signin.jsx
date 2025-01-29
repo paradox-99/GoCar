@@ -28,6 +28,7 @@ const Signin = () => {
         }
         catch (error) {
             toast.error('Login failed.')
+            setLoading(false);
         }
     }
 

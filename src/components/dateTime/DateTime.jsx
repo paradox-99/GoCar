@@ -5,8 +5,9 @@ import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import moment from 'moment';
 import { useState } from 'react';
 import PropTypes from 'prop-types';
+import toast from 'react-hot-toast';
 
-const DateTime = ({getTime, time}) => {
+const DateTime = ({ getTime, time }) => {
 
      const [fromDate, setFromDate] = useState(time?.fromDate);
      const [fromTime, setFromTime] = useState(time?.fromTime);
@@ -27,6 +28,15 @@ const DateTime = ({getTime, time}) => {
           setUntilDate(untilDate);
           const untilTime = e.format('HH:mm');
           setUntilTime(untilTime);
+          const fromDateTime = moment(`${fromDate} ${fromTime}`, "YYYY-MM-DD HH:mm");
+          const toDateTime = moment(`${untilDate} ${untilTime}`, "YYYY-MM-DD HH:mm");
+          const diff = toDateTime.diff(fromDateTime, 'hours');
+
+          if (diff < 10) {
+               toast.error("You have to select at least 10 hours");
+               e.reset();
+               return;
+          }
           submit();
      }
 
@@ -44,12 +54,12 @@ const DateTime = ({getTime, time}) => {
           <div className='mt-2 md:mt-0 flex flex-col md:flex-row gap-3 md:items-center'>
                <LocalizationProvider dateAdapter={AdapterMoment}>
                     <DemoContainer components={['DateTimePicker']}>
-                         <DateTimePicker label="From" name='fromDate&Time' onChange={getFromDateAndTime} minDate={currentTime} maxDate={moment(currentTime.clone().add(3, "months"))} defaultValue={time && moment(FromDate)} slotProps={{ textField: { size: 'small', required:true }}}/>
+                         <DateTimePicker label="From" name='fromDate&Time' onChange={getFromDateAndTime} minDate={currentTime} maxDate={moment(currentTime.clone().add(3, "months"))} defaultValue={time && moment(FromDate)} slotProps={{ textField: { size: 'small', required: true } }} />
                     </DemoContainer>
                </LocalizationProvider>
                <LocalizationProvider dateAdapter={AdapterMoment}>
                     <DemoContainer components={['DateTimePicker']} >
-                         <DateTimePicker label="Until" name='untilDate&Time' onChange={getUntilDateAndTime} minDate={currentTime} maxDate={moment(currentTime.clone().add(3, "months"))} defaultValue={time && moment(UntilDate)} slotProps={{ textField: { size: 'small', required:true }}}/>
+                         <DateTimePicker label="Until" name='untilDate&Time' onChange={getUntilDateAndTime} minDate={currentTime} maxDate={moment(currentTime.clone().add(3, "months"))} defaultValue={time && moment(UntilDate)} slotProps={{ textField: { size: 'small', required: true } }} />
                     </DemoContainer>
                </LocalizationProvider>
           </div>
@@ -57,8 +67,8 @@ const DateTime = ({getTime, time}) => {
 };
 
 DateTime.propTypes = {
-    getTime: PropTypes.func,
-    time: PropTypes.object,
+     getTime: PropTypes.func,
+     time: PropTypes.object,
 }
 
 export default DateTime;

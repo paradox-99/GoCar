@@ -1,18 +1,10 @@
-import { useQuery } from "@tanstack/react-query";
-import useAxiosPublic from "../../hooks/useAxiosPublic";
-import { styled } from '@mui/material/styles';
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableCell, { tableCellClasses } from '@mui/material/TableCell';
-import TableContainer from '@mui/material/TableContainer';
-import TableHead from '@mui/material/TableHead';
-import TableRow from '@mui/material/TableRow';
-import Paper from '@mui/material/Paper';
-import { useState } from "react";
-import { useTheme } from '@emotion/react';
+import useAxiosPublic from '../../hooks/useAxiosPublic';
+import { useQuery } from '@tanstack/react-query';
 import PropTypes from 'prop-types';
-import { FirstPage, KeyboardArrowLeft, KeyboardArrowRight, LastPage } from "@mui/icons-material";
-import { Box, IconButton, TableFooter, TablePagination } from "@mui/material";
+import { FirstPage, KeyboardArrowLeft, KeyboardArrowRight, LastPage } from '@mui/icons-material';
+import { Box, IconButton, Paper, styled, Table, TableBody, TableCell, tableCellClasses, TableContainer, TableFooter, TableHead, TablePagination, TableRow } from '@mui/material';
+import { useTheme } from '@emotion/react';
+import { useState } from 'react';
 
 function TablePaginationActions(props) {
      const theme = useTheme();
@@ -75,21 +67,20 @@ TablePaginationActions.propTypes = {
      rowsPerPage: PropTypes.number.isRequired,
 };
 
-const Guardians = () => {
+const Bookings = () => {
 
-     const axiosPublic = useAxiosPublic();
-
+     const axiosPublic = useAxiosPublic()
 
      const { data } = useQuery({
-          queryKey: ['guardians'],
+          queryKey: ['bookings'],
           queryFn: async () => {
-               const response = await axiosPublic.get(`/guardianRoutes/guardians`);
+               const response = await axiosPublic.get(`agencyRoutes/getAllBookings`);
                return response.data;
-          },
+               },
      })
 
      const [page, setPage] = useState(0);
-     const [rowsPerPage, setRowsPerPage] = useState(5);
+     const [rowsPerPage, setRowsPerPage] = useState(8);
 
      // Avoid a layout jump when reaching the last page with empty rows.
      const emptyRows =
@@ -118,19 +109,21 @@ const Guardians = () => {
 
      return (
           <div>
-               <h1 className="text-4xl text-center mt-12 font-semibold">Guardians Information</h1>
-               <div className="mt-14">
+               <h1 className="text-4xl text-center mt-8 font-semibold">Booking Information&rsquo;s</h1>
+               <div className="mt-10 pb-10">
                     {data ?
                          <TableContainer component={Paper}>
                               <Table sx={{ minWidth: 500 }} aria-label="custom pagination table">
                                    <TableHead>
                                         <TableRow>
-                                             <StyledTableCell >Name</StyledTableCell>
+                                             <StyledTableCell >User Name</StyledTableCell>
                                              <StyledTableCell >Email</StyledTableCell>
-                                             <StyledTableCell >Contact</StyledTableCell>
-                                             <StyledTableCell >Permanent Address</StyledTableCell>
-                                             <StyledTableCell >EM Contact</StyledTableCell>
-                                             <StyledTableCell >EM Relationship</StyledTableCell>
+                                             <StyledTableCell >Vehicle</StyledTableCell>
+                                             <StyledTableCell >Agency</StyledTableCell>
+                                             <StyledTableCell >From</StyledTableCell>
+                                             <StyledTableCell >To</StyledTableCell>
+                                             <StyledTableCell >Price</StyledTableCell>
+                                             <StyledTableCell >Total Hours</StyledTableCell>
                                         </TableRow>
                                    </TableHead>
                                    <TableBody>
@@ -138,25 +131,15 @@ const Guardians = () => {
                                              ? data.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                                              : data
                                         ).map((row) => (
-                                             <TableRow key={row.name}>
-                                                  <StyledTableCell component="th" scope="row">
-                                                       {row.name}
-                                                  </StyledTableCell>
-                                                  <StyledTableCell style={{ width: 160 }}>
-                                                       {row.email}
-                                                  </StyledTableCell>
-                                                  <StyledTableCell style={{ width: 160 }}>
-                                                       {row.phone}
-                                                  </StyledTableCell>
-                                                  <StyledTableCell style={{ width: 160 }}>
-                                                       {row.present_address}
-                                                  </StyledTableCell>
-                                                  <StyledTableCell style={{ width: 160 }}>
-                                                       {row.em_phone}
-                                                  </StyledTableCell>
-                                                  <StyledTableCell style={{ width: 160 }}>
-                                                       {row.em_relationship}
-                                                  </StyledTableCell>
+                                             <TableRow key={row.donor_id}>
+                                                  <StyledTableCell>{row.name}</StyledTableCell>
+                                                  <StyledTableCell>{row.email}</StyledTableCell>
+                                                  <StyledTableCell>{row.brand} {row.model}</StyledTableCell>
+                                                  <StyledTableCell>{row.agency_Name}</StyledTableCell>
+                                                  <StyledTableCell>{row.pickup_date.split('T')[0]}</StyledTableCell>
+                                                  <StyledTableCell>{row.dropoff_date.split('T')[0]}</StyledTableCell>
+                                                  <StyledTableCell>{row.total_cost}</StyledTableCell>
+                                                  <StyledTableCell>{row.total_rent_hours}</StyledTableCell>
                                              </TableRow>
                                         ))}
                                         {emptyRows > 0 && (
@@ -168,7 +151,7 @@ const Guardians = () => {
                                    <TableFooter>
                                         <TableRow>
                                              <TablePagination
-                                                  rowsPerPageOptions={[5, 10, 25, { label: 'All', value: -1 }]}
+                                                  rowsPerPageOptions={[8]}
                                                   colSpan={3}
                                                   count={data?.length}
                                                   rowsPerPage={rowsPerPage}
@@ -196,4 +179,4 @@ const Guardians = () => {
      );
 };
 
-export default Guardians;
+export default Bookings;

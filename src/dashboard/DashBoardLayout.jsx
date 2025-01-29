@@ -7,20 +7,23 @@ import { FaUsersGear } from "react-icons/fa6";
 import { BiSolidCoupon } from "react-icons/bi";
 import { TbLayoutDashboardFilled } from "react-icons/tb";
 import { CgProfile } from "react-icons/cg";
-import { FaHome, FaUser } from "react-icons/fa";
+import { FaHome, FaUser, FaUsers } from "react-icons/fa";
 import { Outlet } from 'react-router-dom';
 import { HiMenu } from "react-icons/hi";
-import { IoNotifications } from "react-icons/io5";
 import useRole from '../hooks/useRole';
 import { FaListAlt } from "react-icons/fa";
 import { FaCartShopping } from "react-icons/fa6";
-import { MdRateReview } from "react-icons/md";
+import { IoCarSport } from "react-icons/io5";
+import addCar from "../assets/icons/add_car.png";
+import { FaRegCalendarCheck } from "react-icons/fa";
+import { LuCalendarClock } from "react-icons/lu";
+import { BsShop } from "react-icons/bs";
+import { HiCurrencyBangladeshi } from "react-icons/hi";
 
 const DashBoardLayout = () => {
 
      const { logOut } = useAuth();
      const [open, setOpen] = useState(false);
-     const [selectedIndex, setSelectedIndex] = useState();
      const data = useRole();
      const designation = data?.userRole;
 
@@ -28,9 +31,6 @@ const DashBoardLayout = () => {
           setOpen(newOpen);
      };
 
-     const handleListItemClick = (event, index) => {
-          setSelectedIndex(index);
-     };
      const ListNav = styled(ListItemButton)({
           '& .Mui-selected': {
 
@@ -41,68 +41,53 @@ const DashBoardLayout = () => {
      const userRoutes = (
           <List component="nav" aria-label="main mailbox folders">
                <ListItem disablePadding>
-                    <ListNav href="/dashboard"
-                         style={{
-                              backgroundColor: selectedIndex === 0 && '#ffffff66'
-                         }}
-                         onClick={(event) => handleListItemClick(event, 0)} >
-                         <ListItemIcon style={{ fontSize: 25 }}>
+                    <ListNav href="/dashboard" >
+                         <ListItemIcon style={{ fontSize: 20 }}>
                               <TbLayoutDashboardFilled color='white' />
                          </ListItemIcon>
                          <ListItemText primary="Dashboard" />
                     </ListNav>
                </ListItem>
                <ListItem disablePadding>
-                    <ListNav href="/dashboard/myprofile"
-                         style={{
-                              backgroundColor: selectedIndex === 1 && '#ffffff66'
-                         }}
-                         onClick={(event) => handleListItemClick(event, 1)}>
-                         <ListItemIcon style={{ fontSize: 25 }}>
+                    <ListNav href="/dashboard/myprofile">
+                         <ListItemIcon style={{ fontSize: 20 }}>
                               <FaUser color='white' />
                          </ListItemIcon>
                          <ListItemText primary="My Profile" />
                     </ListNav>
                </ListItem>
                <ListItem disablePadding>
-                    <ListItemButton href="/dashboard/userProfile"
-                         style={{
-                              backgroundColor: selectedIndex === 2 && '#ffffff66'
-                         }}
-                         onClick={(event) => handleListItemClick(event, 2)}>
-                         <ListItemIcon style={{ fontSize: 25 }}>
+                    <ListItemButton href="/dashboard/user/bookings">
+                         <ListItemIcon style={{ fontSize: 20 }}>
                               <FaListAlt color='white' />
                          </ListItemIcon>
                          <ListItemText primary="Bookings" />
                     </ListItemButton>
                </ListItem>
-               <ListItem disablePadding>
-                    <ListItemButton href="/dashboard/addProducts" selected={selectedIndex === 3}
-                         onClick={(event) => handleListItemClick(event, 3)}>
-                         <ListItemIcon style={{ fontSize: 25 }}>
+               {/* <ListItem disablePadding>
+                    <ListItemButton href="/dashboard/addProducts">
+                         <ListItemIcon style={{ fontSize: 20 }}>
                               <MdRateReview className='text-white' />
                          </ListItemIcon>
                          <ListItemText primary="Reviews" />
                     </ListItemButton>
-               </ListItem>
+               </ListItem> */}
                <ListItem disablePadding>
-                    <ListItemButton href="/dashboard/myProducts" selected={selectedIndex === 4}
-                         onClick={(event) => handleListItemClick(event, 4)}>
-                         <ListItemIcon style={{ fontSize: 25 }}>
+                    <ListItemButton href="/dashboard/my-cart">
+                         <ListItemIcon style={{ fontSize: 20 }}>
                               <FaCartShopping className='text-white' />
                          </ListItemIcon>
-                         <ListItemText primary="Cart" />
+                         <ListItemText primary="Favourite List" />
                     </ListItemButton>
                </ListItem>
-               <ListItem disablePadding>
-                    <ListItemButton href="/dashboard/myProducts" selected={selectedIndex === 6}
-                         onClick={(event) => handleListItemClick(event, 6)}>
-                         <ListItemIcon style={{ fontSize: 25 }}>
+               {/* <ListItem disablePadding>
+                    <ListItemButton href="/dashboard/myProducts">
+                         <ListItemIcon style={{ fontSize: 20 }}>
                               <IoNotifications className='text-white' />
                          </ListItemIcon>
                          <ListItemText primary="Notifications" />
                     </ListItemButton>
-               </ListItem>
+               </ListItem> */}
           </List>
      );
 
@@ -110,58 +95,50 @@ const DashBoardLayout = () => {
           <List component="nav" aria-label="main mailbox folders">
                <ListItem disablePadding>
                     <ListItemButton href="/dashboard/admin" >
-                         <ListItemIcon style={{ fontSize: 25 }}>
-                              <TbLayoutDashboardFilled />
+                         <ListItemIcon style={{ fontSize: 20 }}>
+                              <TbLayoutDashboardFilled className='text-white'/>
                          </ListItemIcon>
                          <ListItemText primary="Dashboard" />
                     </ListItemButton>
                </ListItem>
                <ListItem disablePadding>
-                    <ListItemButton href="/dashboard/manageUsers">
-                         <ListItemIcon style={{ fontSize: 25 }}>
-                              <FaUsersGear />
+                    <ListItemButton href="/dashboard/admin-profile">
+                         <ListItemIcon style={{ fontSize: 20 }}>
+                              <FaUser color='white' />
                          </ListItemIcon>
                          <ListItemText primary="Profile" />
                     </ListItemButton>
                </ListItem>
                <ListItem disablePadding>
-                    <ListItemButton href="/dashboard/guardians">
-                         <ListItemIcon style={{ fontSize: 25 }}>
-                              <BiSolidCoupon />
+                    <ListItemButton href="/dashboard/admin/users">
+                         <ListItemIcon style={{ fontSize: 20 }}>
+                         <FaUsers className='text-white' />
                          </ListItemIcon>
                          <ListItemText primary="Users" />
                     </ListItemButton>
                </ListItem>
                <ListItem disablePadding>
-                    <ListItemButton href="/dashboard/manageCoupons">
-                         <ListItemIcon style={{ fontSize: 25 }}>
-                              <BiSolidCoupon />
+                    <ListItemButton href="/dashboard/admin/vehicles">
+                         <ListItemIcon style={{ fontSize: 20 }}>
+                         <IoCarSport className='text-white' />
                          </ListItemIcon>
-                         <ListItemText primary="Residents" />
+                         <ListItemText primary="Vehicles" />
                     </ListItemButton>
                </ListItem>
                <ListItem disablePadding>
-                    <ListItemButton href="/dashboard/manageCoupons">
-                         <ListItemIcon style={{ fontSize: 25 }}>
-                              <BiSolidCoupon />
+                    <ListItemButton href="/dashboard/admin/bookings">
+                         <ListItemIcon style={{ fontSize: 20 }}>
+                              <LuCalendarClock className='text-white' />
                          </ListItemIcon>
-                         <ListItemText primary="Circumstances" />
+                         <ListItemText primary="Bookings" />
                     </ListItemButton>
                </ListItem>
                <ListItem disablePadding>
-                    <ListItemButton href="/dashboard/manageCoupons">
-                         <ListItemIcon style={{ fontSize: 25 }}>
-                              <BiSolidCoupon />
+                    <ListItemButton href="/dashboard/admin/payment-history">
+                         <ListItemIcon style={{ fontSize: 20 }}>
+                              <HiCurrencyBangladeshi className='text-white' />
                          </ListItemIcon>
-                         <ListItemText primary="Report Circumstance" />
-                    </ListItemButton>
-               </ListItem>
-               <ListItem disablePadding>
-                    <ListItemButton href="/dashboard/manageCoupons">
-                         <ListItemIcon style={{ fontSize: 25 }}>
-                              <BiSolidCoupon />
-                         </ListItemIcon>
-                         <ListItemText primary="Packages" />
+                         <ListItemText primary="Payment History" />
                     </ListItemButton>
                </ListItem>
           </List>
@@ -170,62 +147,69 @@ const DashBoardLayout = () => {
      const agencyRoutes = (
           <List component="nav" aria-label="main mailbox folders">
                <ListItem disablePadding>
-                    <ListItemButton href="/dashboard/admin">
-                         <ListItemIcon style={{ fontSize: 25 }}>
-                              <TbLayoutDashboardFilled />
+                    <ListItemButton href="/dashboard/agency">
+                         <ListItemIcon style={{ fontSize: 20 }}>
+                              <TbLayoutDashboardFilled className='text-white' />
                          </ListItemIcon>
                          <ListItemText primary="Dashboard" />
                     </ListItemButton>
                </ListItem>
                <ListItem disablePadding>
-                    <ListItemButton href="/dashboard/agency-profile">
-                         <ListItemIcon style={{ fontSize: 25 }}>
-                              <FaUsersGear />
+                    <ListItemButton href="/dashboard/agency/owner-profile">
+                         <ListItemIcon style={{ fontSize: 20 }}>
+                              <FaUser className='text-white w-5' />
                          </ListItemIcon>
-                         <ListItemText primary="Profile" />
+                         <ListItemText primary="Owner Profile" />
+                    </ListItemButton>
+               </ListItem>
+               <ListItem disablePadding>
+                    <ListItemButton href="/dashboard/agency/agency-profile">
+                         <ListItemIcon style={{ fontSize: 20 }}>
+                         <BsShop className='text-white'/>
+                         </ListItemIcon>
+                         <ListItemText primary="Agency Profile" />
                     </ListItemButton>
                </ListItem>
                <ListItem disablePadding>
                     <ListItemButton href="/dashboard/agency/cars" >
-                         <ListItemIcon style={{ fontSize: 25 }}>
-                              <BiSolidCoupon />
+                         <ListItemIcon style={{ fontSize: 20 }}>
+                              <IoCarSport className='text-white' />
                          </ListItemIcon>
-                         <ListItemText primary="Cars" />
+                         <ListItemText primary="Vehicles" />
                     </ListItemButton>
                </ListItem>
                <ListItem disablePadding>
-                    <ListItemButton href="/dashboard/">
-                         <ListItemIcon style={{ fontSize: 25 }}>
-                              <BiSolidCoupon />
+                    <ListItemButton href="/dashboard/agency/add-cars">
+                         <ListItemIcon style={{ fontSize: 20 }}>
+                              <img src={addCar} alt="" className='w-6'/>
                          </ListItemIcon>
-                         <ListItemText primary="Add Car" />
+                         <ListItemText primary="Add Vehicle" />
                     </ListItemButton>
                </ListItem>
                <ListItem disablePadding>
-                    <ListItemButton href="/dashboard/manageCoupons">
-                         <ListItemIcon style={{ fontSize: 25 }}>
-                              <BiSolidCoupon />
+                    <ListItemButton href="/dashboard/agency/active-bookings">
+                         <ListItemIcon style={{ fontSize: 20 }}>
+                              <FaRegCalendarCheck className='text-white'/>
                          </ListItemIcon>
                          <ListItemText primary="Active Booking" />
                     </ListItemButton>
                </ListItem>
-               <ListItem disablePadding>
+               {/* <ListItem disablePadding>
                     <ListItemButton href="/dashboard/manageCoupons">
-                         <ListItemIcon style={{ fontSize: 25 }}>
-                              <BiSolidCoupon />
+                         <ListItemIcon style={{ fontSize: 20 }}>
+                              <LuCalendarClock className='text-white' />
                          </ListItemIcon>
                          <ListItemText primary="Booking History" />
                     </ListItemButton>
-               </ListItem>
-               <ListItem disablePadding>
-                    <ListItemButton href="/dashboard/manageCoupons" selected={selectedIndex === 13}
-                         onClick={(event) => handleListItemClick(event, 13)}>
-                         <ListItemIcon style={{ fontSize: 25 }}>
-                              <BiSolidCoupon />
+               </ListItem> */}
+               {/* <ListItem disablePadding>
+                    <ListItemButton href="/dashboard/manageCoupons">
+                         <ListItemIcon style={{ fontSize: 20 }}>
+                              <HiCurrencyBangladeshi className='text-white'/>
                          </ListItemIcon>
-                         <ListItemText primary="Packages" />
+                         <ListItemText primary="Transactions" />
                     </ListItemButton>
-               </ListItem>
+               </ListItem> */}
           </List>
      )
 
@@ -242,7 +226,7 @@ const DashBoardLayout = () => {
                          {designation === 'user' && <>
                               <ListItem disablePadding>
                                    <ListItemButton href="/dashboard/userProfile">
-                                        <ListItemIcon style={{ fontSize: 25 }}>
+                                        <ListItemIcon style={{ fontSize: 20 }}>
                                              <CgProfile />
                                         </ListItemIcon>
                                         <ListItemText primary="My Profile" />
@@ -250,7 +234,7 @@ const DashBoardLayout = () => {
                               </ListItem>
                               <ListItem disablePadding>
                                    <ListItemButton href="/dashboard/addProducts">
-                                        <ListItemIcon style={{ fontSize: 25 }}>
+                                        <ListItemIcon style={{ fontSize: 20 }}>
                                              <Add />
                                         </ListItemIcon>
                                         <ListItemText primary="Add Products" />
@@ -258,7 +242,7 @@ const DashBoardLayout = () => {
                               </ListItem>
                               <ListItem disablePadding>
                                    <ListItemButton href="/dashboard/myProducts">
-                                        <ListItemIcon style={{ fontSize: 25 }}>
+                                        <ListItemIcon style={{ fontSize: 20 }}>
                                              <SiBmcsoftware />
                                         </ListItemIcon>
                                         <ListItemText primary="My Products" />
@@ -268,7 +252,7 @@ const DashBoardLayout = () => {
                          {designation === 'moderator' && <>
                               <ListItem disablePadding>
                                    <ListItemButton href="/dashboard/productsReview">
-                                        <ListItemIcon style={{ fontSize: 25 }}>
+                                        <ListItemIcon style={{ fontSize: 20 }}>
                                              <ReviewsOutlined />
                                         </ListItemIcon>
                                         <ListItemText primary="Review Products" />
@@ -276,7 +260,7 @@ const DashBoardLayout = () => {
                               </ListItem>
                               <ListItem disablePadding>
                                    <ListItemButton href="/dashboard/reportedContents">
-                                        <ListItemIcon style={{ fontSize: 25 }}>
+                                        <ListItemIcon style={{ fontSize: 20 }}>
                                              <ReportOutlined />
                                         </ListItemIcon>
                                         <ListItemText primary="Reported Products" />
@@ -286,7 +270,7 @@ const DashBoardLayout = () => {
                          {designation === 'admin' && <>
                               <ListItem disablePadding>
                                    <ListItemButton href="/dashboard/adminDashboard">
-                                        <ListItemIcon style={{ fontSize: 25 }}>
+                                        <ListItemIcon style={{ fontSize: 20 }}>
                                              <TbLayoutDashboardFilled />
                                         </ListItemIcon>
                                         <ListItemText primary="Dashboard" />
@@ -294,7 +278,7 @@ const DashBoardLayout = () => {
                               </ListItem>
                               <ListItem disablePadding>
                                    <ListItemButton href="/dashboard/manageUsers">
-                                        <ListItemIcon style={{ fontSize: 25 }}>
+                                        <ListItemIcon style={{ fontSize: 20 }}>
                                              <FaUsersGear />
                                         </ListItemIcon>
                                         <ListItemText primary="Manage Users" />
@@ -302,7 +286,7 @@ const DashBoardLayout = () => {
                               </ListItem>
                               <ListItem disablePadding>
                                    <ListItemButton href="/dashboard/manageCoupons">
-                                        <ListItemIcon style={{ fontSize: 25 }}>
+                                        <ListItemIcon style={{ fontSize: 20 }}>
                                              <BiSolidCoupon />
                                         </ListItemIcon>
                                         <ListItemText primary="Manage Coupons" />
@@ -348,8 +332,8 @@ const DashBoardLayout = () => {
      )
 
      return (
-          <div className="flex">
-               <div className="w-72 bg-[#313131] lg:flex flex-col gap-10 hidden max-h-screen">
+          <div className="flex relative">
+               <div className="w-[17%] fixed inset-y-0 left-0 z-40 bg-[#313131] lg:flex flex-col gap-10 hidden max-h-screen">
                     <Box sx={{ width: '100%', maxWidth: 360, bgcolor: '#313131', color: 'white' }}>
                          <div className="flex justify-center flex-col items-center my-6">
                               <figure>
@@ -390,7 +374,7 @@ const DashBoardLayout = () => {
                          {DrawerList}
                     </Drawer>
                </div>
-               <div className="w-full h-screen px-10">
+               <div className="w-[83%] absolute right-0 h-screen px-2">
                     <Outlet></Outlet>
                </div>
           </div>

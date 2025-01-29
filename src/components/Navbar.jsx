@@ -30,13 +30,13 @@ const userDropdown = [
 const adminDropDown = [
     { title: 'Profile', url: '/dashboard/admin-profile' },
     { title: 'Dashboard', url: '/dashboard/admin' },
-    { title: 'Notifications', url: '/dashboard/notificationsAdmin' },
+    // { title: 'Notifications', url: '/dashboard/notificationsAdmin' },
 ]
 
 const agencyDropDown = [
     { title: 'Profile', url: '/dashboard/agency-profile' },
     { title: 'Dashboard', url: '/dashboard/agency' },
-    { title: 'Notifications', url: '/dashboard/notificationsAgency' }
+    // { title: 'Notifications', url: '/dashboard/notificationsAgency' }
 ]
 
 const driverDropDown = [
@@ -55,7 +55,7 @@ const Navbar = () => {
     const [anchorElUser, setAnchorElUser] = React.useState(null);
     const data = useRole();
     let dashboard = [''];
-
+    
     const handleOpenNavMenu = (event) => {
         setAnchorElNav(event.currentTarget);
     };
@@ -214,7 +214,7 @@ const Navbar = () => {
                                 mr: { md: 3 },
                                 ml: { md: 3 }
                             }}>
-                                <IconButton>
+                                <IconButton href='/search'>
                                     <LuSearch />
                                 </IconButton>
                             </Box>

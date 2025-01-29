@@ -19,6 +19,7 @@ const Address = ({ getAddress }) => {
         }
         getAddress(address);
     }
+    
 
     return (
         <div className='mt-4 md:mt-2 flex flex-col md:flex-row gap-3 w-full'>
@@ -29,7 +30,6 @@ const Address = ({ getAddress }) => {
                     setDistrictValue(newValue?.label);
                     setUpazillasValue('');
                 }}
-                // value={districtValue}
                 fullWidth
                 renderInput={(params) => <TextField {...params} label="District" size='small'  sx={{minWidth: "200px"}} required/>}
             />
@@ -55,7 +55,6 @@ const Address = ({ getAddress }) => {
                     }
                     setAddress(newValue?.label, '')
                 }}
-                // value={upazillasValue}
                 disabled={!districtValue}
                 fullWidth
                 sx={{minWidth: "200px"}}
@@ -71,7 +70,6 @@ const Address = ({ getAddress }) => {
                         setAddress(upazillasValue, newValue || '')
 
                     }}
-                    // value={areaValue}
                     fullWidth
                     sx={{minWidth: "200px"}}
                     renderInput={(params) => <TextField {...params} label="Area" size='small' />}
@@ -83,6 +81,7 @@ const Address = ({ getAddress }) => {
 
 Address.propTypes = {
     getAddress: PropTypes.func,
+    location: PropTypes.object,
 }
 
 export default Address;

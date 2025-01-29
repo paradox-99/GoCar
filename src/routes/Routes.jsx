@@ -9,13 +9,22 @@ import AllBrands from "../pages/all_brands/AllBrands";
 import BrandPage from "../components/BrandPage";
 import { DashboardRoutes } from "./DashboardRoutes";
 import Agencies from "../pages/agency/Agencies";
-import CarTypes from "../pages/home/CarTypes";
 import CarTypePage from "../components/CarTypePage";
+import DriverSignUp from "../pages/sign_up/driver_signup/DriverSignUp";
+import AgencySignUp from "../pages/sign_up/agency_sign_up/AgencySignUp";
+import ViewAgencyDetails from "../pages/agency/ViewAgencyDetails";
+import Filter from "../pages/search/Filter";
+import ViewDetails from "../components/ViewDetails";
+import Booking from "../pages/booking/Booking";
+import PaymentSuccess from "../components/payment/PaymentSuccess";
+import PaymentFail from "../components/payment/PaymentFail";
+import ErrorPage from "../ErrorPage";
 
 const router = createBrowserRouter([
     {
         path: "/",
         element: <Root></Root>,
+        errorElement: <ErrorPage/>,
         children: [
             {
                 path: "/",
@@ -35,7 +44,15 @@ const router = createBrowserRouter([
             },
             {
                 path: "/sign-up/user-info",
-                element: <Signup_part2/>
+                element: <Signup_part2 />
+            },
+            {
+                path: "/sign-up/agency",
+                element: <AgencySignUp />
+            },
+            {
+                path: "/sign-up/driver",
+                element: <DriverSignUp />
             },
             {
                 path: '/view-all-brands',
@@ -48,7 +65,35 @@ const router = createBrowserRouter([
             {
                 path: '/carType/:type',
                 element: <CarTypePage/>
-            }
+            },
+            {
+                path: '/agency/:id',
+                element: <ViewAgencyDetails/>
+            },
+            {
+                path: '/search/queries',
+                element:<SearchPage/>
+            },
+            {
+                path: '/search',
+                element: <Filter></Filter>
+            },
+            {
+                path: '/details/:name',
+                element: <ViewDetails/>
+            },
+            {
+                path: '/booking-info',
+                element: <Booking/>
+            },
+            {
+                path: "/payment/successful/:tran_id",
+                element: <PaymentSuccess />,
+            },
+            {
+                path: "/payment/failed",
+                element: <PaymentFail />
+            },
         ]
     },
     ...DashboardRoutes

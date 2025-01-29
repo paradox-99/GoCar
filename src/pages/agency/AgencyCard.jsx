@@ -1,68 +1,21 @@
-import { Box, CardContent, CardMedia, Typography } from "@mui/material";
 import PropTypes from "prop-types";
+import { useNavigate } from "react-router-dom";
 
 const AgencyCard = ({ agency }) => {
 
-     const { agency_id, agency_Name, image, total_vehicles, agency_email} = agency
+     const { agency_id, agency_Name, image, total_vehicles, area } = agency
+     const navigate = useNavigate();
 
      return (
-          <div className='flex  border rounded-xl lg:w-[35%] mx-auto shadow-xl px-5 py-2 items-center justify-between hover:scale-102 duration-500 cursor-pointer border-primary'
-               // onClick={() => gotoDetails(agency.agency_id)}
-               >
-               <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-
-                    <CardContent sx={{ flex: '1 0 auto' }}>
-
-                         <Typography component="div" variant="p">
-                              Agency Name: {agency_Name}
-                         </Typography>
-                         <Typography
-                              variant="subtitle1"
-                              component="div"
-                              sx={{ color: 'text.secondary' }}
-                         >
-                         </Typography>
-                    </CardContent>
-
-                    <CardContent sx={{ flex: '1 0 auto' }}>
-
-                         <Typography component="div" variant="p">
-                              Agency Id: {agency_id}
-                         </Typography>
-                         <Typography
-                              variant="subtitle1"
-                              component="div"
-                              sx={{ color: 'text.secondary' }}
-                         >
-                         </Typography>
-                    </CardContent>
-
-                    <CardContent sx={{ flex: '1 0 auto' }}>
-
-                         <Typography component="div" variant="p">
-                              No of Vehicle: {total_vehicles}
-                         </Typography>
-                         <Typography
-                              variant="subtitle1"
-                              component="div"
-                              sx={{ color: 'text.secondary' }}
-                         >
-                         </Typography>
-                    </CardContent>
-
-                    <Box sx={{ display: 'flex', alignItems: 'center', pl: 1, pb: 1 }}>
-
-                    </Box>
-               </Box>
-               <div className='h-36 w-36 rounded-full overflow-hidden border border-primary'>
-                    <CardMedia
-                         component="img"
-                         sx={{ width: 151 }}
-                         image={image}
-                         alt="Live from space album cover"
-
-                    />
+          <div className='flex border rounded-xl lg:w-[35%] shadow-xl px-5 py-2 justify-between cursor-pointer'
+          onClick={() => navigate(`/agency/${agency_id}`)}
+          >
+               <div className="flex flex-col gap-2">
+                    <p><span className="font-bold text-lg">Agency Name:</span> {agency_Name}</p>
+                    <p><span className="font-bold text-lg">Address: </span>{area}</p>
+                    <p><span className="font-bold text-lg">Vehicle: </span>{total_vehicles}</p>
                </div>
+                    <img src={image} alt="" className="w-28 h-28 rounded-full"/>
           </div>
      );
 };

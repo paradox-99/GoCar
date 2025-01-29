@@ -315,7 +315,9 @@ export const carBrands = [
     { label: "Hyundai" },
     { label: "Honda" },
     { label: "Suzuki" },
-    { label: "Mazda" }
+    { label: "Tata" },
+    { label: "Kia" },
+    { label: "Volkswagen" }
 ];
 
 export const top_brands = [
@@ -397,4 +399,11 @@ export const top_car_types = [
         name: "Minivan",
         image: minivan
     }
+]
+
+export const car_types = [
+    { label: "Sedan" },
+    { label: "Hatchback" },
+    { label: "Van" },
+    { label: "Minivan" }
 ]

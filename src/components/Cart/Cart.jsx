@@ -3,18 +3,17 @@ import { BsFuelPumpFill } from "react-icons/bs";
 import { FaCarSide } from "react-icons/fa";
 import { PiSeatFill } from "react-icons/pi";
 import { TbManualGearboxFilled } from "react-icons/tb";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
-const Cart = ({ car }) => {
+const Cart = ({ car, carBookingInfo }) => {
 
-     const handleNext = () => {
-
-     }
+     console.log(carBookingInfo);
+     
 
      return (
           <div className="max-w-80 p-5 rounded-lg border-2 border-[#F9F9F9] shadow-lg">
                <figure className="h-44">
-                    <img src={car?.photo} alt="photo" className="rounded-lg h-full w-full" />
+                    <img src={car?.photo} alt="photo" className="rounded-lg h-[176px] w-[276px]" />
                </figure>
                <div className="pt-5 flex justify-between items-center pb-3">
                     <h2 className="text-2xl font-bold">{car?.brand} {car?.model}</h2>
@@ -58,9 +57,9 @@ const Cart = ({ car }) => {
                          </h2>
                     </div>
                     <div>
-                         <button onClick={handleNext} className="bg-primary hover:bg-transparent hover:border-2 border-primary hover:text-primary duration-500 active:scale-75 shadow-inner shadow-secondary border-2 px-3 py-2 text-white rounded-lg font-semibold">
+                         <Link to={`/details/${car.brand}_${car.model}`} state={{car, carBookingInfo}} className="bg-primary hover:bg-transparent hover:border-2 border-primary hover:text-primary duration-500 active:scale-75 shadow-inner shadow-secondary border-2 px-3 py-2 text-white rounded-lg font-semibold">
                               Details
-                         </button>
+                         </Link>
                     </div>
                </div>
           </div>
@@ -68,7 +67,8 @@ const Cart = ({ car }) => {
 };
 
 Cart.propTypes = {
-     car: PropTypes.object.isRequired
+     car: PropTypes.object.isRequired,
+     carBookingInfo: PropTypes.object.isRequired,
 }
 
 export default Cart;
