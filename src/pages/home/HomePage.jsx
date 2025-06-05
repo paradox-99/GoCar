@@ -3,6 +3,9 @@ import Banner from "./Banner";
 import TopBrands from "./TopBrands";
 import CarTypes from "./CarTypes";
 import Benefit from "./Benefit";
+import HowItWorks from "./HowItWorks";
+import WhyChooseUs from "./WhyChooseUs";
+import Testimonial from "./Testimonial";
 
 const HomePage = () => {
     return (
@@ -15,6 +18,9 @@ const HomePage = () => {
                 <Benefit></Benefit>
                 <TopBrands></TopBrands>
                 <CarTypes></CarTypes>
+                <HowItWorks></HowItWorks>
+                <WhyChooseUs></WhyChooseUs>
+                <Testimonial></Testimonial>
             </div>
         </div>
     );

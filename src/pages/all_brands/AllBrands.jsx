@@ -1,10 +1,12 @@
+import { useNavigate } from "react-router-dom";
 import { all_brands } from "../../components/address/locationData";
-import { Button } from "@mui/material";
 
 const AllBrands = () => {
 
+     const navigate = useNavigate();
+
      const handleBrand = brand_name => {
-          // navigate(`/brand/${brand_name}`)
+          navigate(`/brand/${brand_name}`)
      }
 
      return (

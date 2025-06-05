@@ -10,7 +10,7 @@ INSERT INTO users (
 -- User 4
 ('USER-1734755975710', 'Nusrat Jahan', 'nusrat.jahan@gmail.com', '01945678901', 'Female', '4234567890123456', '1992-11-22', 'images/nusrat.jpg', 'user', TRUE, 'Active', NULL, NULL, NULL, 'Add-1734757354678'),
 -- User 5
-('USER-1734755975481', 'Ashraful Alam', 'ashraful.alam@yahoo.com', '01856789012', 'Male', '5234567890123456', '1985-04-19', 'images/ashraful.jpg', 'user', FALSE, 'Suspended', 'DL987654321', '2024-12-01', 8, 'Add-1734757354419'),
+('USER-1734755975481', 'Ashraful Alam', 'ashraful.alam@yahoo.com', '01856789012', 'Male', '5234567890122456', '1985-04-19', 'images/ashraful.jpg', 'user', FALSE, 'Suspended', 'DL987654321', '2024-12-01', 8, 'Add-1734757354419'),
 -- User 6
 ('USER-1734755975601', 'Taslima Begum', 'taslima.begum@gmail.com', '01567890123', 'Female', '6234567890123456', '1998-08-05', 'images/taslima.jpg', 'user', TRUE, 'Active', NULL, NULL, NULL, 'Add-1734757354246'),
 -- User 7
@@ -71,7 +71,7 @@ INSERT INTO users (
 -- User 6
 ('USER-1734783251120', 'Nazia Rahman', 'nazia.rahman@yahoo.com', '01999887766', 'Female', '6234567890123437', '1995-01-20', 'images/nazia.jpg', 'agency', TRUE, 'Active', NULL, NULL, NULL, 'Add-1734757354755'),
 -- User 7
-('USER-1734783250826', 'Rafiq Islam', 'rafiq.islam@gmail.com', '01611223344', 'Male', '7234567890123438', '1987-06-14', 'images/rafiq.jpg', 'agency', TRUE, 'Active', NULL, NULL, NULL, 'Add-1734757354582'),
+('USER-1734783250826', 'Rafiq Islam', 'rafiq.islam@gmail.com', '01611223354', 'Male', '7234567890123438', '1987-06-14', 'images/rafiq.jpg', 'agency', TRUE, 'Active', NULL, NULL, NULL, 'Add-1734757354582'),
 -- User 8
 ('USER-1734783251093', 'Mahmuda Khatun', 'mahmuda.khatun@gmail.com', '01755443322', 'Female', '8234567890123439', '1992-09-05', 'images/mahmuda.jpg', 'agency', FALSE, 'Suspended', NULL, NULL, NULL, 'Add-1734757354255'),
 -- User 9
@@ -161,7 +161,7 @@ INSERT INTO agencies (
 -- Agency 7
 ('AG-1734771688628', 'Prime Auto Hire', 'prime@autohire.com.bd', 'USER-1734783250568', '01644556677', 'images/primeauto.jpg', 9, 'BRN-78901236', 'TIN-32109876', 'INS-78901234', '2018-04-22', '2023-04-22', 'active', TRUE, 'Add-1734757354641'),
 -- Agency 8
-('AG-1734771688680', 'DriveX BD', 'info@drivexbd.com.bd', 'USER-1734783251333', '01855443322', 'images/drivex.jpg', 11, 'BRN-89012347', 'TIN-21098765', 'INS-89012345', '2019-11-11', '2024-11-11', 'suspended', FALSE, 'Add-1734757354201'),
+('AG-1734771688680', 'DriveX BD', 'info@drivexbd.com.bd', 'USER-1734783251333', '01855443222', 'images/drivex.jpg', 11, 'BRN-89012347', 'TIN-21098765', 'INS-89012345', '2019-11-11', '2024-11-11', 'suspended', FALSE, 'Add-1734757354201'),
 -- Agency 9
 ('AG-1734771688065', 'Quick Wheels', 'quick@wheels.com.bd', 'USER-1734783251371', '01566778899', 'images/quickwheels.jpg', 6, 'BRN-90123458', 'TIN-10987654', 'INS-90123456', '2020-06-25', '2025-06-25', 'active', TRUE, 'Add-1734757354356'),
 -- Agency 10
@@ -309,3 +309,85 @@ INSERT INTO address_info (address_id, user_id, agency_id, district, upazilla, ke
 -- Address 10
 (Add-1734782538291, NULL, 'AG-1734771688243', 'Dhaka', 'Dhaka South', 'Khilgaon', 'Goran, Khilgaon, Dhaka South');
 
+
+
+
+
+
+
+INSERT INTO vehicle_documentation (
+    documentation_id, vehicle_id, license_number, expire_date, fitness_certificate, issuing_authority, 
+    insurance_number, insurance_start_date, insurance_ending_date, insurance_provider, insurance_coverage_type
+) VALUES
+('DOC-1737343539737', 'CAR-1736216228975', 'LIC-548372819', '2025-12-31', 'FIT-8764213', 'Dhaka BRTA', 
+ 'INS-762451923', '2024-01-01', '2025-01-01', 'Guardian Insurance Co.', 'Comprehensive'),
+('DOC-1737343538801', 'CAR-1736216229321', 'LIC-294837126', '2025-11-30', 'FIT-2347654', 'Chittagong BRTA', 
+ 'INS-954627481', '2023-12-01', '2024-12-01', 'Reliance General Insurance', 'Third Party'),
+('DOC-1737343538898', 'CAR-1736216229094', 'LIC-675489231', '2026-01-15', 'FIT-9845623', 'Sylhet BRTA', 
+ 'INS-374192658', '2024-02-01', '2025-02-01', 'Delta Insurance Ltd.', 'Comprehensive'),
+('DOC-1737343539299', 'CAR-1736216229037', 'LIC-128493765', '2025-10-20', 'FIT-5437892', 'Khulna BRTA', 
+ 'INS-832764129', '2023-10-01', '2024-10-01', 'Prime Insurance Group', 'Third Party'),
+('DOC-1737343538919', 'CAR-1736216228919', 'LIC-982347612', '2026-03-25', 'FIT-1268743', 'Dhaka BRTA', 
+ 'INS-498271536', '2024-03-01', '2025-03-01', 'Sunlife Insurance', 'Comprehensive'),
+('DOC-1737343539089', 'CAR-1736216228617', 'LIC-756489321', '2025-09-15', 'FIT-2387645', 'Rajshahi BRTA', 
+ 'INS-621839472', '2023-11-01', '2024-11-01', 'Guardian Insurance Co.', 'Third Party'),
+('DOC-1737343539743', 'CAR-1736216229074', 'LIC-438276591', '2025-08-31', 'FIT-4672813', 'Comilla BRTA', 
+ 'INS-928374615', '2023-09-01', '2024-09-01', 'Reliance General Insurance', 'Comprehensive'),
+('DOC-1737343539612', 'CAR-1736216229122', 'LIC-918273645', '2026-07-01', 'FIT-8364729', 'Barisal BRTA', 
+ 'INS-732846195', '2024-05-01', '2025-05-01', 'Delta Insurance Ltd.', 'Comprehensive'),
+('DOC-1737343539108', 'CAR-1736216228439', 'LIC-837492615', '2025-06-10', 'FIT-3458726', 'Rangpur BRTA', 
+ 'INS-192837465', '2023-06-01', '2024-06-01', 'Prime Insurance Group', 'Third Party'),
+('DOC-1737343539256', 'CAR-1736216228467', 'LIC-719283465', '2026-08-20', 'FIT-9283745', 'Mymensingh BRTA', 
+ 'INS-274938165', '2024-07-01', '2025-07-01', 'Sunlife Insurance', 'Comprehensive');
+
+
+
+
+
+
+
+ 
+ INSERT INTO drivers (
+    _id, name, email, phone, gender, nid, dob, image, availability, 
+    verified, accountStatus, license_number, expire_date, experience, 
+    hiring_price, address_id
+) VALUES
+('DRI-1737928894209', 'Abul Kalam', 'abul.kalam@example.com', '01711111111', 'Male', '1234567890123456', '1980-01-01', 'https://i.imghippo.com/files/RwgS5586qA.jpeg', 'Yes', TRUE, 'Active', 'LN-1234567890', '2030-01-01', 10, 200, 'Add-1734782538164'),
+('DRI-1737928894027', 'Mofizur Rahman', 'mofiz.rahman@example.com', '01722222222', 'Male', '1234567890123457', '1985-02-02', 'https://i.imghippo.com/files/SVL6031gYA.jpeg', 'Yes', TRUE, 'Active', 'LN-1234567891', '2031-02-02', 8, 180, 'Add-1734782538141'),
+('DRI-1737928893978', 'Saiful Islam', 'saiful.islam@example.com', '01733333333', 'Male', '1234567890123458', '1990-03-03', 'https://i.imghippo.com/files/Dw3397wgQ.jpeg', 'No', FALSE, 'Inactive', 'LN-1234567892', '2032-03-03', 5, 150, 'Add-1734782537615'),
+('DRI-1737928894076', 'Jahirul Haque', 'jahirul.haque@example.com', '01744444444', 'Male', '1234567890123459', '1988-04-04', 'https://i.imghippo.com/files/tPpM7267Vbo.jpeg', 'Yes', TRUE, 'Active', 'LN-1234567893', '2033-04-04', 12, 220, 'Add-1734782538344'),
+('DRI-1737928894488', 'Azizul Haque', 'azizul.haque@example.com', '01755555555', 'Male', '1234567890123460', '1992-05-05', 'https://i.imghippo.com/files/xiQy2682HzQ.jpeg', 'No', FALSE, 'Suspended', 'LN-1234567894', '2034-05-05', 6, 170, 'Add-1734782537800'),
+('DRI-1737928894693', 'Habibur Rahman', 'habibur.rahman@example.com', '01766666666', 'Male', '1234567890123461', '1995-06-06', 'https://i.imghippo.com/files/lxxh2222c.jpeg', 'Yes', TRUE, 'Active', 'LN-1234567895', '2035-06-06', 4, 160, 'Add-1734782537595'),
+('DRI-1737928894263', 'Ashraf Uddin', 'ashraf.uddin@example.com', '01777777777', 'Male', '1234567890123462', '1998-07-07', 'https://i.imghippo.com/files/uVln9245XfM.jpeg', 'Yes', TRUE, 'Active', 'LN-1234567896', '2036-07-07', 3, 140, 'Add-1734782537939'),
+('DRI-1737928894460', 'Kamal Hossain', 'kamal.hossain@example.com', '01788888888', 'Male', '1234567890123463', '2000-08-08', 'https://i.imghippo.com/files/fA6292TY.jpeg', 'No', FALSE, 'Inactive', 'LN-1234567897', '2037-08-08', 7, 190, 'Add-1734782538239'),
+('DRI-1737928894364', 'Delwar Hossain', 'delwar.hossain@example.com', '01799999999', 'Male', '1234567890123464', '2001-09-09', 'https://i.imghippo.com/files/sxJ5493u.jpg', 'Yes', TRUE, 'Active', 'LN-1234567898', '2038-09-09', 2, 120, 'Add-1734782538054'),
+('DRI-1737928894354', 'Shahidul Islam', 'shahidul.islam@example.com', '01710101010', 'Male', '1234567890123465', '2002-10-10', 'https://i.imghippo.com/files/DBO3837Uqw.jpeg', 'No', FALSE, 'Suspended', 'LN-1234567899', '2039-10-10', 1, 100, 'Add-1734782537809');
+
+
+
+
+
+
+INSERT INTO vehicle_reviews_and_ratings (user_id, vehicle_id, date, review, rating) VALUES
+('USER-1734755975780', 'CAR-1736216228975', '2025-01-01', 'Smooth ride, very comfortable!', 4.5),
+('USER-1734755976303', 'CAR-1736216229321', '2025-01-02', 'Decent performance, but fuel efficiency could be better.', 3.8),
+('USER-1734755975956', 'CAR-1736216229094', '2025-01-03', 'Spacious and perfect for family trips.', 4.7),
+('USER-1734755975780', 'CAR-1736216229037', '2025-01-04', 'Affordable and reliable, highly recommended.', 5.0),
+('USER-1734755976303', 'CAR-1736216228919', '2025-01-05', 'Average performance, not very powerful.', 3.0),
+('USER-1734755975956', 'CAR-1736216228617', '2025-01-06', 'Great handling and modern features.', 4.2),
+('USER-1734755975780', 'CAR-1736216229074', '2025-01-07', 'The car needs better maintenance, felt outdated.', 2.8),
+('USER-1734755976303', 'CAR-1736216229122', '2025-01-08', 'Good value for money, but has minor issues.', 3.5),
+('USER-1734755975956', 'CAR-1736216228439', '2025-01-09', 'Compact and easy to drive in the city.', 4.0),
+('USER-1734755975780', 'CAR-1736216228467', '2025-01-10', 'Impressive fuel efficiency and smooth engine.', 4.8);
+
+INSERT INTO vehicle_reviews_and_ratings (user_id, vehicle_id, date, review, rating) VALUES
+('USER-1734755975710', 'CAR-1736216228650', '2025-01-11', 'Comfortable seating and smooth ride.', 4.6),
+('USER-1734755975481', 'CAR-1736216228441', '2025-01-12', 'Good mileage but slightly underpowered.', 3.9),
+('USER-1734755975601', 'CAR-1736216228433', '2025-01-13', 'Spacious and well-suited for long trips.', 4.8),
+('USER-1734755975710', 'CAR-1736216229407', '2025-01-14', 'Affordable but noisy engine.', 3.2),
+('USER-1734755975481', 'CAR-1736216228735', '2025-01-15', 'Great value for the price.', 4.3),
+('USER-1734755975601', 'CAR-1736216229290', '2025-01-16', 'Handles well in city traffic.', 4.1),
+('USER-1734755975710', 'CAR-1736216228597', '2025-01-17', 'Engine performance could be better.', 3.5),
+('USER-1734755975481', 'CAR-1736216228563', '2025-01-18', 'Modern interior and good tech features.', 4.7),
+('USER-1734755975601', 'CAR-1736216229389', '2025-01-19', 'Reliable and easy to maintain.', 4.2),
+('USER-1734755975710', 'CAR-1736216229296', '2025-01-20', 'Compact and fuel-efficient, great for daily use.', 4.4);

@@ -5,6 +5,8 @@ import { Link, useNavigate } from "react-router-dom";
 import google from "../../../assets/search.png"
 import { PropagateLoader } from "react-spinners";
 import useAuth from "../../../hooks/useAuth";
+import { CiShop } from "react-icons/ci";
+import { FaUserPlus } from "react-icons/fa";
 
 const Signup = () => {
 
@@ -132,11 +134,23 @@ const Signup = () => {
                         <p className="text-center">Already have an account? <Link to={'/sign-in'} className="text-[#F58300]">Log in</Link></p>
                     </div>
                     <Divider>OR</Divider>
-                    <div className="w-full">
+                    <div className="w-full flex flex-col gap-2">
                         <Link>
                             <div className="border border-gray-400 rounded p-2 flex gap-2 text-lg font-medium justify-center items-center">
                                 <img src={google} alt="" className="w-6" />
                                 <p>Sign up with Google</p>
+                            </div>
+                        </Link>
+                        <Link to={'/sign-up/agency'}>
+                            <div className="border border-gray-400 rounded p-2 flex gap-2 text-lg font-medium justify-center items-center">
+                                <CiShop className="w-6"/>
+                                <p>Sign up as Agency</p>
+                            </div>
+                        </Link>
+                        <Link to={'/sign-up/driver'}>
+                            <div className="border border-gray-400 rounded p-2 flex gap-2 text-lg font-medium justify-center items-center">
+                                <FaUserPlus className="w-6" />
+                                <p>Sign up as Driver</p>
                             </div>
                         </Link>
                     </div>

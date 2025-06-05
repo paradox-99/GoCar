@@ -7,7 +7,7 @@ const TopBrands = () => {
     const navigate = useNavigate();
 
     const handleBrand = brand_name => {
-        // navigate(`/brand/${brand_name}`)
+        navigate(`/brand/${brand_name}`)
     }
 
     return (
