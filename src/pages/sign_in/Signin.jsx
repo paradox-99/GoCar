@@ -6,13 +6,18 @@ import google from "../../assets/search.png"
 import useAuth from "../../hooks/useAuth";
 import toast from "react-hot-toast";
 import { PropagateLoader } from "react-spinners";
+import { sendEmailVerification } from "firebase/auth";
+import { useDispatch } from "react-redux";
+import { setUserData } from "../../redux/userSignUpSlice";
+import { nextStep, setEmail } from "../../redux/signupSlice";
 
 const Signin = () => {
 
-    const { handleEmailLogin, handleGoogleLogin } = useAuth();
+    const { handleEmailLogin, handleGoogleLogin, setUser } = useAuth();
     const [showPassword, setShowPassword] = useState(false);
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
+    const dispatch = useDispatch();
 
     const handleLogin = async (e) => {
         e.preventDefault();
@@ -23,6 +28,8 @@ const Signin = () => {
 
         try {
             const result = await handleEmailLogin(email, password);
+            // console.log(result);
+            setUser(result.user);
             toast.success("Log in successful.")
             navigate('/');
         }
@@ -31,15 +38,30 @@ const Signin = () => {
             setLoading(false);
         }
     }
-
+    
     const googleLogin = async () => {
         try {
             const result = await handleGoogleLogin();
-            toast.success("Log in successful.")
-            navigate('/');
+            // console.log(result);
+            setUser(result.user);
+
+            if (result.user.metadata.lastLoginAt - result.user.metadata.createdAt > 5000 ) {
+                toast.success("Log in successful.")
+                navigate('/');
+            }
+            else {
+                const user = result.user;
+                await sendEmailVerification(user);
+                dispatch(setUserData(user));
+                dispatch(setEmail(user.email));
+                dispatch(nextStep());
+                toast.success("Account created successfully. Please verify your email.");
+                navigate('/sign-up/email-verification');
+            }
+
         }
         catch (error) {
-            toast.error('Login failed.')
+            toast.error('Login failed.');
         }
     }
 

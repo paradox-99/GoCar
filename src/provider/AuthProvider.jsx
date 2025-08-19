@@ -8,14 +8,14 @@ export const AuthContext = createContext(null);
 const AuthProvider = ({children}) => {
 
     const [user, setUser] = useState();
-    const [status, setStatus] = useState();
+    const [status, setStatus] = useState(true);
     const googleProvider = new GoogleAuthProvider();
 
     const handleCreateUser = (email, password) => {
         setStatus(true);
         return createUserWithEmailAndPassword(auth, email, password);
     };
-
+ 
     const handleEmailLogin = (email, password) => {
         setStatus(true);
         return signInWithEmailAndPassword(auth, email, password);
@@ -42,11 +42,13 @@ const AuthProvider = ({children}) => {
         setStatus(true);
         return signOut(auth);
     }
+    
 
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, (user) => {
             setUser(user);
             setStatus(false);
+            
             // if (user) {
             //     const userInfo = { email: user.email };
             //     axiosPublic.post('/jwt', userInfo)
@@ -67,7 +69,7 @@ const AuthProvider = ({children}) => {
         })
     }, []);
 
-    const authInfo = { user, status, handleCreateUser, handleEmailLogin, logOut, handleGoogleLogin, updateUser };
+    const authInfo = { user, status, setUser, handleCreateUser, handleEmailLogin, logOut, handleGoogleLogin, updateUser };
 
     return (
         <AuthContext.Provider value={authInfo}>

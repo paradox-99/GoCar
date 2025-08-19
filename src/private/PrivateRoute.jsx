@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import { AuthContext } from "../provider/AuthProv";
+import { AuthContext } from "../provider/AuthProvider";
 import PropTypes from 'prop-types';
 import { Navigate, useLocation } from "react-router-dom";
 import toast from "react-hot-toast";

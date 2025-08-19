@@ -7,17 +7,22 @@ import { PropagateLoader } from "react-spinners";
 import useAuth from "../../../hooks/useAuth";
 import { CiShop } from "react-icons/ci";
 import { FaUserPlus } from "react-icons/fa";
+import { sendEmailVerification } from "firebase/auth";
+import toast from "react-hot-toast";
+import { useDispatch } from "react-redux";
+import { setUserData } from "../../../redux/userSignUpSlice";
+import { nextStep, setEmail } from "../../../redux/signupSlice";
 
 const Signup = () => {
-
-    const { handleCreateUser } = useAuth();
+    const { handleCreateUser, handleGoogleLogin, setUser } = useAuth();
     const [loading, setLoading] = useState(false);
     const [showPassword, setShowPassword] = useState(false);
     const [terms, setTerms] = useState(false);
     const [error, setError] = useState("")
     const navigate = useNavigate();
+    const dispatch = useDispatch();
 
-    const handleSignUp = (e) => {
+    const handleSignUp = async(e) => {
         e.preventDefault();
 
         if (terms) {
@@ -28,9 +33,14 @@ const Signup = () => {
 
             if (password === confirmPassword) {
                 handleCreateUser(email, password)
-                .then(res => {
-                    console.log(res);
-                    navigate('/sign-up/user-info');
+                .then(async (res) => {
+                    // console.log(res);
+                    const user = res.user;
+                    await sendEmailVerification(user);
+                    dispatch(setUserData(user));
+                    dispatch(setEmail(email));
+                    dispatch(nextStep());
+                    navigate('/sign-up/email-verification');
                 })
                 .catch((error) => {
                     if (error.message === 'Firebase: Error (auth/email-already-in-use).')
@@ -42,6 +52,32 @@ const Signup = () => {
             setError("You must agree to the terms and conditions.");
         }
     }
+
+    const googleLogin = async () => {
+            try {
+                const result = await handleGoogleLogin();
+                // console.log(result);
+                setUser(result.user);
+    
+                if (result.user.metadata.lastLoginAt - result.user.metadata.createdAt > 5000 ) {
+                    toast.success("Log in successful.")
+                    navigate('/');
+                }
+                else {
+                    const user = result.user;
+                    await sendEmailVerification(user);
+                    dispatch(setUserData(user));
+                    dispatch(setEmail(user.email));
+                    dispatch(nextStep());
+                    toast.success("Account created successfully. Please verify your email.");
+                    navigate('/sign-up/email-verification');
+                }
+    
+            }
+            catch (error) {
+                toast.error('Login failed.');
+            }
+        }
 
     const handleClickShowPassword = () => setShowPassword((show) => !show);
 
@@ -135,7 +171,7 @@ const Signup = () => {
                     </div>
                     <Divider>OR</Divider>
                     <div className="w-full flex flex-col gap-2">
-                        <Link>
+                        <Link onClick={googleLogin}>
                             <div className="border border-gray-400 rounded p-2 flex gap-2 text-lg font-medium justify-center items-center">
                                 <img src={google} alt="" className="w-6" />
                                 <p>Sign up with Google</p>

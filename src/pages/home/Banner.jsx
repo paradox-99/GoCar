@@ -18,9 +18,6 @@ const Banner = () => {
           setTime(timeAndDate)
      }
 
-     console.log(address);
-     
-
      const searchPage = () => {
           const district = address.district;
           const upazilla = address.upazilla;

@@ -55,6 +55,9 @@ const Navbar = () => {
     const [anchorElUser, setAnchorElUser] = React.useState(null);
     const data = useRole();
     let dashboard = [''];
+
+    // console.log(user);
+    
     
     const handleOpenNavMenu = (event) => {
         setAnchorElNav(event.currentTarget);

@@ -19,6 +19,9 @@ import Booking from "../pages/booking/Booking";
 import PaymentSuccess from "../components/payment/PaymentSuccess";
 import PaymentFail from "../components/payment/PaymentFail";
 import ErrorPage from "../ErrorPage";
+import EmailVerificationPage from "../pages/sign_up/user_Sign_up/EmailVerificationPage";
+import PrivateRoute from "../private/PrivateRoute";
+import PersonalInfo from "../pages/sign_up/user_Sign_up/PersonalInfo";
 
 const router = createBrowserRouter([
     {
@@ -43,8 +46,16 @@ const router = createBrowserRouter([
                 element: <Signup />
             },
             {
+                path: "/sign-up/email-verification",
+                element: <PrivateRoute><EmailVerificationPage /></PrivateRoute>
+            },
+            {
                 path: "/sign-up/user-info",
-                element: <Signup_part2 />
+                element: <PrivateRoute><Signup_part2 /></PrivateRoute>
+            },
+            {
+                path: "sign-up/user-contact-info",
+                element: <PrivateRoute><PersonalInfo /></PrivateRoute>
             },
             {
                 path: "/sign-up/agency",
