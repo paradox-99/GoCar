@@ -6,31 +6,54 @@ import moment from 'moment';
 import { useDispatch } from "react-redux";
 import { nextStep, setBirthdate, setNID, setGender, setName } from "../../../redux/signupSlice";
 import { useNavigate } from "react-router-dom";
+import useAxiosPublic from "../../../hooks/useAxiosPublic";
+import toast from "react-hot-toast";
+import { useState } from "react";
 
 const Signup_part2 = () => {
 
+    const [message, setMessage] = useState('');
     const currentTime = moment();
     const dispatch = useDispatch();
     const navigate = useNavigate();
+    const axiosPublic = useAxiosPublic();
 
-    const submitData = (e) => {
+    const checkNID = async (nid) => {
+        const { data } = await axiosPublic.get(`/userRoute/checkNID/${nid}`);
+
+        if (data.code === 1) {
+            return true;
+        }
+        return false;
+    }
+
+    const submitData = async(e) => {
         e.preventDefault();
         const name = e.target.name.value;
         const gender = e.target.gender.value;
         const dob = e.target.dob.value;
         const nid = e.target.nid.value;
 
-        dispatch(setName(name));
-        dispatch(setGender(gender));
-        dispatch(setBirthdate(dob));
-        dispatch(setNID(nid));
-        dispatch(nextStep());
-        
-        navigate('/sign-up/user-contact-info');
+        const status = await checkNID(nid)
+        console.log(status);
+
+        if (status) {
+            setMessage("NID already exists. Please use a different NID.");
+            return;
+        }
+        else {
+            setMessage('');
+            dispatch(setName(name));
+            dispatch(setGender(gender));
+            dispatch(setBirthdate(dob));
+            dispatch(setNID(nid));
+            dispatch(nextStep());
+            navigate('/sign-up/user-contact-info');
+        }
     }
 
     return (
-        <div className="pt-8 lg:pt-20 flex justify-center items-center h-screen">
+        <div className="pt-8 lg:pt-32 flex justify-center items-center ">
             <div className="md:border rounded-lg md:shadow-md min-[600px]:w-1/2 xl:w-[500px] h-fit px-5 py-6">
                 <h1 className="text-lg md:text-xl lg:text-2xl text-center mb-5 font-bold">Personal Information</h1>
                 <form className="space-y-4" onSubmit={submitData}>
@@ -43,6 +66,7 @@ const Signup_part2 = () => {
                             </DemoContainer>
                         </LocalizationProvider>
                         <TextField id="nid" label="NID" variant="outlined" type="text" size="small" sx={{ mt: 1 }} required />
+                        {message && <p className="text-red-500 text-sm">{message}</p>}
                     </div>
                     <div className="flex justify-center items-center">
                         <Button variant="contained" color="primary" type="submit" sx={{ background: '#F58300' }}>Next</Button>

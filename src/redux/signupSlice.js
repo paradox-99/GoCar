@@ -9,6 +9,7 @@ const initialState = {
      nid: '',
      phone: '',
      address: '',
+     area: '',
      profilePicture: null,
      completedSteps: [],
      isLoading: false,
@@ -61,10 +62,16 @@ const signupSlice = createSlice({
                     state.completedSteps.push(7);
                }
           },
-          setProfilePicture: (state, action) => {
-               state.profilePicture = action.payload;
+          setAddressA: (state, action) => {
+               state.area = action.payload;
                if (!state.completedSteps.includes(8)) {
                     state.completedSteps.push(8);
+               }
+          },
+          setProfilePicture: (state, action) => {
+               state.profilePicture = action.payload;
+               if (!state.completedSteps.includes(9)) {
+                    state.completedSteps.push(9);
                }
           },
           nextStep: (state) => {
@@ -88,6 +95,7 @@ export const {
      setNID,
      setPhone,
      setAddressR,
+     setAddressA,
      setProfilePicture,
      nextStep,
      prevStep,

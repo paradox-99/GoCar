@@ -22,6 +22,8 @@ import ErrorPage from "../ErrorPage";
 import EmailVerificationPage from "../pages/sign_up/user_Sign_up/EmailVerificationPage";
 import PrivateRoute from "../private/PrivateRoute";
 import PersonalInfo from "../pages/sign_up/user_Sign_up/PersonalInfo";
+import PhotoUpload from "../pages/sign_up/user_Sign_up/PhotoUpload";
+import ReviewInfo from "../pages/sign_up/user_Sign_up/ReviewInfo";
 
 const router = createBrowserRouter([
     {
@@ -54,8 +56,16 @@ const router = createBrowserRouter([
                 element: <PrivateRoute><Signup_part2 /></PrivateRoute>
             },
             {
-                path: "sign-up/user-contact-info",
+                path: "/sign-up/user-contact-info",
                 element: <PrivateRoute><PersonalInfo /></PrivateRoute>
+            },
+            {
+                path: "/sign-up/user-photo-upload",
+                element: <PhotoUpload />
+            },
+            {
+                path: "/sign-up/user-info-review",
+                element: <ReviewInfo />
             },
             {
                 path: "/sign-up/agency",

@@ -11,7 +11,6 @@ const EmailVerificationPage = () => {
      const [isLoading, setIsLoading] = useState(false);
      const [error, setError] = useState(null);
      const [success, setSuccess] = useState(false);
-     const { email } = useSelector((state) => state.signup);
      const user = useSelector((state) => state.user.userData);
      const auth = getAuth();
      const navigate = useNavigate();
