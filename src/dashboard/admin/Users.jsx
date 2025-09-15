@@ -75,7 +75,7 @@ const Users = () => {
      const { data } = useQuery({
           queryKey: ['bookings'],
           queryFn: async () => {
-               const response = await axiosPublic.get(`userRoute/users`);
+               const response = await axiosPublic.get(`userRoute/users`, {withCredentials: true});
                return response.data;
                },
      })

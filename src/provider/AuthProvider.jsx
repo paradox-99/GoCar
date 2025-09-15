@@ -2,6 +2,8 @@ import { createContext, useEffect, useState } from "react";
 import { createUserWithEmailAndPassword, GoogleAuthProvider, onAuthStateChanged, signInWithEmailAndPassword, signInWithPopup, signOut, updateEmail, updatePassword, updateProfile } from "firebase/auth"
 import auth from "../firebase/firebase.config";
 import PropTypes from 'prop-types';
+import useAxiosPublic from "../hooks/useAxiosPublic";
+import { Logout } from "@mui/icons-material";
 
 export const AuthContext = createContext(null);
 
@@ -10,6 +12,7 @@ const AuthProvider = ({children}) => {
     const [user, setUser] = useState();
     const [status, setStatus] = useState(true);
     const googleProvider = new GoogleAuthProvider();
+    const axiosPublic = useAxiosPublic();
 
     const handleCreateUser = (email, password) => {
         setStatus(true);
@@ -42,7 +45,6 @@ const AuthProvider = ({children}) => {
         setStatus(true);
         return signOut(auth);
     }
-    
 
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -50,19 +52,16 @@ const AuthProvider = ({children}) => {
             setStatus(false);
             
             // if (user) {
-            //     const userInfo = { email: user.email };
-            //     axiosPublic.post('/jwt', userInfo)
-            //         .then(res => {
-            //             if (res.data.accessToken) {
-            //                 localStorage.setItem('accessToken', res.data.accessToken);
-            //             }
-            //         })
+                
             // }
-            // else {
-            //     localStorage.removeItem('access-token');
-            //     setStatus(false);
-            // }
-        });
+            if(!user){ {
+                axiosPublic.post('authorization/logout', {}, { withCredentials: true })
+                .then(() => console.log("Logged out"))
+                .catch(err => console.error("Logout error:", err));
+
+                logOut();
+            }}
+    });
 
         return (() => {
             unsubscribe();

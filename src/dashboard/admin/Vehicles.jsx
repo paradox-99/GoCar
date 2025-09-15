@@ -74,7 +74,7 @@ const Vehicles = () => {
      const { data } = useQuery({
           queryKey: ['bookings'],
           queryFn: async () => {
-               const response = await axiosPublic.get(`carRoutes/showAllCars`);
+               const response = await axiosPublic.get(`carRoutes/showAllCars`, {withCredentials: true});
                return response.data;
                },
      })

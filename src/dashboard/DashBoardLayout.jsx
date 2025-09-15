@@ -225,7 +225,7 @@ const DashBoardLayout = () => {
                     <List>
                          {designation === 'user' && <>
                               <ListItem disablePadding>
-                                   <ListItemButton href="/dashboard/userProfile">
+                                   <ListItemButton href="/dashboard/myprofile">
                                         <ListItemIcon style={{ fontSize: 20 }}>
                                              <CgProfile />
                                         </ListItemIcon>

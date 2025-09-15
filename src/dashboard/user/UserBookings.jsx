@@ -6,6 +6,7 @@ import { FirstPage, KeyboardArrowLeft, KeyboardArrowRight, LastPage } from '@mui
 import { Box, IconButton, Paper, styled, Table, TableBody, TableCell, tableCellClasses, TableContainer, TableFooter, TableHead, TablePagination, TableRow } from '@mui/material';
 import { useTheme } from '@emotion/react';
 import { useState } from 'react';
+import Loader from "../../components/Loader";
 
 function TablePaginationActions(props) {
      const theme = useTheme();
@@ -76,7 +77,7 @@ const UserBookings = () => {
      const { data } = useQuery({
           queryKey: ['bookings'],
           queryFn: async () => {
-               const response = await axiosPublic.get(`userRoute/getBookings/${role._id}`);
+               const response = await axiosPublic.get(`userRoute/getBookings/${role._id}`, {withCredentials: true});
                return response.data;
                },
      })
@@ -173,8 +174,7 @@ const UserBookings = () => {
                                         </TableRow>
                                    </TableFooter>
                               </Table>
-                         </TableContainer> :
-                         <p className="text-center mt-20">Loading ...</p>
+                         </TableContainer> : <Loader />
                     }
                </div>
           </div>

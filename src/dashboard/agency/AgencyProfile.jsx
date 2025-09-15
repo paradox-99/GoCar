@@ -11,7 +11,7 @@ const AgencyProfile = () => {
      const { data } = useQuery({
           queryKey: ['user'],
           queryFn: async () => {
-               const response = await axiosPublic.get(`agencyRoutes/getAgencyDetails2/${role._id}`);
+               const response = await axiosPublic.get(`agencyRoutes/getAgencyDetails2/${role._id}`, {withCredentials: true});
                return response.data;
           },
      })

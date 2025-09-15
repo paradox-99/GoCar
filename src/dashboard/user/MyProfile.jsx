@@ -2,6 +2,7 @@ import { Button, Divider, TextField } from "@mui/material";
 import { useQuery } from '@tanstack/react-query'
 import useAxiosPublic from '../../hooks/useAxiosPublic';
 import useAuth from "../../hooks/useAuth";
+import Loader from "../../components/Loader";
 
 const MyProfile = () => {
 
@@ -11,7 +12,7 @@ const MyProfile = () => {
      const { data } = useQuery({
           queryKey: ['user'],
           queryFn: async () => {
-               const response = await axiosPublic.get(`userRoute/getUserInfo/${user.email}`);
+               const response = await axiosPublic.get(`userRoute/getUserInfo/${user.email}`, {withCredentials: true});
                return response.data;
           },
      })
@@ -76,8 +77,8 @@ const MyProfile = () => {
                                         <Button variant="contained" sx={{ background: '#F58300' }}>Edit</Button>
                                    </div>
                               </div>
-                         </> :
-                         <h1>...Loading</h1>
+                         </> : <><Loader></Loader></>
+                         
                }
           </div>
      );

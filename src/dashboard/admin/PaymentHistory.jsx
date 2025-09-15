@@ -74,7 +74,7 @@ const PaymentHistory = () => {
      const { data } = useQuery({
           queryKey: ['bookings'],
           queryFn: async () => {
-               const response = await axiosPublic.get(`paymentRoutes/paymentHistory`);
+               const response = await axiosPublic.get(`paymentRoutes/paymentHistory`, {withCredentials: true});
                return response.data;
           },
      })

@@ -12,6 +12,21 @@ import toast from "react-hot-toast";
 import { useDispatch } from "react-redux";
 import { setUserData } from "../../../redux/userSignUpSlice";
 import { nextStep, setEmail } from "../../../redux/signupSlice";
+import { z } from "zod";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+
+
+const schema = z.object({
+    email: z.string()
+        .min(1, 'Email is required.')
+        .email('Please enter a valid email address.')
+        .transform(email => email.toLowerCase().trim()),
+    password: z.string()
+        .min(1, 'Password is required.')
+        .min(8, 'Password must be at least 8 characters')
+        .transform(password => password.trim())
+});
 
 const Signup = () => {
     const { handleCreateUser, handleGoogleLogin, setUser } = useAuth();
@@ -21,6 +36,10 @@ const Signup = () => {
     const [error, setError] = useState("")
     const navigate = useNavigate();
     const dispatch = useDispatch();
+
+    const { register, handleSubmit, formState: { errors } } = useForm({
+        resolver: zodResolver(schema)
+    })
 
     const handleSignUp = async(e) => {
         e.preventDefault();
@@ -105,13 +124,14 @@ const Signup = () => {
             <div className="lg:border rounded-lg lg:shadow-md min-[600px]:w-1/2 lg:w-1/4 h-fit px-10 py-6">
                 <h1 className="text-3xl text-center mb-5 font-bold">Sign up</h1>
                 <div className="space-y-4">
-                    <form onSubmit={handleSignUp} className="space-y-4">
-                        <TextField id="email" label="Email" variant="outlined" type="email" fullWidth size="small" />
+                    <form onSubmit={handleSubmit(handleSignUp)} className="space-y-4">
+                        <TextField id="email" label="Email" variant="outlined" type="email" fullWidth size="small" {...register("email")}/>
                         <FormControl variant="outlined" fullWidth size="small">
                             <InputLabel htmlFor="outlined-adornment-password">Password</InputLabel>
                             <OutlinedInput
                                 id="password"
                                 type={showPassword ? 'text' : 'password'}
+                                {...register("password")}
                                 endAdornment={
                                     <InputAdornment position="end">
                                         <IconButton
@@ -155,6 +175,8 @@ const Signup = () => {
                                 size="small"
                             />
                         </FormControl>
+                        {errors.email && <p className="text-red-500">{errors.email.message}</p>}
+                        {errors.password && <p className="text-red-500">{errors.password.message}</p>}
                         <div className="flex text-sm">
                             <label className="flex justify-center items-center gap-2">
                                 <input type="checkbox" name="terms" onChange={termsChecked} />

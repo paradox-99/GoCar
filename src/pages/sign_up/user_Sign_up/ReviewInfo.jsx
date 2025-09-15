@@ -14,22 +14,6 @@ const ReviewInfo = () => {
      const currentTime = moment();
      const axiosPublic = useAxiosPublic();
 
-     // const userData = {
-     //      name: "Radwanul Islam Nayeem",
-     //      email: "rinayeem546@gmail.com",
-     //      phone: "01998004959",
-     //      nid: "12345678901234",
-     //      gender: "Male",
-     //      birthdate: "2003-01-01",
-          // address: {
-          //      district: "Dhaka",
-          //      upazilla: "Dhanmondi",
-          //      keyArea: "Kalabagan",
-          //      area: "Road 8, House 12"
-          // },
-     //      profilepicture: "https://i.ibb.co/kVxCvPy3/IMG-6207-2.jpg"
-     // }
-
      const submitData = async(e) => {
           e.preventDefault();
           const userData = {
@@ -50,7 +34,7 @@ const ReviewInfo = () => {
           console.log(data.response);
           
 
-          // navigate('/sign-up/user-contact-info');
+          navigate('/');
      }
 
      return (

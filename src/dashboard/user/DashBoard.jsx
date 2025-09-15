@@ -10,7 +10,7 @@ const DashBoard = () => {
      const { data } = useQuery({
           queryKey: ['user'],
           queryFn: async () => {
-               const response = await axiosPublic.get(`userRoute/getUser/${user.email}`);
+               const response = await axiosPublic.get(`userRoute/getUserInfo/${user.email}`,{withCredentials: true});
                return response.data;
           },
      })

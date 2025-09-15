@@ -76,7 +76,7 @@ const ActiveBookings = () => {
      const { data } = useQuery({
           queryKey: ['bookings'],
           queryFn: async () => {
-               const response = await axiosPublic.get(`carRoutes/agencyActiveBookingCars/${role._id}`);
+               const response = await axiosPublic.get(`carRoutes/agencyActiveBookingCars/${role._id}`, {withCredentials: true});
                return response.data;
           },
      })

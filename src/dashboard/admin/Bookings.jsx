@@ -74,7 +74,7 @@ const Bookings = () => {
      const { data } = useQuery({
           queryKey: ['bookings'],
           queryFn: async () => {
-               const response = await axiosPublic.get(`agencyRoutes/getAllBookings`);
+               const response = await axiosPublic.get(`agencyRoutes/getAllBookings`, {withCredentials: true});
                return response.data;
                },
      })

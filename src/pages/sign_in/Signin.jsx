@@ -10,6 +10,20 @@ import { sendEmailVerification } from "firebase/auth";
 import { useDispatch } from "react-redux";
 import { setUserData } from "../../redux/userSignUpSlice";
 import { nextStep, setEmail } from "../../redux/signupSlice";
+import { z } from "zod";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import useAxiosPublic from "../../hooks/useAxiosPublic";
+
+const schema = z.object({
+    email: z.string()
+        .min(1, 'Email is required.')
+        .email('Please enter a valid email address.')
+        .transform(email => email.toLowerCase().trim()),
+    password: z.string()
+        .min(8, 'Password must be at least 8 characters')
+        .transform(password => password.trim())
+});
 
 const Signin = () => {
 
@@ -18,17 +32,29 @@ const Signin = () => {
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
     const dispatch = useDispatch();
+    const axiosPublic = useAxiosPublic();
 
-    const handleLogin = async (e) => {
-        e.preventDefault();
+    const { register, handleSubmit, formState: { errors } } = useForm({
+        resolver: zodResolver(schema)
+    })
+
+    const handleLogin = async (data) => {
+        await new Promise(resolve => setTimeout(() => resolve(), 1000));
         setLoading(true);
 
-        const email = e.target.email.value;
-        const password = e.target.password.value;
+        const email = data.email;
+        const password = data.password;
 
         try {
             const result = await handleEmailLogin(email, password);
-            // console.log(result);
+            console.log(result);
+            
+            if (result.user.email) {
+                const userInfo = { email: result.user.email };
+                axiosPublic.post('authorization/jwt', userInfo, { withCredentials: true })
+                    .then(res => console.log("JWT issued:", res.data))
+                    .catch(err => console.error("JWT error:", err));
+            }
             setUser(result.user);
             toast.success("Log in successful.")
             navigate('/');
@@ -38,14 +64,14 @@ const Signin = () => {
             setLoading(false);
         }
     }
-    
+
     const googleLogin = async () => {
         try {
             const result = await handleGoogleLogin();
             // console.log(result);
             setUser(result.user);
 
-            if (result.user.metadata.lastLoginAt - result.user.metadata.createdAt > 5000 ) {
+            if (result.user.metadata.lastLoginAt - result.user.metadata.createdAt > 5000) {
                 toast.success("Log in successful.")
                 navigate('/');
             }
@@ -58,7 +84,6 @@ const Signin = () => {
                 toast.success("Account created successfully. Please verify your email.");
                 navigate('/sign-up/email-verification');
             }
-
         }
         catch (error) {
             toast.error('Login failed.');
@@ -89,13 +114,14 @@ const Signin = () => {
             <div className="lg:border rounded-lg lg:shadow-md lg:w-1/4 h-fit px-10 py-6">
                 <h1 className="text-3xl text-center mb-5 font-bold">Sign in</h1>
                 <div className="space-y-4">
-                    <form onSubmit={handleLogin} className="space-y-4">
-                        <TextField id="email" label="Email" variant="outlined" type="email" fullWidth size="small" />
+                    <form onSubmit={handleSubmit(handleLogin)} className="space-y-4">
+                        <TextField id="email" label="Email" variant="outlined" type="email" fullWidth size="small" {...register("email")} />
                         <FormControl variant="outlined" fullWidth size="small">
                             <InputLabel htmlFor="outlined-adornment-password">Password</InputLabel>
                             <OutlinedInput
                                 id="password"
                                 type={showPassword ? 'text' : 'password'}
+                                {...register("password")}
                                 endAdornment={
                                     <InputAdornment position="end">
                                         <IconButton
@@ -115,6 +141,8 @@ const Signin = () => {
                                 size="small"
                             />
                         </FormControl>
+                        {errors.email && <p className="text-red-500">{errors.email.message}</p>}
+                        {errors.password && <p className="text-red-500">{errors.password.message}</p>}
                         <div className="">
                             <Link className="hover:underline">Forgotten password?</Link>
                         </div>

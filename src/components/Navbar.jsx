@@ -23,7 +23,7 @@ const pages = [
 ];
 
 const userDropdown = [
-    { title: 'Profile', url: '/dashboard/profile' },
+    { title: 'Profile', url: '/dashboard/myprofile' },
     { title: 'Dashboard', url: '/dashboard' },
 ];
 
