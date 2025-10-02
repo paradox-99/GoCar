@@ -7,7 +7,7 @@ import { Link } from "react-router-dom";
 const Footer = () => {
     return (
         <div className="mt-10 bg-[#0e232b] pt-10 pb-5 text-white px-8 md:px-12 lg:px-20">
-            <div className="flex flex-col md:flex-row gap-5 md:justify-between md:items-center">
+            <div className="flex flex-col xl:flex-row gap-5 md:justify-between md:items-center">
                 <div className="flex items-center gap-4">
                     <BiPhoneCall size={30} className="text-[#f58300]" />
                     <div>

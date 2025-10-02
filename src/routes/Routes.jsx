@@ -24,6 +24,10 @@ import PrivateRoute from "../private/PrivateRoute";
 import PersonalInfo from "../pages/sign_up/user_Sign_up/PersonalInfo";
 import PhotoUpload from "../pages/sign_up/user_Sign_up/PhotoUpload";
 import ReviewInfo from "../pages/sign_up/user_Sign_up/ReviewInfo";
+import DriverEmailVerificationPage from "../pages/sign_up/driver_signup/DriverEmailVerificationPage";
+import DriverPersonalInfo from "../pages/sign_up/driver_signup/DriverPersonalInfo";
+import DriverPhotoUpload from "../pages/sign_up/driver_signup/DriverPhotoUpload";
+import DrivingInfo from "../pages/sign_up/driver_signup/DrivingInfo";
 
 const router = createBrowserRouter([
     {
@@ -43,6 +47,8 @@ const router = createBrowserRouter([
                 path: "/sign-in",
                 element: <Signin />
             },
+
+            // user sign-up routes
             {
                 path: "/sign-up",
                 element: <Signup />
@@ -67,14 +73,40 @@ const router = createBrowserRouter([
                 path: "/sign-up/user-info-review",
                 element: <ReviewInfo />
             },
+
+            // agency sign-up routes
             {
                 path: "/sign-up/agency",
                 element: <AgencySignUp />
             },
+
+            // driver sign-up routes
             {
                 path: "/sign-up/driver",
                 element: <DriverSignUp />
             },
+            {
+                path: "/sign-up/driver/email-verification",
+                element: <DriverEmailVerificationPage />
+            },
+            {
+                path: "/sign-up/driver/personal-info",
+                element: <DriverPersonalInfo />
+            },
+            {
+                path: "/sign-up/driver/driving-info",
+                element: <DrivingInfo />
+            },
+            {
+                path: "/sign-up/driver/photo-upload",
+                element: <DriverPhotoUpload />
+            },
+            
+            {
+                path: "/sign-up/driver/information-review",
+                element: <ReviewInfo />
+            },
+
             {
                 path: '/view-all-brands',
                 element: <AllBrands></AllBrands>

@@ -25,6 +25,10 @@ const schema = z.object({
     password: z.string()
         .min(1, 'Password is required.')
         .min(8, 'Password must be at least 8 characters')
+        .transform(password => password.trim()),
+    confirmPassword: z.string()
+        .min(1, 'Password is required.')
+        .min(8, 'Password must be at least 8 characters')
         .transform(password => password.trim())
 });
 
@@ -41,30 +45,37 @@ const Signup = () => {
         resolver: zodResolver(schema)
     })
 
-    const handleSignUp = async(e) => {
-        e.preventDefault();
+    const handleSignUp = async (data) => {
+        await new Promise(resolve => setTimeout(() => resolve(), 1000));
 
         if (terms) {
-            // setLoading(true);
-            const email = e.target.email.value;
-            const password = e.target.password.value;
-            const confirmPassword = e.target.confirmPassword.value;
+            setLoading(true);
+            const email = data.email;
+            const password = data.password;
+            const confirmPassword = data.confirmPassword;
+
+            console.log(password, confirmPassword);
+
 
             if (password === confirmPassword) {
                 handleCreateUser(email, password)
-                .then(async (res) => {
-                    // console.log(res);
-                    const user = res.user;
-                    await sendEmailVerification(user);
-                    dispatch(setUserData(user));
-                    dispatch(setEmail(email));
-                    dispatch(nextStep());
-                    navigate('/sign-up/email-verification');
-                })
-                .catch((error) => {
-                    if (error.message === 'Firebase: Error (auth/email-already-in-use).')
-                        setError('Email is already in use!')
-                })
+                    .then(async (res) => {
+                        // console.log(res);
+                        const user = res.user;
+                        await sendEmailVerification(user);
+                        dispatch(setUserData(user));
+                        dispatch(setEmail(email));
+                        dispatch(nextStep());
+                        navigate('/sign-up/email-verification');
+                    })
+                    .catch((error) => {
+                        if (error.message === 'Firebase: Error (auth/email-already-in-use).')
+                            setError('Email is already in use!')
+                    })
+            }
+            else {
+                setLoading(false);
+                setError("Passwords do not match.");
             }
         }
         else {
@@ -73,30 +84,30 @@ const Signup = () => {
     }
 
     const googleLogin = async () => {
-            try {
-                const result = await handleGoogleLogin();
-                // console.log(result);
-                setUser(result.user);
-    
-                if (result.user.metadata.lastLoginAt - result.user.metadata.createdAt > 5000 ) {
-                    toast.success("Log in successful.")
-                    navigate('/');
-                }
-                else {
-                    const user = result.user;
-                    await sendEmailVerification(user);
-                    dispatch(setUserData(user));
-                    dispatch(setEmail(user.email));
-                    dispatch(nextStep());
-                    toast.success("Account created successfully. Please verify your email.");
-                    navigate('/sign-up/email-verification');
-                }
-    
+        try {
+            const result = await handleGoogleLogin();
+            // console.log(result);
+            setUser(result.user);
+
+            if (result.user.metadata.lastLoginAt - result.user.metadata.createdAt > 5000) {
+                toast.success("Log in successful.")
+                navigate('/');
             }
-            catch (error) {
-                toast.error('Login failed.');
+            else {
+                const user = result.user;
+                await sendEmailVerification(user);
+                dispatch(setUserData(user));
+                dispatch(setEmail(user.email));
+                dispatch(nextStep());
+                toast.success("Account created successfully. Please verify your email.");
+                navigate('/sign-up/email-verification');
             }
+
         }
+        catch (error) {
+            toast.error('Login failed.');
+        }
+    }
 
     const handleClickShowPassword = () => setShowPassword((show) => !show);
 
@@ -125,7 +136,7 @@ const Signup = () => {
                 <h1 className="text-3xl text-center mb-5 font-bold">Sign up</h1>
                 <div className="space-y-4">
                     <form onSubmit={handleSubmit(handleSignUp)} className="space-y-4">
-                        <TextField id="email" label="Email" variant="outlined" type="email" fullWidth size="small" {...register("email")}/>
+                        <TextField id="email" label="Email" variant="outlined" type="email" fullWidth size="small" {...register("email")} />
                         <FormControl variant="outlined" fullWidth size="small">
                             <InputLabel htmlFor="outlined-adornment-password">Password</InputLabel>
                             <OutlinedInput
@@ -156,6 +167,7 @@ const Signup = () => {
                             <OutlinedInput
                                 id="confirmPassword"
                                 type={showPassword ? 'text' : 'password'}
+                                {...register("confirmPassword")}
                                 endAdornment={
                                     <InputAdornment position="end">
                                         <IconButton
@@ -183,10 +195,10 @@ const Signup = () => {
                                 Accept our terms and conditions.
                             </label>
                         </div>
-                        <Button variant="contained" type="submit" fullWidth sx={{ backgroundColor: '#F58300', fontWeight: 700 }}>Sign up</Button>
                         {
-                            error && <div className="text-red-500 text-sm text-center">{error}</div>
+                            error && <div className="text-red-500 text-sm">{error}</div>
                         }
+                        <Button variant="contained" type="submit" fullWidth sx={{ backgroundColor: '#F58300', fontWeight: 700 }}>Sign up</Button>
                     </form>
                     <div>
                         <p className="text-center">Already have an account? <Link to={'/sign-in'} className="text-[#F58300]">Log in</Link></p>
@@ -201,11 +213,11 @@ const Signup = () => {
                         </Link>
                         <Link to={'/sign-up/agency'}>
                             <div className="border border-gray-400 rounded p-2 flex gap-2 text-lg font-medium justify-center items-center">
-                                <CiShop className="w-6"/>
+                                <CiShop className="w-6" />
                                 <p>Sign up as Agency</p>
                             </div>
                         </Link>
-                        <Link to={'/sign-up/driver'}>
+                        <Link to={"/sign-up/driver"}>
                             <div className="border border-gray-400 rounded p-2 flex gap-2 text-lg font-medium justify-center items-center">
                                 <FaUserPlus className="w-6" />
                                 <p>Sign up as Driver</p>

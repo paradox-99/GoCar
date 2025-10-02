@@ -12,6 +12,7 @@ import { useState } from "react";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { PropagateLoader } from "react-spinners";
 
 const schema = z.object({
     name: z.string()
@@ -42,6 +43,8 @@ const Signup_part2 = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const axiosPublic = useAxiosPublic();
+    const [loading, setLoading] = useState(false);
+    const [birthdate, setBirthdatee] = useState(null);
 
     const { register, handleSubmit, formState: { errors } } = useForm({
         resolver: zodResolver(schema)
@@ -49,37 +52,48 @@ const Signup_part2 = () => {
 
     const checkNID = async (nid) => {
         const { data } = await axiosPublic.get(`/userRoute/checkNID/${nid}`);
-
+    
         if (data.code === 1) {
             return true;
         }
         return false;
     }
 
-    const submitData = async (e) => {
-        // e.preventDefault();
-        const name = e.target.name.value;
-        const gender = e.target.gender.value;
-        const dob = e.target.dob.value;
-        const nid = e.target.nid.value;
+    const submitData = async (data) => {
+        await new Promise(resolve => setTimeout(() => resolve(), 1000));
 
-        const status = await checkNID(nid)
-        console.log(status);
+        const name = data.name;
+        const gender = data.gender;
+        const nid = data.nid;
 
+        const status = await checkNID(nid);
+        
         if (status) {
             setMessage("NID already exists. Please use a different NID.");
             return;
         }
         else {
+            setLoading(true);
             setMessage('');
             dispatch(setName(name));
             dispatch(setGender(gender));
-            dispatch(setBirthdate(dob));
+            dispatch(setBirthdate(birthdate));
             dispatch(setNID(nid));
             dispatch(nextStep());
             navigate('/sign-up/user-contact-info');
         }
     }
+
+
+    if (loading) {
+        return <div className="w-full h-screen flex justify-center items-center">
+            <PropagateLoader
+                color="#F58300"
+                speedMultiplier={1}
+            />
+        </div>
+    }
+
 
     return (
         <div className="pt-8 lg:pt-32 flex justify-center items-center ">
@@ -91,7 +105,16 @@ const Signup_part2 = () => {
                         <TextField id="gender" label="Gender" variant="outlined" type="text" fullWidth size="small" required {...register("gender")} />
                         <LocalizationProvider dateAdapter={AdapterMoment}>
                             <DemoContainer components={['DatePicker']}>
-                                <DatePicker label="Date of Birth" name="dob" minDate={moment('1950-01-01')} maxDate={moment(currentTime.clone().subtract(18, "years"))} slotProps={{ textField: { size: 'small', fullWidth: true, required: true } }} />
+                                <DatePicker label="Date of Birth" name="dob" minDate={moment('1950-01-01')} maxDate={moment(currentTime.clone().subtract(18, "years"))} slotProps={{ textField: { size: 'small', fullWidth: true, required: true } }}
+                                    onChange={(newValue) => {
+                                        if (newValue) {
+                                            const dateOnly = newValue.format("YYYY-MM-DD");
+                                            console.log(dateOnly); // e.g., "1998-05-20"
+                                            setBirthdatee(dateOnly); // store in state
+                                        } else {
+                                            setBirthdatee(""); // if cleared
+                                        }
+                                    }} />
                             </DemoContainer>
                         </LocalizationProvider>
                         <TextField id="nid" label="NID" variant="outlined" type="text" size="small" sx={{ mt: 1 }} required {...register("nid")} />
