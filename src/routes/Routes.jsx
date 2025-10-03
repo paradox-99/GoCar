@@ -28,6 +28,7 @@ import DriverEmailVerificationPage from "../pages/sign_up/driver_signup/DriverEm
 import DriverPersonalInfo from "../pages/sign_up/driver_signup/DriverPersonalInfo";
 import DriverPhotoUpload from "../pages/sign_up/driver_signup/DriverPhotoUpload";
 import DrivingInfo from "../pages/sign_up/driver_signup/DrivingInfo";
+import DriverInfoReview from "../pages/sign_up/driver_signup/DriverInfoReview";
 
 const router = createBrowserRouter([
     {
@@ -79,6 +80,26 @@ const router = createBrowserRouter([
                 path: "/sign-up/agency",
                 element: <AgencySignUp />
             },
+            {
+                path: "/sign-up/agency/email-verification",
+                element: <DriverEmailVerificationPage />
+            },
+            {
+                path: "/sign-up/agency/personal-info",
+                element: <DriverPersonalInfo />
+            },
+            {
+                path: "/sign-up/agency/driving-info",
+                element: <DrivingInfo />
+            },
+            {
+                path: "/sign-up/agency/photo-upload",
+                element: <DriverPhotoUpload />
+            },
+            {
+                path: "/sign-up/agency/information-review",
+                element: <DriverInfoReview />
+            },
 
             // driver sign-up routes
             {
@@ -101,10 +122,9 @@ const router = createBrowserRouter([
                 path: "/sign-up/driver/photo-upload",
                 element: <DriverPhotoUpload />
             },
-            
             {
                 path: "/sign-up/driver/information-review",
-                element: <ReviewInfo />
+                element: <DriverInfoReview />
             },
 
             {
