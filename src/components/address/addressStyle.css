@@ -1,0 +1,34 @@
+.addressInput {
+  width: 100%;
+  max-width: 720px;      /* desktop max */
+  height: 3.75rem;
+  padding: 0.6rem 0.75rem;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  box-sizing: border-box;
+  font-size: 1rem;
+  transition: box-shadow .15s ease;
+}
+
+/* medium screens — slightly taller for touch */
+@media (max-width: 600px) {
+  .addressInput {
+    height: 3.25rem;
+    padding: 0.5rem 0.6rem;
+    font-size: 0.95rem;
+  }
+}
+
+/* very small phones */
+@media (max-width: 360px) {
+  .addressInput {
+    height: 3rem;
+    font-size: 0.9rem;
+  }
+}
+
+/* focus state */
+.addressInput:focus {
+  box-shadow: 0 0 0 3px rgba(21,156,228,0.12);
+  border-color: #159ce4;
+}

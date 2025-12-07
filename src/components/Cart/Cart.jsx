@@ -7,9 +7,6 @@ import { Link, useNavigate } from "react-router-dom";
 
 const Cart = ({ car, carBookingInfo }) => {
 
-     console.log(carBookingInfo);
-     
-
      return (
           <div className="max-w-80 p-5 rounded-lg border-2 border-[#F9F9F9] shadow-lg">
                <figure className="h-44">

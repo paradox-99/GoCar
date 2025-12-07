@@ -8,15 +8,25 @@ import { useQuery } from "@tanstack/react-query";
 import DateTime from "../../components/dateTime/DateTime";
 import Address from "../../components/address/Address";
 import { FaEdit } from "react-icons/fa";
+import AddressSearch from "../../components/address/AddressSearch";
+import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
+
+function PanTo({ lat, lon }) {
+     const map = useMap();
+     if (!lat || !lon) return null;
+     map.setView([parseFloat(lat), parseFloat(lon)], 15, { animate: true });
+     return null;
+}
 
 const SearchPage = () => {
     const location = useLocation();
     const params = new URLSearchParams(location.search);
     const axiosPublic = useAxiosPublic();
 
-    const [district, setDistrict] = useState(params.get("district"));
-    const [upazilla, setUpazilla] = useState(params.get("upazilla"));
-    const [keyArea, setKeyArea] = useState(params.get("keyArea"));
+    const [area, setArea] = useState(params.get("location"));
+    const [lat, setLat] = useState(params.get("lat"));
+    const [lon, setLon] = useState(params.get("lon"));
+    const [placeID, setPlaceID] = useState(params.get("place_id"));
     const [fromDate, setFromDate] = useState(params.get("fromDate"));
     const [fromTime, setFromTime] = useState(params.get("fromTime"));
     const [untilDate, setUntilDate] = useState(params.get("untilDate"));
@@ -26,8 +36,13 @@ const SearchPage = () => {
     const [carBookingInfo, setCarBookingInfo] = useState(null);
     const [edit, setEdit] = useState(false);
     const [cars, setCars] = useState('');
+    const [selected, setSelected] = useState(null);
+    const LOCATIONIQ_KEY = import.meta.env.VITE_LOCATIONIQ_KEY || '';
 
     const timeValues = { fromDate, fromTime, untilDate, untilTime };
+
+    console.log(area);
+
 
     const { isPending } = useQuery({
         queryKey: ['cars'],
@@ -61,8 +76,6 @@ const SearchPage = () => {
         setTime(timeAndDate)
     }
 
-
-
     const searchPage = async () => {
         setDistrict(address.district);
         setUpazilla(address.upazilla);
@@ -88,12 +101,16 @@ const SearchPage = () => {
         setCars(response.data);
     }
 
+    function handleSelectPlace(place) {
+          setSelected(place);
+     }
+
     return (
         <div className="pt-28 w-full">
             <div className="mb-10 w-full flex gap-5 flex-col min-[1220px]:flex-row justify-center items-center">
                 <div className="">
                     <p className="font-nunito lg:mb-4 font-semibold text-lg text-center md:text-left">Location</p>
-                    <div className="flex gap-4 lg:items-center w-full">
+                    {/* <div className="flex gap-4 lg:items-center w-full">
                         {
                             !edit && <>
                                 <TextField size="small" value={district} label="District"></TextField>
@@ -107,7 +124,13 @@ const SearchPage = () => {
                         {
                             edit && <div className="-mt-2"><Address getAddress={getAddress}></Address></div>
                         }
-                    </div>
+                    </div> */}
+                    <AddressSearch
+                        onSelect={handleSelectPlace}
+                        apiKey={LOCATIONIQ_KEY}
+                        provider={LOCATIONIQ_KEY ? 'locationiq' : 'nominatim'}
+                        defaultValue={area}
+                    />
                 </div>
                 <div>
                     <h3 className="font-nunito lg:mb-2 font-semibold text-lg text-center md:text-left">Booking Date</h3>

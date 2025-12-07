@@ -3,7 +3,6 @@ import { createUserWithEmailAndPassword, GoogleAuthProvider, onAuthStateChanged,
 import auth from "../firebase/firebase.config";
 import PropTypes from 'prop-types';
 import useAxiosPublic from "../hooks/useAxiosPublic";
-import { Logout } from "@mui/icons-material";
 
 export const AuthContext = createContext(null);
 
@@ -51,9 +50,6 @@ const AuthProvider = ({children}) => {
             setUser(user);
             setStatus(false);
             
-            // if (user) {
-                
-            // }
             if(!user){ {
                 axiosPublic.post('authorization/logout', {}, { withCredentials: true })
                 .then(() => console.log("Logged out"))
