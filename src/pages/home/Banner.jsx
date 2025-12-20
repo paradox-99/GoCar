@@ -16,15 +16,10 @@ function PanTo({ lat, lon }) {
 
 const Banner = () => {
 
-     // const [address, setAddress] = useState();
      const [time, setTime] = useState();
      const navigate = useNavigate();
      const [selected, setSelected] = useState(null);
      const LOCATIONIQ_KEY = import.meta.env.VITE_LOCATIONIQ_KEY || '';
-
-     // const getAddress = (address) => {
-     //      setAddress(address);
-     // }
 
      const getTime = (timeAndDate) => {
           setTime(timeAndDate)
@@ -35,13 +30,11 @@ const Banner = () => {
           const lat = selected.lat;
           const lon = selected.lon;
           const placeId = selected.raw.place_id;
-          const fromDate = time.fromDate;
-          const fromTime = time.fromTime;
-          const untilDate = time.untilDate;
-          const untilTime = time.untilTime;
+          const fromTs = time.fromTs;
+          const untilTs = time.untilTs;
 
           const locationParam = new URLSearchParams({ location: location, lat: lat, lon: lon, place_id: placeId});
-          const date = new URLSearchParams({fromDate: fromDate, fromTime: fromTime, untilDate: untilDate, untilTime: untilTime});
+          const date = new URLSearchParams({fromTs: fromTs, untilTs: untilTs});
           navigate(`/search/queries?${locationParam}&${date}`)
 
      }
@@ -50,8 +43,6 @@ const Banner = () => {
      function handleSelectPlace(place) {
           setSelected(place);
      }
-     
-     console.log("Selected place:", selected);
 
      return (
           <div className="bg-[#ececec] md:h-[85vh] lg:h-[83vh] py-10 md:py-0  bg-[url('/banner_image.png')] md:bg-[url('/banner_image2.png')] lg:bg-[url('/banner_image.png')] bg-right-top bg-contain md:bg-auto lg:bg-contain bg-no-repeat pl-3 md:pl-8 xl:pl-20 flex flex-col justify-center md:gap-5 lg:gap-10 xl:gap-14">
@@ -74,7 +65,6 @@ const Banner = () => {
                                    apiKey={LOCATIONIQ_KEY}
                                    provider={LOCATIONIQ_KEY ? 'locationiq' : 'nominatim'}
                                    placeholder="Search pickup location, e.g., Dhanmondi, Dhaka"
-                                   defaultValue={selected ? selected.display_name : ""}
                               />
                               {/* <div>
                                    <div style={{ display: 'grid', gridTemplateRows: 'auto 1fr', height: '100vh' }}>

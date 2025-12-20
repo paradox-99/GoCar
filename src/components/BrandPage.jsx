@@ -30,7 +30,7 @@ const BrandPage = () => {
      }
 
      return (
-          <div className="px-4 md:px-10 pt-28">
+          <div className="px-4 md:px-24 pt-28">
                <Helmet>
                     <title>{brandName} Cars</title>
                </Helmet>

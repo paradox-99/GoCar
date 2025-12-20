@@ -1,6 +1,8 @@
 // AddressSearch.jsx
 import React, { useState, useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
+import { useNavigate } from 'react-router-dom';
+import { BeatLoader, PropagateLoader } from 'react-spinners';
 
 // Simple debounce hook (no deps)
 function useDebounce(value, delay) {
@@ -22,6 +24,7 @@ export default function AddressSearch({ onSelect, apiKey, provider = 'locationiq
   const containerRef = useRef(null);
   const [error, setError] = useState(null);
   const countryFilter = 'bd';
+  const navigate = useNavigate();
 
   // close dropdown when clicking outside
   useEffect(() => {
@@ -48,10 +51,10 @@ export default function AddressSearch({ onSelect, apiKey, provider = 'locationiq
         if (provider === 'locationiq') {
           // LocationIQ autocomplete endpoint
           // NOTE: replace apiKey with your LocationIQ token
-          url = `https://us1.locationiq.com/v1/autocomplete.php?key=${encodeURIComponent(apiKey)}&q=${encodeURIComponent(q)}&format=json&limit=6&countrycodes=${countryFilter}`;
+          url = `https://us1.locationiq.com/v1/autocomplete.php?key=${encodeURIComponent(apiKey)}&q=${encodeURIComponent(q)}&format=json&limit=10&countrycodes=${countryFilter}`;
         } else {
           // fallback to OSM Nominatim (public) — be kind to their servers (cache + rate-limit)
-          url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(q)}&addressdetails=1&limit=6&countrycodes=${countryFilter}`;
+          url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(q)}&addressdetails=1&limit=10&countrycodes=${countryFilter}`;
         }
 
         const res = await fetch(url, {
@@ -97,31 +100,29 @@ export default function AddressSearch({ onSelect, apiKey, provider = 'locationiq
     if (onSelect) onSelect(item);
   }
 
-  console.log(defaultValue);
-
-
   return (
     <div ref={containerRef} style={{ position: 'relative', width: '100%' }}>
-      {
-        defaultValue &&
-        <input
-          id="address-search"
-          role="combobox"
-          aria-expanded={open}
-          aria-autocomplete="list"
-          aria-controls="address-search-list"
-          aria-activedescendant=""
-          placeholder={placeholder}
-          value={query}
-          defaultValue={defaultValue ? defaultValue : ""}
-          onChange={(e) => { setQuery(e.target.value); }}
-          onFocus={() => { if (results.length) setOpen(true); }}
-          className='md:w-[500px] h-[61px] rounded p-4 border border-gray-300 focus:border-blue-500 focus:ring-1 focus:ring-blue-500'
-        />
-      }
+      <input
+        id="address-search"
+        role="combobox"
+        aria-expanded={open}
+        aria-autocomplete="list"
+        aria-controls="address-search-list"
+        aria-activedescendant=""
+        placeholder={placeholder}
+        value={query}
+        defaultValue={defaultValue ? defaultValue : ""}
+        onChange={(e) => { setQuery(e.target.value); }}
+        onFocus={() => { if (results.length) setOpen(true); }}
+        className='md:w-[500px] h-[61px] rounded p-4 border border-gray-300 focus:border-blue-500 focus:ring-1 focus:ring-blue-500'
+      />
 
 
-      {loading && <div style={{ position: 'absolute', right: 10, top: 12, fontSize: 12 }}>…</div>}
+      {loading && <div style={{ position: 'absolute', right: 20, top: 20, fontSize: 12 }}><BeatLoader
+        color="#ff802c"
+        loading
+        size={10}
+      /></div>}
 
       {open && results.length > 0 && (
         <ul
@@ -143,6 +144,14 @@ export default function AddressSearch({ onSelect, apiKey, provider = 'locationiq
             border: '1px solid rgba(0,0,0,0.08)',
           }}
         >
+          <li
+            role="option"
+            onClick={() => navigate('/search/queries')}
+            style={{
+              padding: '10px 12px',
+              cursor: 'pointer',
+              borderBottom: '1px solid rgba(0,0,0,0.03)',
+            }}>Select address on map</li>
           {results.map((r, idx) => (
             <li
               key={`${r.lat}-${r.lon}-${idx}`}

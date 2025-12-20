@@ -1,9 +1,9 @@
-import { IconButton, Skeleton, Stack, TextField } from "@mui/material";
+import { IconButton, Skeleton, Stack, TextField, Tabs, Tab, Box } from "@mui/material";
 import { FaSearch } from "react-icons/fa";
 import Cart from "../../components/Cart/Cart";
 import { useLocation } from "react-router-dom";
 import useAxiosPublic from "../../hooks/useAxiosPublic";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import DateTime from "../../components/dateTime/DateTime";
 import Address from "../../components/address/Address";
@@ -12,10 +12,10 @@ import AddressSearch from "../../components/address/AddressSearch";
 import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
 
 function PanTo({ lat, lon }) {
-     const map = useMap();
-     if (!lat || !lon) return null;
-     map.setView([parseFloat(lat), parseFloat(lon)], 15, { animate: true });
-     return null;
+    const map = useMap();
+    if (!lat || !lon) return null;
+    map.setView([parseFloat(lat), parseFloat(lon)], 15, { animate: true });
+    return null;
 }
 
 const SearchPage = () => {
@@ -23,118 +23,117 @@ const SearchPage = () => {
     const params = new URLSearchParams(location.search);
     const axiosPublic = useAxiosPublic();
 
-    const [area, setArea] = useState(params.get("location"));
     const [lat, setLat] = useState(params.get("lat"));
     const [lon, setLon] = useState(params.get("lon"));
     const [placeID, setPlaceID] = useState(params.get("place_id"));
-    const [fromDate, setFromDate] = useState(params.get("fromDate"));
-    const [fromTime, setFromTime] = useState(params.get("fromTime"));
-    const [untilDate, setUntilDate] = useState(params.get("untilDate"));
-    const [untilTime, setUntilTime] = useState(params.get("untilTime"));
-    const [address, setAddress] = useState();
+    const [fromTs, setFromTs] = useState(params.get("fromTs"));
+    const [untilTs, setUntilTs] = useState(params.get("untilTs"));
+    const [display_name, setDisplay_name] = useState(params.get("location"));
     const [time, setTime] = useState();
     const [carBookingInfo, setCarBookingInfo] = useState(null);
     const [edit, setEdit] = useState(false);
-    const [cars, setCars] = useState('');
+    const [cars, setCars] = useState([]);
     const [selected, setSelected] = useState(null);
+    const [isPending, setIsPending] = useState(false);
+    const [tabValue, setTabValue] = useState(0);
     const LOCATIONIQ_KEY = import.meta.env.VITE_LOCATIONIQ_KEY || '';
 
-    const timeValues = { fromDate, fromTime, untilDate, untilTime };
+    const timeValues = { fromTs, untilTs };
 
-    console.log(area);
-
-
-    const { isPending } = useQuery({
-        queryKey: ['cars'],
-        queryFn: async () => {
-            const filterData = {
-                fromDate,
-                fromTime,
-                untilDate,
-                untilTime,
-                district,
-                upazilla,
-                keyArea
-            };
-            const response = await axiosPublic.get('carRoutes/getSearchData', { params: filterData });
-            const bookingInfo = {
-                fromDate: fromDate,
-                fromTime: fromTime,
-                toDate: untilDate,
-                toTime: untilTime
+    useEffect(() => {
+        const fetchCars = async () => {
+            setIsPending(true);
+            try {
+                const filterData = {
+                    fromTs, untilTs, lat, lon, placeID
+                };
+                console.log(filterData);
+                
+                const response = await axiosPublic.get('carRoutes/getSearchData', { params: filterData });
+                console.log(response);
+                
+                const bookingInfo = {
+                    fromTs: fromTs,
+                    untilTs: untilTs
+                }
+                setCarBookingInfo(bookingInfo)
+                setCars(response.data)
+            } catch (error) {
+                console.error('Error fetching cars:', error);
+            } finally {
+                setIsPending(false);
             }
-            setCarBookingInfo(bookingInfo)
-            setCars(response.data)
-            return response.data;
-        },
-    })
+        };
 
-    const getAddress = (address) => {
-        setAddress(address);
-    }
+        if (fromTs && untilTs && lat && lon) {
+            fetchCars();
+        }
+    }, [fromTs, untilTs, lat, lon, placeID, axiosPublic]);
+
     const getTime = (timeAndDate) => {
         setTime(timeAndDate)
     }
 
     const searchPage = async () => {
-        setDistrict(address.district);
-        setUpazilla(address.upazilla);
-        setKeyArea(address.area);
+        
         if (time) {
-            setFromDate(time.fromDate);
-            setFromTime(time.fromTime);
-            setUntilDate(time.untilDate);
-            setUntilTime(time.untilTime);
+            setFromTs(time.fromTs);
+            setUntilTs(time.untilTs);
+            setLat(selected.lat);
+            setLon(selected.lon);
+            setPlaceID(selected.raw.place_id);
         }
-        console.log("called");
-
+        
         const filterData = {
-            fromDate,
-            fromTime,
-            untilDate,
-            untilTime,
-            district,
-            upazilla,
-            keyArea
+            fromTs,
+            untilTs,
+            lat,
+            lon,
+            placeID
         };
         const response = await axiosPublic.get('/carRoutes/getSearchData', { params: filterData });
         setCars(response.data);
     }
 
     function handleSelectPlace(place) {
-          setSelected(place);
-     }
+        setSelected(place);
+    }
+
+    const handleTabChange = (event, newValue) => {
+        setTabValue(newValue);
+    };
+
+    const filteredCars = Array.isArray(cars) ? cars.filter(car => {
+        if (tabValue === 0) return car.vehicle_type === 'Car';
+        if (tabValue === 1) return car.vehicle_type === 'Bike';
+        return true;
+    }) : [];
 
     return (
         <div className="pt-28 w-full">
             <div className="mb-10 w-full flex gap-5 flex-col min-[1220px]:flex-row justify-center items-center">
                 <div className="">
                     <p className="font-nunito lg:mb-4 font-semibold text-lg text-center md:text-left">Location</p>
-                    {/* <div className="flex gap-4 lg:items-center w-full">
+                    <div className="flex gap-4 lg:items-center w-full">
                         {
                             !edit && <>
-                                <TextField size="small" value={district} label="District"></TextField>
-                                <TextField size="small" value={upazilla} label="Upazilla"></TextField>
-                                {
-                                    keyArea &&
-                                    <TextField size="small" value={keyArea} label="Area"></TextField>
-                                }
+                                <TextField size="medium" value={display_name} label="District" sx={{ width: '500px' }} disabled></TextField>
                             </>
                         }
                         {
-                            edit && <div className="-mt-2"><Address getAddress={getAddress}></Address></div>
+                            edit &&
+                            <AddressSearch
+                                onSelect={handleSelectPlace}
+                                apiKey={LOCATIONIQ_KEY}
+                                provider={LOCATIONIQ_KEY ? 'locationiq' : 'nominatim'}
+                                placeholder="Search pickup location, e.g., Dhanmondi, Dhaka"
+                            />
                         }
-                    </div> */}
-                    <AddressSearch
-                        onSelect={handleSelectPlace}
-                        apiKey={LOCATIONIQ_KEY}
-                        provider={LOCATIONIQ_KEY ? 'locationiq' : 'nominatim'}
-                        defaultValue={area}
-                    />
+                    </div>
                 </div>
                 <div>
                     <h3 className="font-nunito lg:mb-2 font-semibold text-lg text-center md:text-left">Booking Date</h3>
-                    <DateTime getTime={getTime} time={timeValues}></DateTime>
+                    <DateTime getTime={getTime} time={timeValues} dis={edit ? false : true}></DateTime>
                 </div>
                 <div className=" min-[1222px]:mt-10">
                     {
@@ -151,7 +150,52 @@ const SearchPage = () => {
                     }
                 </div>
             </div>
+            {/* <div>
+                <div style={{ display: 'grid', gridTemplateRows: 'auto 1fr', height: '100vh' }}>
+                    <div style={{ padding: 12, maxWidth: 900, margin: '0 auto', width: '100%' }}>
+                        <AddressSearch
+                            onSelect={handleSelectPlace}
+                            apiKey={LOCATIONIQ_KEY}
+                            provider={LOCATIONIQ_KEY ? 'locationiq' : 'nominatim'}
+                            placeholder="Search pickup location, e.g., Dhanmondi, Dhaka"
+                        />
+                    </div>
+
+                    <div style={{ maxWidth: 1200, margin: '0 auto', width: '100%', height: '100%' }}>
+                        <MapContainer center={[23.8103, 90.4125]} zoom={12} style={{ height: '100%', borderRadius: 8 }}>
+                            <TileLayer
+                                // use OSM tiles (or your tileserver)
+                                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                                attribution="&copy; OpenStreetMap contributors"
+                            />
+                            {selected && (
+                                <>
+                                    <PanTo lat={selected.lat} lon={selected.lon} />
+                                    <Marker position={[parseFloat(selected.lat), parseFloat(selected.lon)]}>
+                                        <Popup>
+                                            <div style={{ minWidth: 200 }}>
+                                                <strong>{selected.display_name}</strong>
+                                                <div style={{ fontSize: 12, color: '#444' }}>
+                                                    {selected.lat}, {selected.lon}
+                                                </div>
+                                            </div>
+                                        </Popup>
+                                    </Marker>
+                                </>
+                            )}
+                        </MapContainer>
+                    </div>
+                </div>
+            </div> */}
             <h1 className="text-5xl font-bold font-nunito text-center mt-10 md:mt-16 lg:mt-20">Search Results</h1>
+            
+            <Box sx={{ borderBottom: 1, borderColor: 'divider', display: 'flex', justifyContent: 'center', my: 3 }}>
+                <Tabs value={tabValue} onChange={handleTabChange}>
+                    <Tab label="Cars" />
+                    <Tab label="Bikes" />
+                </Tabs>
+            </Box>
+
             <div className="w-full flex gap-5 justify-center items-center flex-wrap my-8 md:my-12">
                 {
                     isPending ? Array.from({ length: 3 }).map((_, index) => (
@@ -163,12 +207,13 @@ const SearchPage = () => {
                             <Skeleton variant="rectangular" width={300} height={80} />
                             <Skeleton variant="rounded" width={300} height={80} />
                         </Stack>
-                    )) :
-                        cars?.map(car => <Cart
-                            key={car.vehicle_id}
-                            car={car}
-                            carBookingInfo={carBookingInfo}
-                        ></Cart>)
+                    ))
+                    :
+                    filteredCars?.map(car => <Cart
+                        key={car.vehicle_id}
+                        car={car}
+                        carBookingInfo={carBookingInfo}
+                    ></Cart>)
                 }
             </div>
         </div>
