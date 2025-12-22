@@ -1,4 +1,4 @@
-import { IconButton, Skeleton, Stack, TextField, Tabs, Tab, Box } from "@mui/material";
+import { IconButton, Skeleton, Stack, TextField, Tabs, Tab, Box, Button } from "@mui/material";
 import { FaSearch } from "react-icons/fa";
 import Cart from "../../components/Cart/Cart";
 import { useLocation } from "react-router-dom";
@@ -39,6 +39,13 @@ const SearchPage = () => {
     const LOCATIONIQ_KEY = import.meta.env.VITE_LOCATIONIQ_KEY || '';
 
     const timeValues = { fromTs, untilTs };
+
+    // Set edit to true if coming from map select page
+    useEffect(() => {
+        if (params.get("fromMapSelect") === "true") {
+            setEdit(true);
+        }
+    }, []);
 
     useEffect(() => {
         const fetchCars = async () => {
@@ -127,6 +134,7 @@ const SearchPage = () => {
                                 apiKey={LOCATIONIQ_KEY}
                                 provider={LOCATIONIQ_KEY ? 'locationiq' : 'nominatim'}
                                 placeholder="Search pickup location, e.g., Dhanmondi, Dhaka"
+                                defaultValue={display_name}
                             />
                         }
                     </div>
@@ -138,55 +146,52 @@ const SearchPage = () => {
                 <div className=" min-[1222px]:mt-10">
                     {
                         !edit &&
-                        <IconButton onClick={() => setEdit(true)}>
-                            <FaEdit className="w-5 md:w-7" />
-                        </IconButton>
+                        <Button
+                            variant="contained"
+                            startIcon={<FaEdit />}
+                            onClick={() => setEdit(true)}
+                            sx={{
+                                backgroundColor: '#ff802c',
+                                color: '#fff',
+                                fontFamily: 'Nunito',
+                                fontWeight: 600,
+                                textTransform: 'none',
+                                padding: '10px 20px',
+                                borderRadius: '8px',
+                                fontSize: '16px',
+                                '&:hover': {
+                                    backgroundColor: '#e67e1f',
+                                }
+                            }}
+                        >
+                            Edit
+                        </Button>
                     }
                     {
                         edit &&
-                        <IconButton onClick={searchPage}>
-                            <FaSearch className="w-5 md:w-7 text-black" />
-                        </IconButton>
+                        <Button
+                            variant="contained"
+                            startIcon={<FaSearch />}
+                            onClick={searchPage}
+                            sx={{
+                                backgroundColor: '#ff802c',
+                                color: '#fff',
+                                fontFamily: 'Nunito',
+                                fontWeight: 600,
+                                textTransform: 'none',
+                                padding: '10px 20px',
+                                borderRadius: '8px',
+                                fontSize: '16px',
+                                '&:hover': {
+                                    backgroundColor: '#e67e1f',
+                                }
+                            }}
+                        >
+                            Search
+                        </Button>
                     }
                 </div>
             </div>
-            {/* <div>
-                <div style={{ display: 'grid', gridTemplateRows: 'auto 1fr', height: '100vh' }}>
-                    <div style={{ padding: 12, maxWidth: 900, margin: '0 auto', width: '100%' }}>
-                        <AddressSearch
-                            onSelect={handleSelectPlace}
-                            apiKey={LOCATIONIQ_KEY}
-                            provider={LOCATIONIQ_KEY ? 'locationiq' : 'nominatim'}
-                            placeholder="Search pickup location, e.g., Dhanmondi, Dhaka"
-                        />
-                    </div>
-
-                    <div style={{ maxWidth: 1200, margin: '0 auto', width: '100%', height: '100%' }}>
-                        <MapContainer center={[23.8103, 90.4125]} zoom={12} style={{ height: '100%', borderRadius: 8 }}>
-                            <TileLayer
-                                // use OSM tiles (or your tileserver)
-                                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                                attribution="&copy; OpenStreetMap contributors"
-                            />
-                            {selected && (
-                                <>
-                                    <PanTo lat={selected.lat} lon={selected.lon} />
-                                    <Marker position={[parseFloat(selected.lat), parseFloat(selected.lon)]}>
-                                        <Popup>
-                                            <div style={{ minWidth: 200 }}>
-                                                <strong>{selected.display_name}</strong>
-                                                <div style={{ fontSize: 12, color: '#444' }}>
-                                                    {selected.lat}, {selected.lon}
-                                                </div>
-                                            </div>
-                                        </Popup>
-                                    </Marker>
-                                </>
-                            )}
-                        </MapContainer>
-                    </div>
-                </div>
-            </div> */}
             <h1 className="text-5xl font-bold font-nunito text-center mt-10 md:mt-16 lg:mt-20">Search Results</h1>
             
             <Box sx={{ borderBottom: 1, borderColor: 'divider', display: 'flex', justifyContent: 'center', my: 3 }}>

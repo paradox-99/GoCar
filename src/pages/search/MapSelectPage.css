@@ -1,0 +1,69 @@
+.map-select-page {
+  display: flex;
+  flex-direction: column;
+  height: calc(100vh - 80px);
+  width: 100%;
+  padding-top: 80px;
+  background-color: #f5f5f5;
+}
+
+.action-buttons {
+  display: flex !important;
+  justify-content: center;
+  gap: 15px !important;
+  padding: 20px !important;
+  background-color: #fff !important;
+  border-top: 1px solid #e0e0e0 !important;
+  box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.05) !important;
+}
+
+.action-buttons .cancel-btn {
+  min-width: 140px !important;
+  padding: 10px 24px !important;
+  font-family: 'Nunito', sans-serif !important;
+  font-weight: 600 !important;
+  text-transform: none !important;
+  border-color: #ccc !important;
+  color: #333 !important;
+}
+
+.action-buttons .cancel-btn:hover {
+  background-color: #f5f5f5 !important;
+  border-color: #999 !important;
+}
+
+.action-buttons .confirm-btn {
+  min-width: 160px !important;
+  padding: 10px 24px !important;
+  font-family: 'Nunito', sans-serif !important;
+  font-weight: 600 !important;
+  text-transform: none !important;
+  background-color: #ff802c !important;
+}
+
+.action-buttons .confirm-btn:hover {
+  background-color: #e67e1f !important;
+}
+
+.action-buttons .confirm-btn:disabled {
+  background-color: #ccc !important;
+  cursor: not-allowed !important;
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+  .map-select-page {
+    height: calc(100vh - 60px);
+    padding-top: 60px;
+  }
+
+  .action-buttons {
+    flex-direction: column !important;
+    padding: 15px !important;
+  }
+
+  .action-buttons .cancel-btn,
+  .action-buttons .confirm-btn {
+    width: 100% !important;
+  }
+}

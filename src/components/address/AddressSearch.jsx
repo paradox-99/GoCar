@@ -1,7 +1,7 @@
 // AddressSearch.jsx
 import React, { useState, useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { BeatLoader, PropagateLoader } from 'react-spinners';
 
 // Simple debounce hook (no deps)
@@ -16,7 +16,7 @@ function useDebounce(value, delay) {
 
 export default function AddressSearch({ onSelect, apiKey, provider = 'locationiq', defaultValue = '', placeholder = '' }) {
   // onSelect receives { display_name, lat, lon, raw }
-  const [query, setQuery] = useState('');
+  const [query, setQuery] = useState(defaultValue || '');
   const debouncedQuery = useDebounce(query, 300);
   const [results, setResults] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -25,6 +25,14 @@ export default function AddressSearch({ onSelect, apiKey, provider = 'locationiq
   const [error, setError] = useState(null);
   const countryFilter = 'bd';
   const navigate = useNavigate();
+  const location = useLocation();
+
+  // Update query when defaultValue changes
+  useEffect(() => {
+    if (defaultValue) {
+      setQuery(defaultValue);
+    }
+  }, [defaultValue]);
 
   // close dropdown when clicking outside
   useEffect(() => {
@@ -111,7 +119,6 @@ export default function AddressSearch({ onSelect, apiKey, provider = 'locationiq
         aria-activedescendant=""
         placeholder={placeholder}
         value={query}
-        defaultValue={defaultValue ? defaultValue : ""}
         onChange={(e) => { setQuery(e.target.value); }}
         onFocus={() => { if (results.length) setOpen(true); }}
         className='md:w-[500px] h-[61px] rounded p-4 border border-gray-300 focus:border-blue-500 focus:ring-1 focus:ring-blue-500'
@@ -146,12 +153,17 @@ export default function AddressSearch({ onSelect, apiKey, provider = 'locationiq
         >
           <li
             role="option"
-            onClick={() => navigate('/search/queries')}
+            onClick={() => {
+              const params = new URLSearchParams(location.search);
+              navigate(`/search/map-select?${params.toString()}`);
+            }}
             style={{
               padding: '10px 12px',
               cursor: 'pointer',
               borderBottom: '1px solid rgba(0,0,0,0.03)',
-            }}>Select address on map</li>
+              backgroundColor: '#f9f9f9',
+              fontWeight: '500',
+            }}>📍 Select address on map</li>
           {results.map((r, idx) => (
             <li
               key={`${r.lat}-${r.lon}-${idx}`}

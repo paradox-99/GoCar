@@ -13,16 +13,13 @@ const Cart = ({ car, carBookingInfo }) => {
           Availability = true;
      }
 
-     console.log(car.images);
-     
-
      return (
           <div className="w-[395px] p-5 rounded-lg border-2 border-[#F9F9F9] shadow-lg">
                <figure className="h-[231px]">
                     <img src={car?.images} alt="photo" className="rounded-lg h-[231px] w-[351px]" />
                </figure>
                <div className="pt-5 flex justify-between items-start pb-3">
-                    <h2 className="text-xl font-bold">{car?.brand} {car?.model}</h2>
+                    <h2 className="text-lg font-bold">{car?.brand} {car?.model}</h2>
                     <div className="flex flex-col items-end">
                          
                          {/* Availability Status */}
@@ -70,7 +67,7 @@ const Cart = ({ car, carBookingInfo }) => {
                          </h2>
                     </div>
                     <div>
-                         <Link to={`/details/${car.brand}_${car.model}`} state={{ car, carBookingInfo }} className="bg-primary hover:bg-transparent hover:border-2 border-primary hover:text-primary duration-500 active:scale-75 shadow-inner shadow-secondary border-2 px-3 py-2 text-white rounded-lg font-semibold">
+                         <Link to={`/details/${car.vehicle_id}`} state={{ carBookingInfo }} className="bg-primary hover:bg-transparent hover:border-2 border-primary hover:text-primary duration-500 active:scale-75 shadow-inner shadow-secondary border-2 px-3 py-2 text-white rounded-lg font-semibold">
                               Details
                          </Link>
                     </div>

@@ -29,6 +29,7 @@ import DriverPersonalInfo from "../pages/sign_up/driver_signup/DriverPersonalInf
 import DriverPhotoUpload from "../pages/sign_up/driver_signup/DriverPhotoUpload";
 import DrivingInfo from "../pages/sign_up/driver_signup/DrivingInfo";
 import DriverInfoReview from "../pages/sign_up/driver_signup/DriverInfoReview";
+import MapSelectPage from "../pages/search/MapSelectPage";
 
 const router = createBrowserRouter([
     {
@@ -146,6 +147,10 @@ const router = createBrowserRouter([
             {
                 path: '/search/queries',
                 element:<SearchPage/>
+            },
+            {
+                path: '/search/map-select',
+                element: <MapSelectPage/>
             },
             {
                 path: '/search',
