@@ -1,25 +1,17 @@
-import { IconButton, Skeleton, Stack, TextField, Tabs, Tab, Box, Button } from "@mui/material";
+import { Skeleton, Stack, TextField, Tabs, Tab, Box, Button } from "@mui/material";
 import { FaSearch } from "react-icons/fa";
 import Cart from "../../components/Cart/Cart";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import useAxiosPublic from "../../hooks/useAxiosPublic";
 import { useState, useEffect } from "react";
-import { useQuery } from "@tanstack/react-query";
 import DateTime from "../../components/dateTime/DateTime";
-import Address from "../../components/address/Address";
 import { FaEdit } from "react-icons/fa";
 import AddressSearch from "../../components/address/AddressSearch";
-import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
-
-function PanTo({ lat, lon }) {
-    const map = useMap();
-    if (!lat || !lon) return null;
-    map.setView([parseFloat(lat), parseFloat(lon)], 15, { animate: true });
-    return null;
-}
+import toast from "react-hot-toast";
 
 const SearchPage = () => {
     const location = useLocation();
+    const navigate = useNavigate();
     const params = new URLSearchParams(location.search);
     const axiosPublic = useAxiosPublic();
 
@@ -47,6 +39,22 @@ const SearchPage = () => {
         }
     }, []);
 
+    // Update URL whenever search parameters change
+    useEffect(() => {
+        if (lat && lon && fromTs && untilTs) {
+            const searchParams = new URLSearchParams();
+            searchParams.set('lat', lat);
+            searchParams.set('lon', lon);
+            searchParams.set('location', display_name);
+            searchParams.set('fromTs', fromTs);
+            searchParams.set('untilTs', untilTs);
+            if (placeID) searchParams.set('place_id', placeID);
+            
+            // Update URL without full page reload
+            window.history.replaceState({}, '', `/search/queries?${searchParams.toString()}`);
+        }
+    }, [lat, lon, fromTs, untilTs, display_name, placeID]);
+
     useEffect(() => {
         const fetchCars = async () => {
             setIsPending(true);
@@ -55,10 +63,10 @@ const SearchPage = () => {
                     fromTs, untilTs, lat, lon, placeID
                 };
                 console.log(filterData);
-                
+
                 const response = await axiosPublic.get('carRoutes/getSearchData', { params: filterData });
                 console.log(response);
-                
+
                 const bookingInfo = {
                     fromTs: fromTs,
                     untilTs: untilTs
@@ -82,15 +90,21 @@ const SearchPage = () => {
     }
 
     const searchPage = async () => {
-        
+
         if (time) {
             setFromTs(time.fromTs);
             setUntilTs(time.untilTs);
             setLat(selected.lat);
             setLon(selected.lon);
+            setDisplay_name(selected.display_name);
             setPlaceID(selected.raw.place_id);
         }
-        
+
+        if (!time || !fromTs || !untilTs) {
+            toast.error("Please select booking date and time.");
+            return;
+        }
+
         const filterData = {
             fromTs,
             untilTs,
@@ -193,7 +207,7 @@ const SearchPage = () => {
                 </div>
             </div>
             <h1 className="text-5xl font-bold font-nunito text-center mt-10 md:mt-16 lg:mt-20">Search Results</h1>
-            
+
             <Box sx={{ borderBottom: 1, borderColor: 'divider', display: 'flex', justifyContent: 'center', my: 3 }}>
                 <Tabs value={tabValue} onChange={handleTabChange}>
                     <Tab label="Cars" />
@@ -213,12 +227,12 @@ const SearchPage = () => {
                             <Skeleton variant="rounded" width={300} height={80} />
                         </Stack>
                     ))
-                    :
-                    filteredCars?.map(car => <Cart
-                        key={car.vehicle_id}
-                        car={car}
-                        carBookingInfo={carBookingInfo}
-                    ></Cart>)
+                        :
+                        filteredCars?.map(car => <Cart
+                            key={car.vehicle_id}
+                            car={car}
+                            carBookingInfo={carBookingInfo}
+                        ></Cart>)
                 }
             </div>
         </div>

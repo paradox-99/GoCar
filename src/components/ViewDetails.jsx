@@ -77,6 +77,9 @@ const ViewDetails = () => {
         }
     };
 
+    console.log(car);
+    
+
     return (
         <div className="pt-28 max-w-[1360px] mx-auto lg:px-6">
             <Helmet>
