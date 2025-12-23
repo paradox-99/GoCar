@@ -62,10 +62,8 @@ const SearchPage = () => {
                 const filterData = {
                     fromTs, untilTs, lat, lon, placeID
                 };
-                console.log(filterData);
 
                 const response = await axiosPublic.get('carRoutes/getSearchData', { params: filterData });
-                console.log(response);
 
                 const bookingInfo = {
                     fromTs: fromTs,

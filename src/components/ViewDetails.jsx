@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import toast from "react-hot-toast";
 import { FcList, FcViewDetails } from "react-icons/fc";
-// import { FaCheckCircle } from "react-icons/fa"; // For green check icon
 import Slider from 'react-slick';
 import { Link, useLocation, useParams } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
@@ -13,6 +12,8 @@ import transmission from "../assets/icons/manual-transmission.png"
 import gear from "../assets/icons/shift-stick.png";
 import mileage from "../assets/icons/fast.png";
 import { FaCircleDot } from "react-icons/fa6";
+import fuel_capacity from "../assets/icons/fuel-station.png";
+import engine_capacity from "../assets/icons/piston.png";
 
 const ViewDetails = () => {
 
@@ -30,6 +31,8 @@ const ViewDetails = () => {
         // You may need to adjust this based on how your backend identifies cars
         return name;
     };
+
+    const isCar = name.includes("CAR");
 
     useEffect(() => {
         const fetchCarAndReviews = async () => {
@@ -55,8 +58,31 @@ const ViewDetails = () => {
             }
         };
 
+        const fetchBikeAndReviews = async () => {
+            setIsLoading(true);
+            setLoading(true);
+            try {
+                const vehicleIdentifier = getVehicleIdFromName(name);
+                
+                // Fetch car details
+                const bikeResponse = await axiosPublic.get(`/bikeRoutes/getBikeDetails/${vehicleIdentifier}`);
+                setCar(bikeResponse.data);
+                
+                // Fetch reviews and ratings for this car
+                const reviewResponse = await axiosPublic.get(`/bikeRoutes/getBikeReviews/${vehicleIdentifier}`);
+                setReviews(reviewResponse.data);
+                
+                setIsLoading(false);
+                setLoading(false);
+            } catch (error) {
+                console.error('Error fetching car details or reviews:', error);
+                setIsLoading(false);
+                setLoading(false);
+            }
+        };
+
         if (name) {
-            fetchCarAndReviews();
+            isCar ? fetchCarAndReviews() : fetchBikeAndReviews();
         }
     }, [name, axiosPublic]);
 
@@ -76,8 +102,6 @@ const ViewDetails = () => {
             toast("Already in Favorites");
         }
     };
-
-    console.log(car);
     
 
     return (
@@ -148,16 +172,35 @@ const ViewDetails = () => {
                                 <span className="text-xs text-gray-600">Fuel</span>
                                 <span className="font-semibold">{car?.fuel}</span>
                             </div>
-                            <div className="flex flex-col items-center py-3 px-3 border border-gray-300 rounded-lg">
-                                <PiSeatFill className="text-primary text-2xl mb-1" />
-                                <span className="text-xs text-gray-600">Seats</span>
-                                <span className="font-semibold">{car?.seats}</span>
-                            </div>
-                            <div className="flex flex-col items-center py-3 px-3 border border-gray-300 rounded-lg">
-                                <img src={transmission} alt="" className="w-6 mb-1" />
-                                <span className="text-xs text-gray-600">Transmission</span>
-                                <span className="font-semibold">{car?.transmission_type}</span>
-                            </div>
+                            
+                            {isCar ? (
+                                <>
+                                    <div className="flex flex-col items-center py-3 px-3 border border-gray-300 rounded-lg">
+                                        <PiSeatFill className="text-primary text-2xl mb-1" />
+                                        <span className="text-xs text-gray-600">Seats</span>
+                                        <span className="font-semibold">{car?.seats}</span>
+                                    </div>
+                                    <div className="flex flex-col items-center py-3 px-3 border border-gray-300 rounded-lg">
+                                        <img src={transmission} alt="" className="w-6 mb-1" />
+                                        <span className="text-xs text-gray-600">Transmission</span>
+                                        <span className="font-semibold">{car?.transmission_type}</span>
+                                    </div>
+                                </>
+                            ) : (
+                                <>
+                                    <div className="flex flex-col items-center py-3 px-3 border border-gray-300 rounded-lg">
+                                        <img src={fuel_capacity} alt="" className="w-6 mb-1" />
+                                        <span className="text-xs text-gray-600">Fuel Capacity</span>
+                                        <span className="font-semibold">{car?.fuel_capacity} L</span>
+                                    </div>
+                                    <div className="flex flex-col items-center py-3 px-3 border border-gray-300 rounded-lg">
+                                        <img src={engine_capacity} alt="" className="w-6 mb-1" />
+                                        <span className="text-xs text-gray-600">Engine Capacity</span>
+                                        <span className="font-semibold">{car?.engine_capacity} cc</span>
+                                    </div>
+                                </>
+                            )}
+                            
                             <div className="flex flex-col items-center py-3 px-3 border border-gray-300 rounded-lg">
                                 <img src={gear} alt="" className="w-6 mb-1" />
                                 <span className="text-xs text-gray-600">Gear</span>
@@ -181,53 +224,103 @@ const ViewDetails = () => {
             {/* Additional Information Section */}
             <div className="mt-16 px-6 lg:px-0">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
-                    {/* Car Features */}
-                    <div className="p-6 border border-gray-200 rounded-lg">
-                        <h2 className="text-xl font-bold mb-4 flex items-center gap-2">
-                            <FcList className="text-2xl" />
-                            Available Features
-                        </h2>
-                        <ul className="list-none space-y-3">
-                            <li className="flex items-center gap-3">
-                                <FaCircleDot className={`text-xs ${car?.air_conditioning ? 'text-green-500' : 'text-gray-300'}`} />
-                                <span>Air Conditioning: <span className="font-semibold">{car?.air_conditioning ? 'Yes' : 'No'}</span></span>
-                            </li>
-                            <li className="flex items-center gap-3">
-                                <FaCircleDot className={`text-xs ${car?.gps ? 'text-green-500' : 'text-gray-300'}`} />
-                                <span>GPS Navigation: <span className="font-semibold">{car?.gps ? 'Yes' : 'No'}</span></span>
-                            </li>
-                            <li className="flex items-center gap-3">
-                                <FaCircleDot className={`text-xs ${car?.bluetooth ? 'text-green-500' : 'text-gray-300'}`} />
-                                <span>Bluetooth: <span className="font-semibold">{car?.bluetooth ? 'Yes' : 'No'}</span></span>
-                            </li>
-                            <li className="flex items-center gap-3">
-                                <FaCircleDot className={`text-xs ${car?.central_locking ? 'text-green-500' : 'text-gray-300'}`} />
-                                <span>Central Locking: <span className="font-semibold">{car?.central_locking ? 'Yes' : 'No'}</span></span>
-                            </li>
-                        </ul>
-                    </div>
+                    {isCar ? (
+                        <>
+                            {/* Car Features */}
+                            <div className="p-6 border border-gray-200 rounded-lg">
+                                <h2 className="text-xl font-bold mb-4 flex items-center gap-2">
+                                    <FcList className="text-2xl" />
+                                    Available Features
+                                </h2>
+                                <ul className="list-none space-y-3">
+                                    <li className="flex items-center gap-3">
+                                        <FaCircleDot className={`text-xs ${car?.air_conditioning ? 'text-green-500' : 'text-gray-300'}`} />
+                                        <span>Air Conditioning: <span className="font-semibold">{car?.air_conditioning ? 'Yes' : 'No'}</span></span>
+                                    </li>
+                                    <li className="flex items-center gap-3">
+                                        <FaCircleDot className={`text-xs ${car?.gps ? 'text-green-500' : 'text-gray-300'}`} />
+                                        <span>GPS Navigation: <span className="font-semibold">{car?.gps ? 'Yes' : 'No'}</span></span>
+                                    </li>
+                                    <li className="flex items-center gap-3">
+                                        <FaCircleDot className={`text-xs ${car?.bluetooth ? 'text-green-500' : 'text-gray-300'}`} />
+                                        <span>Bluetooth: <span className="font-semibold">{car?.bluetooth ? 'Yes' : 'No'}</span></span>
+                                    </li>
+                                    <li className="flex items-center gap-3">
+                                        <FaCircleDot className={`text-xs ${car?.central_locking ? 'text-green-500' : 'text-gray-300'}`} />
+                                        <span>Central Locking: <span className="font-semibold">{car?.central_locking ? 'Yes' : 'No'}</span></span>
+                                    </li>
+                                </ul>
+                            </div>
 
-                    {/* Vehicle Info */}
-                    <div className="p-6 border border-gray-200 rounded-lg">
-                        <h2 className="text-xl font-bold mb-4 flex items-center gap-2">
-                            <FcViewDetails className="text-2xl" />
-                            Vehicle Information
-                        </h2>
-                        <ul className="list-none space-y-3">
-                            <li className="flex items-center gap-3">
-                                <FaCircleDot className="text-primary text-xs" />
-                                <span>Brand: <span className="font-semibold">{car?.brand}</span></span>
-                            </li>
-                            <li className="flex items-center gap-3">
-                                <FaCircleDot className="text-primary text-xs" />
-                                <span>Model: <span className="font-semibold">{car?.model}</span></span>
-                            </li>
-                            <li className="flex items-center gap-3">
-                                <FaCircleDot className="text-primary text-xs" />
-                                <span>Vehicle Type: <span className="font-semibold">{car?.car_type}</span></span>
-                            </li>
-                        </ul>
-                    </div>
+                            {/* Vehicle Info */}
+                            <div className="p-6 border border-gray-200 rounded-lg">
+                                <h2 className="text-xl font-bold mb-4 flex items-center gap-2">
+                                    <FcViewDetails className="text-2xl" />
+                                    Vehicle Information
+                                </h2>
+                                <ul className="list-none space-y-3">
+                                    <li className="flex items-center gap-3">
+                                        <FaCircleDot className="text-primary text-xs" />
+                                        <span>Brand: <span className="font-semibold">{car?.brand}</span></span>
+                                    </li>
+                                    <li className="flex items-center gap-3">
+                                        <FaCircleDot className="text-primary text-xs" />
+                                        <span>Model: <span className="font-semibold">{car?.model}</span></span>
+                                    </li>
+                                    <li className="flex items-center gap-3">
+                                        <FaCircleDot className="text-primary text-xs" />
+                                        <span>Vehicle Type: <span className="font-semibold">{car?.car_type}</span></span>
+                                    </li>
+                                </ul>
+                            </div>
+                        </>
+                    ) : (
+                        <>
+                            {/* Bike Safety Features */}
+                            <div className="p-6 border border-gray-200 rounded-lg">
+                                <h2 className="text-xl font-bold mb-4 flex items-center gap-2">
+                                    <FcList className="text-2xl" />
+                                    Safety Features
+                                </h2>
+                                <ul className="list-none space-y-3">
+                                    <li className="flex items-center gap-3">
+                                        <FaCircleDot className={`text-xs ${car?.abs ? 'text-green-500' : 'text-gray-300'}`} />
+                                        <span>ABS (Anti-lock Braking System): <span className="font-semibold">{car?.abs ? 'Yes' : 'No'}</span></span>
+                                    </li>
+                                    <li className="flex items-center gap-3">
+                                        <FaCircleDot className={`text-xs ${car?.disk_brake ? 'text-green-500' : 'text-gray-300'}`} />
+                                        <span>Disk Brake: <span className="font-semibold">{car?.disk_brake ? 'Yes' : 'No'}</span></span>
+                                    </li>
+                                    <li className="flex items-center gap-3">
+                                        <FaCircleDot className="text-primary text-xs" />
+                                        <span>Engine Start Type: <span className="font-semibold">{car?.engine_start_type}</span></span>
+                                    </li>
+                                </ul>
+                            </div>
+
+                            {/* Bike Information */}
+                            <div className="p-6 border border-gray-200 rounded-lg">
+                                <h2 className="text-xl font-bold mb-4 flex items-center gap-2">
+                                    <FcViewDetails className="text-2xl" />
+                                    Bike Information
+                                </h2>
+                                <ul className="list-none space-y-3">
+                                    <li className="flex items-center gap-3">
+                                        <FaCircleDot className="text-primary text-xs" />
+                                        <span>Brand: <span className="font-semibold">{car?.brand}</span></span>
+                                    </li>
+                                    <li className="flex items-center gap-3">
+                                        <FaCircleDot className="text-primary text-xs" />
+                                        <span>Model: <span className="font-semibold">{car?.model}</span></span>
+                                    </li>
+                                    <li className="flex items-center gap-3">
+                                        <FaCircleDot className="text-primary text-xs" />
+                                        <span>Helmet Count: <span className="font-semibold">{car?.helmet_count}</span></span>
+                                    </li>
+                                </ul>
+                            </div>
+                        </>
+                    )}
                 </div>
 
                 {/* Reviews Section */}
