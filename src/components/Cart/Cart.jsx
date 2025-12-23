@@ -2,7 +2,6 @@ import PropTypes from "prop-types";
 import { BsFuelPumpFill } from "react-icons/bs";
 import { FaCarSide, FaStar } from "react-icons/fa";
 import { PiSeatFill } from "react-icons/pi";
-import { TbManualGearboxFilled } from "react-icons/tb";
 import { Link, useNavigate } from "react-router-dom";
 
 const Cart = ({ car, carBookingInfo }) => {
@@ -12,6 +11,9 @@ const Cart = ({ car, carBookingInfo }) => {
      if (car?.status === "Available") {
           Availability = true;
      }
+
+     console.log(carBookingInfo);
+     
 
      return (
           <div className="w-[395px] p-5 rounded-lg border-2 border-[#F9F9F9] shadow-lg">

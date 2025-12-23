@@ -69,10 +69,8 @@ const Booking = () => {
      const carInfo = bookingData.car;
      const bookingDate = bookingData?.carBookingInfo;
 
-     const [fromDate, setFromDate] = useState(bookingDate?.fromDate || "");
-     const [fromTime, setFromTime] = useState(bookingDate?.fromTime || "");
-     const [untilDate, setUntilDate] = useState(bookingDate?.toDate || "");
-     const [untilTime, setUntilTime] = useState(bookingDate?.toTime || "");
+     const [fromTs, setFromTs] = useState(bookingDate?.fromTs || "");
+     const [untilTs, setUntilTs] = useState(bookingDate?.untilTs || "");
      const currentTime = moment();
      const [open, setOpen] = useState(false);
      const [open2, setOpen2] = useState(false);
@@ -82,43 +80,38 @@ const Booking = () => {
      const { data } = useQuery({
           queryKey: ['getOwner'],
           queryFn: async () => {
-               const response = await axiosPublic.get(`agencyRoutes/getAgencyOwner/${carInfo?.owner_id}`);
+               const response = await axiosPublic.get(`agencyRoutes/getAgencyDetails/${carInfo?.agency_id}`);
                return response.data;
           }
      })
 
+
      const getFromDateAndTime = (e) => {
-          const fromDate = e.format('YYYY-MM-DD');
-          setFromDate(fromDate);
-          const fromTime = e.format('HH:mm');
-          setFromTime(fromTime);
+          const fromDateTime = moment(e);
+          setFromTs(fromDateTime.format());
      }
 
      const getUntilDateAndTime = (e) => {
-          const untilDate = e.format('YYYY-MM-DD');
-          setUntilDate(untilDate);
-          const untilTime = e.format('HH:mm');
-          setUntilTime(untilTime);
+          const untilDateTime = moment(e);
+          setUntilTs(untilDateTime.format());
+          
+          const fromDateTime = moment(fromTs);
+          const toDateTime = moment(untilDateTime);
+          const diffHours = toDateTime.diff(fromDateTime, 'hours');
 
-          const fromDateTime = moment(`${fromDate} ${fromTime}`, "YYYY-MM-DD HH:mm");
-          const toDateTime = moment(`${untilDate} ${untilTime}`, "YYYY-MM-DD HH:mm");
-          const diff = toDateTime.diff(fromDateTime, 'hours');
-
-          if(diff < 10 ){
+          if(diffHours < 10 ){
                toast.error("You have to select at least 10 hours");
-               e.reset();
+               setUntilTs("");
                return;
           }
 
-          setDiff(diff);
-     }
+          setDiff(diffHours);     }
 
      const handleChange = (event, newValue) => {
           setValue(newValue);
      };
 
      const selectDriver = async () => {
-          
           const drivers = await axiosPublic.get(`driverRoutes/driverList/${carInfo.district}`);
           setDriverData(drivers.data);
      }
@@ -149,11 +142,11 @@ const Booking = () => {
           setOpen2(false);
      };
 
-     const fromDatetime = new Date(`${bookingDate?.fromDate}T${bookingDate?.fromTime}`);
-     const toDatetime = new Date(`${bookingDate?.toDate}T${bookingDate?.toTime}`);
+     const fromDatetime = new Date(moment(fromTs).format('YYYY-MM-DDTHH:mm:ss'));
+     const toDatetime = new Date(moment(untilTs).format('YYYY-MM-DDTHH:mm:ss'));
 
-     const fromDateTime = moment(`${bookingDate?.fromDate} ${bookingDate?.fromTime}`, "YYYY-MM-DD HH:mm");
-     const toDateTime = moment(`${bookingDate?.toDate} ${bookingDate?.toTime}`, "YYYY-MM-DD HH:mm");
+     const fromDateTime = moment(fromTs);
+     const toDateTime = moment(untilTs);
      diffInHours = toDateTime.diff(fromDateTime, 'hours');
 
      const driver_fee = selectedDriver?.hiring_price * ( diff || diffInHours) || 0;
@@ -167,7 +160,7 @@ const Booking = () => {
           const total_cost = final_total;
           const initial_cost = initial_payment;
           const total_rent_hours = diffInHours;
-          const user_id = userInfo._id;
+          const user_id = userInfo.user_id;
           const name = userInfo.name;
           const email = userInfo.email;
           const phone = userInfo.phone;
@@ -186,7 +179,7 @@ const Booking = () => {
                     <div className="w-[60%]">
                          <h2 className="text-center text-2xl font-bold mb-10">Selected Car</h2>
                          <div className="flex items-center gap-5">
-                              <img src={carInfo.photo} alt="" className="w-96" />
+                              <img src={carInfo.images} alt="" className="w-96" />
                               <div>
                                    <h3 className="text-xl font-semibold text-primary">{carInfo.brand} {carInfo.model}</h3>
                                    <p className="">Seats: {carInfo.seats}</p>
@@ -215,11 +208,10 @@ const Booking = () => {
                                    </CustomTabPanel>
                                    <CustomTabPanel value={value} index={1}>
                                         <div className="space-y-1">
-                                             <h1><span className="font-bold">Name:</span> {carInfo.agency_Name}</h1>
-                                             <h1><span className="font-bold">Owner:</span> {data?.name}</h1>
-                                             <h1><span className="font-bold">Agency email:</span> {carInfo.agency_Email}</h1>
-                                             <h1><span className="font-bold">Agency Phone:</span> {carInfo.phone_Number}</h1>
-                                             <h1><span className="font-bold">Address:</span> {carInfo.area}</h1>
+                                             <h1><span className="font-bold">Name:</span> {data?.agency_name}</h1>
+                                             <h1><span className="font-bold">Agency email:</span> {data?.email}</h1>
+                                             <h1><span className="font-bold">Agency Phone:</span> {data?.phone_number}</h1>
+                                             <h1><span className="font-bold">Address:</span> {data?.display_name}</h1>
                                         </div>
                                    </CustomTabPanel>
                                    <CustomTabPanel value={value} index={2}>
@@ -249,7 +241,7 @@ const Booking = () => {
                                    <h1 className="font-semibold text-lg w-48">Start Time: </h1>
                                    <LocalizationProvider dateAdapter={AdapterMoment}>
                                         <DemoContainer components={['DateTimePicker']}>
-                                             <DateTimePicker label="From" name='fromDate&Time' onChange={getFromDateAndTime} minDate={currentTime} maxDate={moment(currentTime.clone().add(3, "months"))} defaultValue={fromTime ? moment(fromDateTime) : null} slotProps={{ textField: { size: 'small', required: true } }} />
+                                             <DateTimePicker label="From" name='fromDate&Time' onChange={getFromDateAndTime} minDate={currentTime} maxDate={moment(currentTime.clone().add(3, "months"))} defaultValue={fromTs ? moment(fromTs) : null} slotProps={{ textField: { size: 'small', required: true } }} />
                                         </DemoContainer>
                                    </LocalizationProvider>
                               </div>
@@ -257,7 +249,7 @@ const Booking = () => {
                                    <h1 className="font-semibold text-lg w-48">End Time:</h1>
                                    <LocalizationProvider dateAdapter={AdapterMoment}>
                                         <DemoContainer components={['DateTimePicker']}>
-                                             <DateTimePicker label="Until" name='fromDate&Time' onChange={getUntilDateAndTime} minDate={currentTime} maxDate={moment(currentTime.clone().add(3, "months"))} defaultValue={untilTime ? moment(toDateTime) : null} slotProps={{ textField: { size: 'small', required: true } }} />
+                                             <DateTimePicker label="Until" name='untilDate&Time' onChange={getUntilDateAndTime} minDate={currentTime} maxDate={moment(currentTime.clone().add(3, "months"))} defaultValue={untilTs ? moment(untilTs) : null} slotProps={{ textField: { size: 'small', required: true } }} />
                                         </DemoContainer>
                                    </LocalizationProvider>
                               </div>
