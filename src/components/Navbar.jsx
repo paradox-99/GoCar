@@ -56,7 +56,7 @@ const Navbar = () => {
     const data = useRole();
     let dashboard = [''];
 
-    // console.log(user);
+    console.log(data);
     
     
     const handleOpenNavMenu = (event) => {
@@ -97,21 +97,18 @@ const Navbar = () => {
         };
     }, [previousScrollY]);
 
-    if (data?.userRole === 'user') {
+    if (data?.userrole === 'user') {
         dashboard = userDropdown;
     }
-    else if (data?.userRole === 'admin') {
+    else if (data?.userrole === 'admin') {
         dashboard = adminDropDown;
     }
-    else if (data?.userRole === 'driver') {
+    else if (data?.userrole === 'driver') {
         dashboard = driverDropDown;
     }
-    else if (data?.userRole === 'agency') {
+    else if (data?.userrole === 'agency') {
         dashboard = agencyDropDown;
     }
-
-    // console.log(user);
-    
 
     return (
 
@@ -226,7 +223,7 @@ const Navbar = () => {
                                 <Box sx={{ flexGrow: 0, color: "black", ml: 2 }}>
                                     <Tooltip title="Menu">
                                         <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                                            <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
+                                            <Avatar alt="Remy Sharp" src={data?.photo} />
                                         </IconButton>
                                     </Tooltip>
                                     <Menu

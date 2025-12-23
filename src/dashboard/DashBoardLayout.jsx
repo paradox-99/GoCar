@@ -25,7 +25,7 @@ const DashBoardLayout = () => {
      const { logOut } = useAuth();
      const [open, setOpen] = useState(false);
      const data = useRole();
-     const designation = data?.userRole;
+     const designation = data?.userrole;
 
      const toggleDrawer = (newOpen) => () => {
           setOpen(newOpen);
