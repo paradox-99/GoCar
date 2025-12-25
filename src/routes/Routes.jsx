@@ -16,6 +16,7 @@ import ViewAgencyDetails from "../pages/agency/ViewAgencyDetails";
 import Filter from "../pages/search/Filter";
 import ViewDetails from "../components/ViewDetails";
 import Booking from "../pages/booking/Booking";
+import BookingSuccess from "../pages/booking/BookingSuccess";
 import PaymentSuccess from "../components/payment/PaymentSuccess";
 import PaymentFail from "../components/payment/PaymentFail";
 import ErrorPage from "../ErrorPage";
@@ -163,6 +164,10 @@ const router = createBrowserRouter([
             {
                 path: '/booking-info',
                 element: <Booking/>
+            },
+            {
+                path: '/booking-success',
+                element: <BookingSuccess/>
             },
             {
                 path: "/payment/successful/:tran_id",

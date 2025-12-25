@@ -7,6 +7,9 @@ const DriverCart = ({ driver, setSelectedDriver, handleClose }) => {
           handleClose();
      }
 
+     console.log(driver);
+     
+
      return (
           <div 
                onClick={handleClick} 
@@ -18,7 +21,7 @@ const DriverCart = ({ driver, setSelectedDriver, handleClose }) => {
                     className="w-full h-32 rounded-lg mb-4"
                />
                <div className="space-y-3">
-                    <h2 className="text-lg font-bold text-gray-800">{driver.name}</h2>
+                    <h2 className="text font-bold text-gray-800">{driver.name}</h2>
                     <div className="space-y-2 text-sm text-gray-600">
                          <div className="flex justify-between items-center">
                               <span className="font-semibold text-gray-700">Experience:</span>
@@ -30,7 +33,7 @@ const DriverCart = ({ driver, setSelectedDriver, handleClose }) => {
                          </div>
                          <div className="flex justify-between items-center pt-2 border-t">
                               <span className="font-semibold text-gray-700">Rate:</span>
-                              <span className="text-lg font-bold text-orange-600">{driver.hiring_price} Tk/hr</span>
+                              <span className="text-lg font-bold text-orange-600">{driver.rental_price} Tk/hr</span>
                          </div>
                     </div>
                </div>
