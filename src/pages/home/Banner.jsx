@@ -66,43 +66,6 @@ const Banner = () => {
                                    provider={LOCATIONIQ_KEY ? 'locationiq' : 'nominatim'}
                                    placeholder="Search pickup location, e.g., Dhanmondi, Dhaka"
                               />
-                              {/* <div>
-                                   <div style={{ display: 'grid', gridTemplateRows: 'auto 1fr', height: '100vh' }}>
-                                        <div style={{ padding: 12, maxWidth: 900, margin: '0 auto', width: '100%' }}>
-                                             <AddressSearch
-                                                  onSelect={handleSelectPlace}
-                                                  apiKey={LOCATIONIQ_KEY}
-                                                  provider={LOCATIONIQ_KEY ? 'locationiq' : 'nominatim'}
-                                                  placeholder="Search pickup location, e.g., Dhanmondi, Dhaka"
-                                             />
-                                        </div>
-
-                                        <div style={{ maxWidth: 1200, margin: '0 auto', width: '100%', height: '100%' }}>
-                                             <MapContainer center={[23.8103, 90.4125]} zoom={12} style={{ height: '100%', borderRadius: 8 }}>
-                                                  <TileLayer
-                                                       // use OSM tiles (or your tileserver)
-                                                       url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                                                       attribution="&copy; OpenStreetMap contributors"
-                                                  />
-                                                  {selected && (
-                                                       <>
-                                                            <PanTo lat={selected.lat} lon={selected.lon} />
-                                                            <Marker position={[parseFloat(selected.lat), parseFloat(selected.lon)]}>
-                                                                 <Popup>
-                                                                      <div style={{ minWidth: 200 }}>
-                                                                           <strong>{selected.display_name}</strong>
-                                                                           <div style={{ fontSize: 12, color: '#444' }}>
-                                                                                {selected.lat}, {selected.lon}
-                                                                           </div>
-                                                                      </div>
-                                                                 </Popup>
-                                                            </Marker>
-                                                       </>
-                                                  )}
-                                             </MapContainer>
-                                        </div>
-                                   </div>
-                              </div> */}
                          </div>
                          <div>
                               <h3 className="font-semibold text-center md:text-left">Booking Date</h3>

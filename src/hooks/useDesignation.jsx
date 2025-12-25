@@ -15,7 +15,6 @@ const useDesignation = () => {
             return data;
         }
     })
-    console.log(userInfo);
     
     return {userInfo, refetch};
 };

@@ -63,20 +63,18 @@ const Booking = () => {
      const [selectedDriver, setSelectedDriver] = useState();
      const { userInfo } = useDesignation();
 
-     console.log(userInfo);
-     
-
      const carInfo = bookingData.car;
      const bookingDate = bookingData?.carBookingInfo;
 
      const [fromTs, setFromTs] = useState(bookingDate?.fromTs || "");
      const [untilTs, setUntilTs] = useState(bookingDate?.untilTs || "");
+     // const searchParams = `lat=${bookingDate?.lat}&lon=${bookingDate?.lon}`;
      const currentTime = moment();
      const [open, setOpen] = useState(false);
      const [open2, setOpen2] = useState(false);
      const [diff, setDiff] = useState();
      let diffInHours = 0
-
+     
      const { data } = useQuery({
           queryKey: ['getOwner'],
           queryFn: async () => {
@@ -84,7 +82,6 @@ const Booking = () => {
                return response.data;
           }
      })
-
 
      const getFromDateAndTime = (e) => {
           const fromDateTime = moment(e);
@@ -112,7 +109,9 @@ const Booking = () => {
      };
 
      const selectDriver = async () => {
-          const drivers = await axiosPublic.get(`driverRoutes/driverList/${carInfo.district}`);
+          const searchParams = {lat: bookingDate?.lat, lon: bookingDate?.lon};
+
+          const drivers = await axiosPublic.get(`driverRoutes/driverList`, { params: searchParams });
           setDriverData(drivers.data);
      }
 
@@ -174,126 +173,266 @@ const Booking = () => {
      }
 
      return (
-          <div className="pt-24 max-w-[1360px] mx-auto lg:px-6 ">
-               <div className="p-4 shadow-lg flex justify-between">
-                    <div className="w-[60%]">
-                         <h2 className="text-center text-2xl font-bold mb-10">Selected Car</h2>
-                         <div className="flex items-center gap-5">
-                              <img src={carInfo.images} alt="" className="w-96" />
-                              <div>
-                                   <h3 className="text-xl font-semibold text-primary">{carInfo.brand} {carInfo.model}</h3>
-                                   <p className="">Seats: {carInfo.seats}</p>
-                                   <p className="">Fuel: {carInfo.fuel}</p>
-                                   <p className="">Price: {carInfo.rental_price} tk/hr</p>
+          <div className="pt-24 pb-12 bg-white">
+               <div className="max-w-[1360px] mx-auto px-4 lg:px-6">
+                    <h1 className="text-3xl font-bold mb-8 text-gray-800">Booking Details</h1>
+                    <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                         {/* LEFT SECTION */}
+                         <div className="lg:col-span-2">
+                              {/* CAR INFO */}
+                              <div className="border border-gray-200 rounded-lg p-6 mb-6">
+                                   <h2 className="text-2xl font-semibold mb-6 text-gray-800">Selected Car</h2>
+                                   <div className="flex flex-col md:flex-row gap-6">
+                                        <img 
+                                             src={carInfo.images} 
+                                             alt={`${carInfo.brand} ${carInfo.model}`}
+                                             className="w-96 rounded-lg"
+                                        />
+                                        <div className="flex-1">
+                                             <h3 className="text-3xl font-bold text-gray-800 mb-4">{carInfo.brand} {carInfo.model}</h3>
+                                             <div className="space-y-3">
+                                                  {
+                                                  carInfo.seats &&
+                                                  <p className="text-gray-700"><span className="font-semibold">Seats:</span> {carInfo.seats}</p>
+                                                  }
+                                                  <p className="text-gray-700"><span className="font-semibold">Fuel:</span> {carInfo.fuel}</p>
+                                                  <p className="text-gray-700"><span className="font-semibold">Price:</span> <span className="text-lg font-bold text-orange-600">{carInfo.rental_price} Tk/hr</span></p>
+                                             </div>
+                                        </div>
+                                   </div>
                               </div>
-                         </div>
-                         <div className="mt-10">
-                              <Box sx={{ width: '100%' }}>
-                                   <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-                                        <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
-                                             <Tab label="Car Information" {...a11yProps(0)} />
-                                             <Tab label="Agency Information" {...a11yProps(1)} />
-                                             <Tab label="Driver Information" {...a11yProps(2)} />
-                                        </Tabs>
-                                   </Box>
-                                   <CustomTabPanel value={value} index={0}>
-                                        <div className="space-y-1">
-                                             <h1><span className="font-bold">Build Year:</span> {carInfo.build_year}</h1>
-                                             <h1><span className="font-bold">License:</span> Verified</h1>
-                                             <h1><span className="font-bold">Gear:</span> {carInfo.gear}</h1>
-                                             <h1><span className="font-bold">Transmission type:</span> {carInfo.transmission_type}</h1>
-                                             <h1><span className="font-bold">Mileage:</span> {carInfo.mileage}</h1>
-                                             <h1><span className="font-bold">Car Type:</span> {carInfo.car_type}</h1>
-                                        </div>
-                                   </CustomTabPanel>
-                                   <CustomTabPanel value={value} index={1}>
-                                        <div className="space-y-1">
-                                             <h1><span className="font-bold">Name:</span> {data?.agency_name}</h1>
-                                             <h1><span className="font-bold">Agency email:</span> {data?.email}</h1>
-                                             <h1><span className="font-bold">Agency Phone:</span> {data?.phone_number}</h1>
-                                             <h1><span className="font-bold">Address:</span> {data?.display_name}</h1>
-                                        </div>
-                                   </CustomTabPanel>
-                                   <CustomTabPanel value={value} index={2}>
-                                        {
-                                             selectedDriver ?
+
+                              {/* TABS */}
+                              <div className="border border-gray-200 rounded-lg overflow-hidden">
+                                   <Box sx={{ width: '100%' }}>
+                                        <Box sx={{ borderBottom: 1, borderColor: '#e5e7eb', bgcolor: '#f9fafb' }}>
+                                             <Tabs 
+                                                  value={value} 
+                                                  onChange={handleChange}
+                                                  sx={{
+                                                       '& .MuiTab-root': {
+                                                            fontWeight: 600,
+                                                            color: '#666',
+                                                            '&.Mui-selected': {
+                                                                 color: '#f58300'
+                                                            }
+                                                       },
+                                                       '& .MuiTabs-indicator': {
+                                                            backgroundColor: '#f58300'
+                                                       }
+                                                  }}
+                                             >
+                                                  <Tab label="Vehicle Details" {...a11yProps(0)} />
+                                                  <Tab label="Agency" {...a11yProps(1)} />
+                                                  <Tab label="Driver" {...a11yProps(2)} />
+                                             </Tabs>
+                                        </Box>
+                                        <CustomTabPanel value={value} index={0}>
+                                             <div className="grid grid-cols-2 gap-4">
                                                   <div>
-                                                       <h1><span className="font-bold">Name:</span> {selectedDriver?.name}</h1>
-                                                       <h1><span className="font-bold">Email:</span> {selectedDriver.email}</h1>
-                                                       <h1><span className="font-bold">Phone:</span> {selectedDriver.phone}</h1>
-                                                       <h1><span className="font-bold">Address:</span> {selectedDriver.area}</h1>
-                                                       <h1><span className="font-bold">Experience:</span> {selectedDriver.experience} years</h1>
-                                                       <h1><span className="font-bold">Price:</span> {selectedDriver.hiring_price} Tk/hour</h1>
-                                                  </div> :
-                                                  <div className="flex justify-center">
-                                                       <Button onClick={handleClickOpen} variant="contained" sx={{ background: '#f58300' }}>Select Driver</Button>
+                                                       <p className="text-gray-600 text-sm">Build Year</p>
+                                                       <p className="text-lg font-semibold text-gray-800">{carInfo.build_year}</p>
                                                   </div>
-                                        }
-                                   </CustomTabPanel>
-                              </Box>
+                                                  <div>
+                                                       <p className="text-gray-600 text-sm">License</p>
+                                                       <p className="text-lg font-semibold text-green-600">Verified</p>
+                                                  </div>
+                                                  <div>
+                                                       <p className="text-gray-600 text-sm">Gear</p>
+                                                       <p className="text-lg font-semibold text-gray-800">{carInfo.gear}</p>
+                                                  </div>
+                                                  {
+                                                       carInfo.transmission_type ?
+                                                       <div>
+                                                       <p className="text-gray-600 text-sm">Transmission</p>
+                                                       <p className="text-lg font-semibold text-gray-800">{carInfo.transmission_type}</p>
+                                                  </div>:
+                                                  <div>
+                                                       <p className="text-gray-600 text-sm">Fuel Capacity</p>
+                                                       <p className="text-lg font-semibold text-gray-800">{carInfo.fuel_capacity} Liter</p>
+                                                  </div>
+
+                                                  }
+                                                  <div>
+                                                       <p className="text-gray-600 text-sm">Mileage</p>
+                                                       <p className="text-lg font-semibold text-gray-800">{carInfo.mileage}</p>
+                                                  </div>
+                                                  <div>
+                                                       <p className="text-gray-600 text-sm">Car Type</p>
+                                                       <p className="text-lg font-semibold text-gray-800">{carInfo.car_type}</p>
+                                                  </div>
+                                             </div>
+                                        </CustomTabPanel>
+                                        <CustomTabPanel value={value} index={1}>
+                                             <div className="space-y-4">
+                                                  <div className="border-b pb-3">
+                                                       <p className="text-gray-600 text-sm">Agency Name</p>
+                                                       <p className="text-lg font-semibold text-gray-800">{data?.agency_name}</p>
+                                                  </div>
+                                                  <div className="border-b pb-3">
+                                                       <p className="text-gray-600 text-sm">Email</p>
+                                                       <p className="text-lg font-semibold text-gray-800">{data?.email}</p>
+                                                  </div>
+                                                  <div className="border-b pb-3">
+                                                       <p className="text-gray-600 text-sm">Phone</p>
+                                                       <p className="text-lg font-semibold text-gray-800">{data?.phone_number}</p>
+                                                  </div>
+                                                  <div>
+                                                       <p className="text-gray-600 text-sm">Address</p>
+                                                       <p className="text-lg font-semibold text-gray-800">{data?.display_name}</p>
+                                                  </div>
+                                             </div>
+                                        </CustomTabPanel>
+                                        <CustomTabPanel value={value} index={2}>
+                                             {
+                                                  selectedDriver ?
+                                                       <div className="space-y-3">
+                                                            <div className="bg-green-50 p-4 rounded-lg border border-green-200 mb-4">
+                                                                 <p className="text-gray-600 text-sm mb-1">Driver Selected</p>
+                                                                 <p className="text-xl font-bold text-green-700">{selectedDriver?.name}</p>
+                                                            </div>
+                                                            <div className="border-b pb-3">
+                                                                 <p className="text-gray-600 text-sm">Email</p>
+                                                                 <p className="text-lg font-semibold text-gray-800">{selectedDriver.email}</p>
+                                                            </div>
+                                                            <div className="border-b pb-3">
+                                                                 <p className="text-gray-600 text-sm">Phone</p>
+                                                                 <p className="text-lg font-semibold text-gray-800">{selectedDriver.phone}</p>
+                                                            </div>
+                                                            <div className="border-b pb-3">
+                                                                 <p className="text-gray-600 text-sm">Area</p>
+                                                                 <p className="text-lg font-semibold text-gray-800">{selectedDriver.area}</p>
+                                                            </div>
+                                                            <div className="border-b pb-3">
+                                                                 <p className="text-gray-600 text-sm">Experience</p>
+                                                                 <p className="text-lg font-semibold text-gray-800">{selectedDriver.experience} years</p>
+                                                            </div>
+                                                            <div>
+                                                                 <p className="text-gray-600 text-sm">Hourly Rate</p>
+                                                                 <p className="text-lg font-semibold text-gray-800">{selectedDriver.hiring_price} Tk/hour</p>
+                                                            </div>
+                                                       </div> :
+                                                       <div className="flex justify-center py-8">
+                                                            <Button 
+                                                                 onClick={handleClickOpen} 
+                                                                 variant="contained" 
+                                                                 sx={{ 
+                                                                      background: '#f58300',
+                                                                      px: 3,
+                                                                      py: 1.2,
+                                                                      fontSize: '15px',
+                                                                      fontWeight: 600
+                                                                 }}
+                                                            >
+                                                                 Select Driver
+                                                            </Button>
+                                                       </div>
+                                             }
+                                        </CustomTabPanel>
+                                   </Box>
+                              </div>
                          </div>
-                    </div>
-                    <Divider orientation="vertical" variant="middle" flexItem />
-                    <div className="w-[40%]">
-                         <h2 className="text-center text-2xl font-bold mb-5">Booking Information</h2>
-                         <div className="space-y-4 ml-5">
-                              <div className="flex items-center gap-5">
-                                   <h1 className="font-semibold text-lg w-48">Start Time: </h1>
-                                   <LocalizationProvider dateAdapter={AdapterMoment}>
-                                        <DemoContainer components={['DateTimePicker']}>
-                                             <DateTimePicker label="From" name='fromDate&Time' onChange={getFromDateAndTime} minDate={currentTime} maxDate={moment(currentTime.clone().add(3, "months"))} defaultValue={fromTs ? moment(fromTs) : null} slotProps={{ textField: { size: 'small', required: true } }} />
-                                        </DemoContainer>
-                                   </LocalizationProvider>
-                              </div>
-                              <div className="flex items-center gap-5">
-                                   <h1 className="font-semibold text-lg w-48">End Time:</h1>
-                                   <LocalizationProvider dateAdapter={AdapterMoment}>
-                                        <DemoContainer components={['DateTimePicker']}>
-                                             <DateTimePicker label="Until" name='untilDate&Time' onChange={getUntilDateAndTime} minDate={currentTime} maxDate={moment(currentTime.clone().add(3, "months"))} defaultValue={untilTs ? moment(untilTs) : null} slotProps={{ textField: { size: 'small', required: true } }} />
-                                        </DemoContainer>
-                                   </LocalizationProvider>
-                              </div>
-                              <div className="flex items-center gap-5">
-                                   <h1 className="font-semibold text-lg w-48">Driving option:</h1>
-                                   <p>{selectedDriver ? "Driver" : "Self Driving"}</p>
-                              </div>
-                              <Divider />
-                              <div className="flex items-center gap-5">
-                                   <h1 className="font-semibold text-lg w-48">Total Hour:</h1>
-                                   <p>{diff || diffInHours} hours</p>
-                              </div>
-                              <div className="flex items-center gap-5">
-                                   <h1 className="font-semibold text-lg w-48">Rent:</h1>
-                                   <p>{carInfo.rental_price} Tk/hour</p>
-                              </div>
-                              <div className="flex items-center gap-5">
-                                   <h1 className="font-semibold text-lg w-48">Total Rental Price:</h1>
-                                   {
-                                        diff && <p>{carInfo.rental_price * (diff)} Tk</p>
-                                   }
-                                   {
-                                        diffInHours === isNaN() && <p>{carInfo.rental_price * (diffInHours)} Tk</p>
-                                   }
-                              </div>
-                              <div className="flex items-center gap-5">
-                                   <h1 className="font-semibold text-lg w-48">Driver Fee:</h1>
-                                   <p>{driver_fee} Tk</p>
-                              </div>
-                              <div className="flex items-center gap-5">
-                                   <h1 className="font-semibold text-lg w-48">Discount:</h1>
-                                   <p>{0} Tk</p>
-                              </div>
-                              <div className="flex items-center gap-5">
-                                   <h1 className="font-semibold text-lg w-48">Grand Total:</h1>
-                                   <p>{final_total} Tk</p>
-                              </div>
-                              <Divider />
-                              <div className="flex items-center gap-5">
-                                   <h1 className="font-semibold text-lg w-48">Initial Payment(50%):</h1>
-                                   <p>{initial_payment} Tk</p>
-                              </div>
-                              <div className="flex justify-center">
-                                   <Button onClick={handleClickOpen2} variant="contained" sx={{ background: '#f58300', mt: "30px" }}>Confirm Booking</Button>
+
+                         {/* RIGHT SECTION - SUMMARY */}
+                         <div className="lg:col-span-1">
+                              <div className="border border-gray-200 rounded-lg p-6 sticky top-24">
+                                   <h2 className="text-2xl font-semibold mb-6 text-gray-800">Booking Summary</h2>
+                                   
+                                   <div className="space-y-5">
+                                        <div>
+                                             <label className="block text-sm font-semibold text-gray-700 mb-2">Pick-up Date & Time</label>
+                                             <LocalizationProvider dateAdapter={AdapterMoment}>
+                                                  <DemoContainer components={['DateTimePicker']}>
+                                                       <DateTimePicker 
+                                                            label="Start" 
+                                                            onChange={getFromDateAndTime} 
+                                                            minDate={currentTime} 
+                                                            maxDate={moment(currentTime.clone().add(3, "months"))} 
+                                                            defaultValue={fromTs ? moment(fromTs) : null} 
+                                                            slotProps={{ textField: { size: 'small', required: true, fullWidth: true } }} 
+                                                       />
+                                                  </DemoContainer>
+                                             </LocalizationProvider>
+                                        </div>
+
+                                        <div>
+                                             <label className="block text-sm font-semibold text-gray-700 mb-2">Drop-off Date & Time</label>
+                                             <LocalizationProvider dateAdapter={AdapterMoment}>
+                                                  <DemoContainer components={['DateTimePicker']}>
+                                                       <DateTimePicker 
+                                                            label="End" 
+                                                            onChange={getUntilDateAndTime} 
+                                                            minDate={currentTime} 
+                                                            maxDate={moment(currentTime.clone().add(3, "months"))} 
+                                                            defaultValue={untilTs ? moment(untilTs) : null} 
+                                                            slotProps={{ textField: { size: 'small', required: true, fullWidth: true } }} 
+                                                       />
+                                                  </DemoContainer>
+                                             </LocalizationProvider>
+                                        </div>
+
+                                        <Divider sx={{ my: 2 }} />
+
+                                        <div className="space-y-3 bg-gray-50 p-4 rounded-lg">
+                                             <div className="flex justify-between">
+                                                  <span className="text-gray-700 font-semibold">Hours:</span>
+                                                  <span className="font-bold text-gray-800">{diff || diffInHours} hrs</span>
+                                             </div>
+                                             <div className="flex justify-between">
+                                                  <span className="text-gray-700 font-semibold">Rate:</span>
+                                                  <span className="font-bold text-gray-800">{carInfo.rental_price} Tk/hr</span>
+                                             </div>
+                                             <div className="flex justify-between pt-2 border-t">
+                                                  <span className="text-gray-700 font-semibold">Car Rental:</span>
+                                                  <span className="font-bold text-gray-800">
+                                                       {diff && `${carInfo.rental_price * (diff)} Tk`}
+                                                       {diffInHours !== NaN && !diff && `${carInfo.rental_price * (diffInHours)} Tk`}
+                                                  </span>
+                                             </div>
+                                             {driver_fee > 0 && (
+                                                  <div className="flex justify-between">
+                                                       <span className="text-gray-700 font-semibold">Driver Fee:</span>
+                                                       <span className="font-bold text-gray-800">{driver_fee} Tk</span>
+                                                  </div>
+                                             )}
+                                             <div className="flex justify-between">
+                                                  <span className="text-gray-700 font-semibold">Discount:</span>
+                                                  <span className="font-bold text-gray-800">-{0} Tk</span>
+                                             </div>
+                                        </div>
+
+                                        <Divider sx={{ my: 2 }} />
+
+                                        <div className="bg-orange-50 p-4 rounded-lg border border-orange-200">
+                                             <div className="flex justify-between mb-3">
+                                                  <span className="text-gray-800 font-semibold">Total:</span>
+                                                  <span className="text-2xl font-bold text-orange-600">৳ {final_total}</span>
+                                             </div>
+                                             <div className="flex justify-between pt-3 border-t border-orange-300">
+                                                  <span className="text-gray-700 text-sm">Initial Payment (50%):</span>
+                                                  <span className="text-xl font-bold text-orange-600">৳ {initial_payment}</span>
+                                             </div>
+                                        </div>
+
+                                        <Button 
+                                             onClick={handleClickOpen2}
+                                             variant="contained" 
+                                             fullWidth
+                                             sx={{ 
+                                                  background: '#f58300',
+                                                  py: 1.5,
+                                                  fontSize: '16px',
+                                                  fontWeight: 700,
+                                                  borderRadius: '6px',
+                                                  mt: 2,
+                                                  '&:hover': {
+                                                       background: '#e07b00'
+                                                  }
+                                             }}
+                                        >
+                                             Send Request
+                                        </Button>
+                                   </div>
                               </div>
                          </div>
                     </div>
@@ -304,10 +443,12 @@ const Booking = () => {
                     open={open}
                     fullWidth
                     maxWidth="1150px"
-                    sx={{ px: 4 }}
                >
-                    <h1 className="text-center text-3xl mt-5 font-semibold">Drivers from {carInfo.district}</h1>
-                    <div className="bg-white flex flex-wrap p-8 gap-x-10 gap-y-5 justify-center">
+                    <div className="p-6 bg-gray-50 border-b">
+                         <h1 className="text-2xl font-bold text-gray-800">Available Drivers</h1>
+                         <p className="text-gray-600 mt-1">Select from {carInfo.district}</p>
+                    </div>
+                    <div className="flex flex-wrap p-6 gap-6 justify-center min-h-[400px] bg-white">
                          {
                               driverData?.map(driver => <DriverCart
                                    key={driver._id}
@@ -325,13 +466,63 @@ const Booking = () => {
                     open={open2}
                     fullWidth
                     maxWidth="sm"
-                    sx={{ px: 4 }}
                >
-                    <div className="p-5">
-                         <h1 className="text-center text-3xl mt-5 font-semibold">You are booking {carInfo.brand} {carInfo.model}</h1>
-                         <div className="flex justify-end gap-10 mt-14">
-                              <Button onClick={handleClose2} variant="contained" sx={{ bgcolor: 'white', color: "black", px: 4, py: 1, fontWeight: 600, fontSize: 20 }} className="mt-5">Cancel</Button>
-                              <Button onClick={handleBooking} variant="contained" sx={{ bgcolor: '#f58300', color: "white", px: 4, py: 1, fontWeight: 600, fontSize: 20 }} className="mt-5">Pay ৳{initial_payment}</Button>
+                    <div className="p-6 bg-gray-50 border-b">
+                         <h1 className="text-2xl font-bold text-gray-800">Confirm Booking</h1>
+                    </div>
+                    <div className="p-6">
+                         <div className="mb-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+                              <p className="text-gray-600 text-sm mb-2">Booking Vehicle</p>
+                              <h2 className="text-2xl font-bold text-gray-800">{carInfo.brand} {carInfo.model}</h2>
+                         </div>
+                         
+                         <div className="space-y-3 mb-6 p-4 bg-gray-50 rounded-lg">
+                              <div className="flex justify-between">
+                                   <span className="text-gray-700">Hours:</span>
+                                   <span className="font-semibold text-gray-800">{diff || diffInHours} hrs</span>
+                              </div>
+                              <div className="flex justify-between border-t pt-3">
+                                   <span className="text-gray-700">Total Amount:</span>
+                                   <span className="text-lg font-bold text-orange-600">৳ {final_total}</span>
+                              </div>
+                              <div className="flex justify-between pt-3 bg-orange-50 p-3 rounded border border-orange-200">
+                                   <span className="text-gray-800 font-semibold">Initial Payment (50%):</span>
+                                   <span className="text-lg font-bold text-orange-600">৳ {initial_payment}</span>
+                              </div>
+                         </div>
+
+                         <div className="flex gap-3">
+                              <Button 
+                                   onClick={handleClose2} 
+                                   variant="outlined"
+                                   fullWidth
+                                   sx={{ 
+                                        borderColor: '#ddd',
+                                        color: '#666',
+                                        py: 1,
+                                        fontWeight: 600,
+                                        fontSize: 14
+                                   }}
+                              >
+                                   Cancel
+                              </Button>
+                              <Button 
+                                   onClick={handleBooking} 
+                                   variant="contained" 
+                                   fullWidth
+                                   sx={{ 
+                                        background: '#f58300',
+                                        color: "white",
+                                        py: 1,
+                                        fontWeight: 600,
+                                        fontSize: 14,
+                                        '&:hover': {
+                                             background: '#e07b00'
+                                        }
+                                   }}
+                              >
+                                   Pay ৳{initial_payment}
+                              </Button>
                          </div>
                     </div>
                </BootstrapDialog>

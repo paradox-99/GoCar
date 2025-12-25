@@ -67,7 +67,9 @@ const SearchPage = () => {
 
                 const bookingInfo = {
                     fromTs: fromTs,
-                    untilTs: untilTs
+                    untilTs: untilTs,
+                    lat,
+                    lon
                 }
                 setCarBookingInfo(bookingInfo)
                 setCars(response.data)

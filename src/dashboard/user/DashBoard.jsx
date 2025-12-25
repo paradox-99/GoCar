@@ -121,8 +121,8 @@ const DashBoard = () => {
                               <StatCard
                                    icon={VerifiedUserIcon}
                                    label="Account Status"
-                                   value={data?.accountstatus === 'active' ? '✓ Active' : 'Pending'}
-                                   color={data?.accountstatus === 'active' ? 'bg-green-500' : 'bg-yellow-500'}
+                                   value={data?.accountstatus === 'Active' ? '✓ Active' : 'Pending'}
+                                   color={data?.accountstatus === 'Active' ? 'bg-green-500' : 'bg-yellow-500'}
                               />
                          </Grid>
                          <Grid item xs={12} sm={6} md={3}>
