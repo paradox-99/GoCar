@@ -57,7 +57,7 @@ const UserBookings = () => {
      return (
           <div className="bg-white min-h-screen">
                {/* Header */}
-               <div className="bg-blue-600 text-white py-8 px-6">
+               <div className="bg-primary text-white py-8 px-6">
                     <h1 className="text-4xl font-bold">My Bookings</h1>
                     <p className="text-blue-100 mt-2">View and manage all your vehicle bookings</p>
                </div>
