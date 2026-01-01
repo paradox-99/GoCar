@@ -1,181 +1,104 @@
 import useRole from '../../hooks/useRole';
 import useAxiosPublic from '../../hooks/useAxiosPublic';
 import { useQuery } from '@tanstack/react-query';
-import PropTypes from 'prop-types';
-import { FirstPage, KeyboardArrowLeft, KeyboardArrowRight, LastPage } from '@mui/icons-material';
-import { Box, IconButton, Paper, styled, Table, TableBody, TableCell, tableCellClasses, TableContainer, TableFooter, TableHead, TablePagination, TableRow } from '@mui/material';
-import { useTheme } from '@emotion/react';
 import { useState } from 'react';
 import Loader from "../../components/Loader";
-
-function TablePaginationActions(props) {
-     const theme = useTheme();
-     const { count, page, rowsPerPage, onPageChange } = props;
-
-     const handleFirstPageButtonClick = (event) => {
-          onPageChange(event, 0);
-     };
-
-     const handleBackButtonClick = (event) => {
-          onPageChange(event, page - 1);
-     };
-
-     const handleNextButtonClick = (event) => {
-          onPageChange(event, page + 1);
-     };
-
-     const handleLastPageButtonClick = (event) => {
-          onPageChange(event, Math.max(0, Math.ceil(count / rowsPerPage) - 1));
-     };
-
-     return (
-          <Box sx={{ flexShrink: 0, ml: 2.5 }}>
-               <IconButton
-                    onClick={handleFirstPageButtonClick}
-                    disabled={page === 0}
-                    aria-label="first page"
-               >
-                    {theme.direction === 'rtl' ? <LastPage /> : <FirstPage />}
-               </IconButton>
-               <IconButton
-                    onClick={handleBackButtonClick}
-                    disabled={page === 0}
-                    aria-label="previous page"
-               >
-                    {theme.direction === 'rtl' ? <KeyboardArrowRight /> : <KeyboardArrowLeft />}
-               </IconButton>
-               <IconButton
-                    onClick={handleNextButtonClick}
-                    disabled={page >= Math.ceil(count / rowsPerPage) - 1}
-                    aria-label="next page"
-               >
-                    {theme.direction === 'rtl' ? <KeyboardArrowLeft /> : <KeyboardArrowRight />}
-               </IconButton>
-               <IconButton
-                    onClick={handleLastPageButtonClick}
-                    disabled={page >= Math.ceil(count / rowsPerPage) - 1}
-                    aria-label="last page"
-               >
-                    {theme.direction === 'rtl' ? <FirstPage /> : <LastPage />}
-               </IconButton>
-          </Box>
-     );
-}
-
-TablePaginationActions.propTypes = {
-     count: PropTypes.number.isRequired,
-     onPageChange: PropTypes.func.isRequired,
-     page: PropTypes.number.isRequired,
-     rowsPerPage: PropTypes.number.isRequired,
-};
+import moment from 'moment';
+import BookingCard from './BookingCard';
 
 const UserBookings = () => {
-
      const role = useRole();
-     const axiosPublic = useAxiosPublic()
+     const axiosPublic = useAxiosPublic();
+     const [activeTab, setActiveTab] = useState('Requested');
 
-     const { data } = useQuery({
-          queryKey: ['bookings'],
+     const { data: bookings, isLoading } = useQuery({
+          queryKey: ['userBookings'],
           queryFn: async () => {
-               const response = await axiosPublic.get(`userRoute/getBookings/${role._id}`, {withCredentials: true});
+               const response = await axiosPublic.get(`bookingRoutes/getUserBookings/${role.user_id}`);
                return response.data;
-               },
-     })
+          },
+     });
 
-     const [page, setPage] = useState(0);
-     const [rowsPerPage, setRowsPerPage] = useState(8);
+     console.log(bookings);
+     
 
-     // Avoid a layout jump when reaching the last page with empty rows.
-     const emptyRows =
-          page > 0 ? Math.max(0, (1 + page) * rowsPerPage - data?.length) : 0;
-
-     const handleChangePage = (event, newPage) => {
-          setPage(newPage);
+     // Filter bookings by status
+     const getFilteredBookings = () => {
+          if (!bookings) return [];
+          
+          const now = moment();
+          
+          return bookings.filter(booking => {
+               const startDate = moment(booking.start_ts);
+               const endDate = moment(booking.end_ts);
+               
+               if (activeTab === 'Requested') {
+                    return booking.booking_request === 'Requested';
+               } else if (activeTab === 'Upcoming') {
+                    return startDate.isAfter(now) && (booking.status === 'Confirmed');
+               } else if (activeTab === 'Current') {
+                    return now.isBetween(startDate, endDate) && (booking.status === 'Running');
+               } else if (activeTab === 'Past') {
+                    return endDate.isBefore(now);
+               }
+               return false;
+          });
      };
 
-     const handleChangeRowsPerPage = (event) => {
-          setRowsPerPage(parseInt(event.target.value, 10));
-          setPage(0);
+     const filteredBookings = getFilteredBookings();
+     const tabs = ['Requested', 'Upcoming', 'Current', 'Past'];
+     const tabColors = {
+          'Requested': '#2563eb',
+          'Upcoming': '#3b82f6',
+          'Current': '#22c55e',
+          'Past': '#8b5cf6'
      };
-
-     const StyledTableCell = styled(TableCell)(({ theme }) => ({
-          [`&.${tableCellClasses.head}`]: {
-               backgroundColor: "#F58300",
-               color: theme.palette.common.white,
-               fontSize: 16,
-               fontWeight: 600,
-          },
-          [`&.${tableCellClasses.body}`]: {
-               fontSize: 14,
-          },
-     }));
 
      return (
-          <div>
-               <h1 className="text-4xl text-center mt-12 font-semibold">Booking Information</h1>
-               <div className="mt-14">
-                    {data ?
-                         <TableContainer component={Paper}>
-                              <Table sx={{ minWidth: 500 }} aria-label="custom pagination table">
-                                   <TableHead>
-                                        <TableRow>
-                                             <StyledTableCell >Name</StyledTableCell>
-                                             <StyledTableCell >Seats</StyledTableCell>
-                                             <StyledTableCell >Fuel</StyledTableCell>
-                                             <StyledTableCell >From</StyledTableCell>
-                                             <StyledTableCell >To</StyledTableCell>
-                                             <StyledTableCell >Total Amount</StyledTableCell>
-                                             <StyledTableCell >Remaining Amount</StyledTableCell>
-                                             <StyledTableCell >Total Hours</StyledTableCell>
-                                        </TableRow>
-                                   </TableHead>
-                                   <TableBody>
-                                        {(rowsPerPage > 0
-                                             ? data.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                                             : data
-                                        ).map((row) => (
-                                             <TableRow key={row.donor_id}>
-                                                  <StyledTableCell component="th" scope="row">{row.brand} {row.model}</StyledTableCell>
-                                                  <StyledTableCell component="th" scope="row">{row.seats}</StyledTableCell>
-                                                  <StyledTableCell component="th" scope="row">{row.fuel}</StyledTableCell>
-                                                  <StyledTableCell>{row.pickup_date.split('T')[0]}</StyledTableCell>
-                                                  <StyledTableCell>{row.dropoff_date.split('T')[0]}</StyledTableCell>
-                                                  <StyledTableCell>{row.total_cost}</StyledTableCell>
-                                                  <StyledTableCell>{row.remaining_amount}</StyledTableCell>
-                                                  <StyledTableCell>{row.total_rent_hours}</StyledTableCell>
-                                             </TableRow>
-                                        ))}
-                                        {emptyRows > 0 && (
-                                             <TableRow style={{ height: 53 * emptyRows }}>
-                                                  <TableCell colSpan={6} />
-                                             </TableRow>
-                                        )}
-                                   </TableBody>
-                                   <TableFooter>
-                                        <TableRow>
-                                             <TablePagination
-                                                  rowsPerPageOptions={[8]}
-                                                  colSpan={3}
-                                                  count={data?.length}
-                                                  rowsPerPage={rowsPerPage}
-                                                  page={page}
-                                                  slotProps={{
-                                                       select: {
-                                                            inputProps: {
-                                                                 'aria-label': 'rows per page',
-                                                            },
-                                                            native: true,
-                                                       },
-                                                  }}
-                                                  onPageChange={handleChangePage}
-                                                  onRowsPerPageChange={handleChangeRowsPerPage}
-                                                  ActionsComponent={TablePaginationActions}
-                                             />
-                                        </TableRow>
-                                   </TableFooter>
-                              </Table>
-                         </TableContainer> : <Loader />
-                    }
+          <div className="bg-white min-h-screen">
+               {/* Header */}
+               <div className="bg-blue-600 text-white py-8 px-6">
+                    <h1 className="text-4xl font-bold">My Bookings</h1>
+                    <p className="text-blue-100 mt-2">View and manage all your vehicle bookings</p>
+               </div>
+
+               <div className="max-w-7xl mx-auto px-6 py-8">
+                    {/* Tab Navigation */}
+                    <div className="flex flex-wrap gap-2 mb-8">
+                         {tabs.map((tab) => (
+                              <button
+                                   key={tab}
+                                   onClick={() => setActiveTab(tab)}
+                                   className={`px-6 py-2 rounded font-semibold transition-all ${
+                                        activeTab === tab
+                                             ? 'text-white'
+                                             : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                                   }`}
+                                   style={{
+                                        backgroundColor: activeTab === tab ? tabColors[tab] : undefined
+                                   }}
+                              >
+                                   {tab}
+                              </button>
+                         ))}
+                    </div>
+
+                    {/* Bookings Grid */}
+                    {isLoading ? (
+                         <div className="flex justify-center items-center py-20">
+                              <Loader />
+                         </div>
+                    ) : filteredBookings.length === 0 ? (
+                         <div className="text-center py-16">
+                              <p className="text-gray-500 text-lg">No {activeTab.toLowerCase()} bookings found.</p>
+                         </div>
+                    ) : (
+                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                              {filteredBookings.map((booking) => (
+                                   <BookingCard key={booking._id} booking={booking} />
+                              ))}
+                         </div>
+                    )}
                </div>
           </div>
      );

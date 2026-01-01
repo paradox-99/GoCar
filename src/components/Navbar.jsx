@@ -12,9 +12,10 @@ import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import { useEffect, useState } from "react";
-import { LuSearch } from 'react-icons/lu';
+import { LuSearch, LuMessageSquareText } from 'react-icons/lu';
 import useAuth from '../hooks/useAuth';
 import useRole from '../hooks/useRole';
+import { IoNotifications } from "react-icons/io5";
 
 const pages = [
     { title: 'Home', url: '/' },
@@ -57,8 +58,8 @@ const Navbar = () => {
     let dashboard = [''];
 
     console.log(data);
-    
-    
+
+
     const handleOpenNavMenu = (event) => {
         setAnchorElNav(event.currentTarget);
     };
@@ -211,13 +212,34 @@ const Navbar = () => {
                                 ))}
                             </Box>
                             <Box sx={{
-                                mr: { md: 3 },
+                                mr: { md: 1 },
                                 ml: { md: 3 }
                             }}>
                                 <IconButton href='/search'>
-                                    <LuSearch />
+                                    <LuSearch className='text-primary text-xl'/>
                                 </IconButton>
                             </Box>
+                            {
+                                user &&
+                                <>
+                                    <Box sx={{
+                                        mr: { md: 1 },
+                                        ml: { md: 1 }
+                                    }}>
+                                        <IconButton href='/search'>
+                                            <LuMessageSquareText className='text-primary text-xl'/>
+                                        </IconButton>
+                                    </Box>
+                                    <Box sx={{
+                                        mr: { md: 1 },
+                                        ml: { md: 1 }
+                                    }}>
+                                        <IconButton href='/search'>
+                                            <IoNotifications  className='text-primary text-xl'/>
+                                        </IconButton>
+                                    </Box>
+                                </>
+                            }
                             {
                                 user &&
                                 <Box sx={{ flexGrow: 0, color: "black", ml: 2 }}>
@@ -255,7 +277,7 @@ const Navbar = () => {
                                             </MenuItem>
                                         ))}
                                         <MenuItem onClick={logOut}>
-                                        <Button
+                                            <Button
                                                 onClick={handleCloseNavMenu}
                                                 sx={{ color: 'black', display: 'block', fontWeight: 600, textTransform: "none", fontSize: 16 }}
                                             >
