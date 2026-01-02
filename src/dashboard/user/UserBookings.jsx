@@ -18,8 +18,6 @@ const UserBookings = () => {
                return response.data;
           },
      });
-
-     console.log(bookings);
      
 
      // Filter bookings by status
@@ -33,7 +31,7 @@ const UserBookings = () => {
                const endDate = moment(booking.end_ts);
                
                if (activeTab === 'Requested') {
-                    return booking.booking_request === 'Requested';
+                    return booking.status === 'Requested';
                } else if (activeTab === 'Upcoming') {
                     return startDate.isAfter(now) && (booking.status === 'Confirmed');
                } else if (activeTab === 'Current') {

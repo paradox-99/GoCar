@@ -1,7 +1,9 @@
 import { Button } from "@mui/material";
 import moment from "moment";
+import { useNavigate } from "react-router-dom";
 
 const BookingCard = ({ booking }) => {
+  const navigate = useNavigate();
   const getStatusBadge = (status) => {
     const lowerStatus = status?.toLowerCase() || "pending";
     
@@ -17,8 +19,6 @@ const BookingCard = ({ booking }) => {
     return "bg-gray-100 text-gray-700";
   };
 
-  console.log(booking);
-  
 
   const startDate = moment(booking.start_ts);
   const endDate = moment(booking.end_ts);
@@ -96,6 +96,7 @@ const BookingCard = ({ booking }) => {
         <Button
           variant="contained"
           fullWidth
+          onClick={() => navigate(`/dashboard/user/bookings/${booking.booking_id}`, { state: { booking } })}
           sx={{
             background: "#f58300",
             py: 1,

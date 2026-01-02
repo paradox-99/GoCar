@@ -327,7 +327,7 @@ const DashBoardLayout = () => {
                               {designation === 'admin' && adminRoutes}
                               {designation === 'agency' && agencyRoutes}
                          </nav>
-                         <nav className="absolute bottom-0" aria-label="main mailbox folders">
+                         <nav className="absolute bottom-0 w-full" aria-label="main mailbox folders">
                               <List component="nav" aria-label="main mailbox folders">
                                    <ListItem disablePadding>
                                         <ListNav onClick={() => handleNavigation('/')} className={isActive('/') ? 'active' : ''}>
@@ -337,6 +337,7 @@ const DashBoardLayout = () => {
                                              <ListItemText primary="Home" />
                                         </ListNav>
                                    </ListItem>
+                                   
                                    <ListItem disablePadding>
                                         <ListNav onClick={() => { logOut(); handleNavigation('/sign-in'); }}>
                                              <ListItemIcon>

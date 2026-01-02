@@ -7,6 +7,7 @@ import AgencyDashboard from "../dashboard/agency/AgencyDashboard";
 import AgencyProfile from "../dashboard/agency/AgencyProfile";
 import FavouriteCars from "../dashboard/user/FavouriteCars";
 import UserBookings from "../dashboard/user/UserBookings";
+import BookingDetails from "../dashboard/user/BookingDetails";
 import Users from "../dashboard/admin/Users";
 import Vehicles from "../dashboard/admin/Vehicles";
 import Bookings from "../dashboard/admin/Bookings";
@@ -36,6 +37,10 @@ export const DashboardRoutes = [
                {
                     path: '/dashboard/user/bookings',
                     element: <UserBookings></UserBookings>
+               },
+               {
+                    path: '/dashboard/user/bookings/:id',
+                    element: <BookingDetails></BookingDetails>
                },
 
                // agency routes
