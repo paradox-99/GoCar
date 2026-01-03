@@ -18,33 +18,50 @@ const OwnerProfile = () => {
      const { data } = useQuery({
           queryKey: ['user'],
           queryFn: async () => {
-               const response = await axiosPublic.get(`userRoute/getUserInfo/${user.email}`, {withCredentials: true});
+               const response = await axiosPublic.get(`agencyRoutes/getAgencyProfile/${user.email}`);
                return response.data;
           },
      })
 
+     console.log(data);
+     
+
      // Initialize form data when data is fetched
      if (data && !ownerData) {
           setOwnerData({
-               name: data?.name || '',
-               phone: data?.phone || '',
+               owner_name: data?.owner_name || '',
+               owner_phone: data?.owner_phone || '',
                gender: data?.gender || '',
-               email: data?.email || '',
-               nid: data?.nid || '',
+               owner_email: data?.owner_email || '',
                dob: data?.dob ? data.dob.split('T')[0] : '',
-               image: data?.image || ''
+               owner_photo: data?.owner_photo || '',
+               owner_city: data?.owner_city || '',
+               owner_area: data?.owner_area || '',
+               owner_postcode: data?.owner_postcode || '',
+               owner_full_address: data?.owner_full_address || '',
+               owner_verified: data?.owner_verified || false,
+               accountstatus: data?.accountstatus || ''
           });
      }
 
      if (data && !agencyData) {
           setAgencyData({
-               district: data?.district || '',
-               upazilla: data?.upazilla || '',
-               keyArea: data?.keyArea || '',
-               area: data?.area || '',
-               license_number: data?.license_number || '',
+               agency_name: data?.agency_name || '',
+               phone_number: data?.phone_number || '',
+               email: data?.email || '',
+               agency_city: data?.agency_city || '',
+               agency_area: data?.agency_area || '',
+               agency_postcode: data?.agency_postcode || '',
+               agency_full_address: data?.agency_full_address || '',
+               license: data?.license || '',
+               tin: data?.tin || '',
+               insurancenumber: data?.insurancenumber || '',
+               tradelicenseexpire: data?.tradelicenseexpire || '',
                expire_date: data?.expire_date || '',
-               experience: data?.experience || ''
+               status: data?.status || '',
+               verified: data?.verified || false,
+               cars: data?.cars || 0,
+               bikes: data?.bikes || 0
           });
      }
 
@@ -85,13 +102,18 @@ const OwnerProfile = () => {
      const handleCancelOwner = () => {
           if (data) {
                setOwnerData({
-                    name: data?.name || '',
-                    phone: data?.phone || '',
+                    owner_name: data?.owner_name || '',
+                    owner_phone: data?.owner_phone || '',
                     gender: data?.gender || '',
-                    email: data?.email || '',
-                    nid: data?.nid || '',
+                    owner_email: data?.owner_email || '',
                     dob: data?.dob ? data.dob.split('T')[0] : '',
-                    image: data?.image || ''
+                    owner_photo: data?.owner_photo || '',
+                    owner_city: data?.owner_city || '',
+                    owner_area: data?.owner_area || '',
+                    owner_postcode: data?.owner_postcode || '',
+                    owner_full_address: data?.owner_full_address || '',
+                    owner_verified: data?.owner_verified || false,
+                    accountstatus: data?.accountstatus || ''
                });
           }
           setEditingOwner(false);
@@ -100,13 +122,22 @@ const OwnerProfile = () => {
      const handleCancelAgency = () => {
           if (data) {
                setAgencyData({
-                    district: data?.district || '',
-                    upazilla: data?.upazilla || '',
-                    keyArea: data?.keyArea || '',
-                    area: data?.area || '',
-                    license_number: data?.license_number || '',
+                    agency_name: data?.agency_name || '',
+                    phone_number: data?.phone_number || '',
+                    email: data?.email || '',
+                    agency_city: data?.agency_city || '',
+                    agency_area: data?.agency_area || '',
+                    agency_postcode: data?.agency_postcode || '',
+                    agency_full_address: data?.agency_full_address || '',
+                    license: data?.license || '',
+                    tin: data?.tin || '',
+                    insurancenumber: data?.insurancenumber || '',
+                    tradelicenseexpire: data?.tradelicenseexpire || '',
                     expire_date: data?.expire_date || '',
-                    experience: data?.experience || ''
+                    status: data?.status || '',
+                    verified: data?.verified || false,
+                    cars: data?.cars || 0,
+                    bikes: data?.bikes || 0
                });
           }
           setEditingAgency(false);
@@ -143,7 +174,7 @@ const OwnerProfile = () => {
                                         {/* Profile Picture */}
                                         <div className="flex justify-center mb-8">
                                              <img
-                                                  src={ownerData.image}
+                                                  src={ownerData.owner_photo}
                                                   alt="Profile"
                                                   className="w-40 h-40 rounded-full border-4 border-orange-300 object-cover"
                                              />
@@ -158,8 +189,8 @@ const OwnerProfile = () => {
                                                   <TextField
                                                        fullWidth
                                                        variant="outlined"
-                                                       value={ownerData.name}
-                                                       onChange={(e) => handleOwnerChange('name', e.target.value)}
+                                                       value={ownerData.owner_name}
+                                                       onChange={(e) => handleOwnerChange('owner_name', e.target.value)}
                                                        disabled={!editingOwner}
                                                        size="small"
                                                   />
@@ -173,8 +204,8 @@ const OwnerProfile = () => {
                                                        <TextField
                                                             fullWidth
                                                             variant="outlined"
-                                                            value={ownerData.phone}
-                                                            onChange={(e) => handleOwnerChange('phone', e.target.value)}
+                                                            value={ownerData.owner_phone}
+                                                            onChange={(e) => handleOwnerChange('owner_phone', e.target.value)}
                                                             disabled={!editingOwner}
                                                             size="small"
                                                        />
@@ -201,26 +232,13 @@ const OwnerProfile = () => {
                                                   <TextField
                                                        fullWidth
                                                        variant="outlined"
-                                                       value={ownerData.email}
+                                                       value={ownerData.owner_email}
                                                        disabled={true}
                                                        size="small"
                                                   />
                                              </div>
 
                                              <div className="grid grid-cols-2 gap-4">
-                                                  <div>
-                                                       <label className="block text-sm font-semibold text-gray-700 mb-2">
-                                                            NID
-                                                       </label>
-                                                       <TextField
-                                                            fullWidth
-                                                            variant="outlined"
-                                                            value={ownerData.nid}
-                                                            onChange={(e) => handleOwnerChange('nid', e.target.value)}
-                                                            disabled={!editingOwner}
-                                                            size="small"
-                                                       />
-                                                  </div>
                                                   <div>
                                                        <label className="block text-sm font-semibold text-gray-700 mb-2">
                                                             Date of Birth
@@ -237,6 +255,83 @@ const OwnerProfile = () => {
                                                                  shrink: true,
                                                             }}
                                                        />
+                                                  </div>
+                                                  <div>
+                                                       <label className="block text-sm font-semibold text-gray-700 mb-2">
+                                                            Account Status
+                                                       </label>
+                                                       <TextField
+                                                            fullWidth
+                                                            variant="outlined"
+                                                            value={ownerData.accountstatus}
+                                                            disabled={true}
+                                                            size="small"
+                                                       />
+                                                  </div>
+                                             </div>
+
+                                             {/* Address Information */}
+                                             <div className="mt-6 pt-6 border-t">
+                                                  <h3 className="text-lg font-semibold text-gray-800 mb-4">
+                                                       Address
+                                                  </h3>
+                                                  <div className="space-y-4">
+                                                       <div>
+                                                            <label className="block text-sm font-semibold text-gray-700 mb-2">
+                                                                 Full Address
+                                                            </label>
+                                                            <TextField
+                                                                 fullWidth
+                                                                 variant="outlined"
+                                                                 value={ownerData.owner_full_address}
+                                                                 onChange={(e) => handleOwnerChange('owner_full_address', e.target.value)}
+                                                                 disabled={!editingOwner}
+                                                                 size="small"
+                                                                 multiline
+                                                                 rows={2}
+                                                            />
+                                                       </div>
+                                                       <div className="grid grid-cols-2 gap-4">
+                                                            <div>
+                                                                 <label className="block text-sm font-semibold text-gray-700 mb-2">
+                                                                      City
+                                                                 </label>
+                                                                 <TextField
+                                                                      fullWidth
+                                                                      variant="outlined"
+                                                                      value={ownerData.owner_city}
+                                                                      onChange={(e) => handleOwnerChange('owner_city', e.target.value)}
+                                                                      disabled={!editingOwner}
+                                                                      size="small"
+                                                                 />
+                                                            </div>
+                                                            <div>
+                                                                 <label className="block text-sm font-semibold text-gray-700 mb-2">
+                                                                      Area
+                                                                 </label>
+                                                                 <TextField
+                                                                      fullWidth
+                                                                      variant="outlined"
+                                                                      value={ownerData.owner_area}
+                                                                      onChange={(e) => handleOwnerChange('owner_area', e.target.value)}
+                                                                      disabled={!editingOwner}
+                                                                      size="small"
+                                                                 />
+                                                            </div>
+                                                       </div>
+                                                       <div>
+                                                            <label className="block text-sm font-semibold text-gray-700 mb-2">
+                                                                 Postcode
+                                                            </label>
+                                                            <TextField
+                                                                 fullWidth
+                                                                 variant="outlined"
+                                                                 value={ownerData.owner_postcode}
+                                                                 onChange={(e) => handleOwnerChange('owner_postcode', e.target.value)}
+                                                                 disabled={!editingOwner}
+                                                                 size="small"
+                                                            />
+                                                       </div>
                                                   </div>
                                              </div>
                                         </div>
@@ -285,71 +380,150 @@ const OwnerProfile = () => {
                                              )}
                                         </div>
 
-                                        {/* Address Information */}
-                                        <div className="mb-6">
-                                             <h3 className="text-lg font-semibold text-gray-800 mb-4">
-                                                  Address
-                                             </h3>
+                                        {/* Basic Information */}
+                                        <div className="space-y-4 mb-6">
+                                             <div>
+                                                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                                                       Agency Name
+                                                  </label>
+                                                  <TextField
+                                                       fullWidth
+                                                       variant="outlined"
+                                                       value={agencyData.agency_name}
+                                                       onChange={(e) => handleAgencyChange('agency_name', e.target.value)}
+                                                       disabled={!editingAgency}
+                                                       size="small"
+                                                  />
+                                             </div>
+
                                              <div className="grid grid-cols-2 gap-4">
                                                   <div>
                                                        <label className="block text-sm font-semibold text-gray-700 mb-2">
-                                                            District
+                                                            Phone Number
                                                        </label>
                                                        <TextField
                                                             fullWidth
                                                             variant="outlined"
-                                                            value={agencyData.district}
-                                                            onChange={(e) => handleAgencyChange('district', e.target.value)}
+                                                            value={agencyData.phone_number}
+                                                            onChange={(e) => handleAgencyChange('phone_number', e.target.value)}
                                                             disabled={!editingAgency}
                                                             size="small"
                                                        />
                                                   </div>
                                                   <div>
                                                        <label className="block text-sm font-semibold text-gray-700 mb-2">
-                                                            Upazilla
+                                                            Email
                                                        </label>
                                                        <TextField
                                                             fullWidth
                                                             variant="outlined"
-                                                            value={agencyData.upazilla}
-                                                            onChange={(e) => handleAgencyChange('upazilla', e.target.value)}
+                                                            value={agencyData.email}
+                                                            onChange={(e) => handleAgencyChange('email', e.target.value)}
                                                             disabled={!editingAgency}
+                                                            size="small"
+                                                       />
+                                                  </div>
+                                             </div>
+
+                                             <div className="grid grid-cols-2 gap-4">
+                                                  <div>
+                                                       <label className="block text-sm font-semibold text-gray-700 mb-2">
+                                                            Vehicles - Cars
+                                                       </label>
+                                                       <TextField
+                                                            fullWidth
+                                                            variant="outlined"
+                                                            type="number"
+                                                            value={agencyData.cars}
+                                                            disabled={true}
                                                             size="small"
                                                        />
                                                   </div>
                                                   <div>
                                                        <label className="block text-sm font-semibold text-gray-700 mb-2">
-                                                            Key Area
+                                                            Vehicles - Bikes
                                                        </label>
                                                        <TextField
                                                             fullWidth
                                                             variant="outlined"
-                                                            value={agencyData.keyArea}
-                                                            onChange={(e) => handleAgencyChange('keyArea', e.target.value)}
-                                                            disabled={!editingAgency}
-                                                            size="small"
-                                                       />
-                                                  </div>
-                                                  <div>
-                                                       <label className="block text-sm font-semibold text-gray-700 mb-2">
-                                                            Area
-                                                       </label>
-                                                       <TextField
-                                                            fullWidth
-                                                            variant="outlined"
-                                                            value={agencyData.area}
-                                                            onChange={(e) => handleAgencyChange('area', e.target.value)}
-                                                            disabled={!editingAgency}
+                                                            type="number"
+                                                            value={agencyData.bikes}
+                                                            disabled={true}
                                                             size="small"
                                                        />
                                                   </div>
                                              </div>
                                         </div>
 
-                                        {/* License Information */}
-                                        <div>
+                                        {/* Address Information */}
+                                        <div className="mb-6 pt-6 border-t">
                                              <h3 className="text-lg font-semibold text-gray-800 mb-4">
-                                                  License Information
+                                                  Address
+                                             </h3>
+                                             <div className="space-y-4">
+                                                  <div>
+                                                       <label className="block text-sm font-semibold text-gray-700 mb-2">
+                                                            Full Address
+                                                       </label>
+                                                       <TextField
+                                                            fullWidth
+                                                            variant="outlined"
+                                                            value={agencyData.agency_full_address}
+                                                            onChange={(e) => handleAgencyChange('agency_full_address', e.target.value)}
+                                                            disabled={!editingAgency}
+                                                            size="small"
+                                                            multiline
+                                                            rows={2}
+                                                       />
+                                                  </div>
+                                                  <div className="grid grid-cols-3 gap-4">
+                                                       <div>
+                                                            <label className="block text-sm font-semibold text-gray-700 mb-2">
+                                                                 City
+                                                            </label>
+                                                            <TextField
+                                                                 fullWidth
+                                                                 variant="outlined"
+                                                                 value={agencyData.agency_city}
+                                                                 onChange={(e) => handleAgencyChange('agency_city', e.target.value)}
+                                                                 disabled={!editingAgency}
+                                                                 size="small"
+                                                            />
+                                                       </div>
+                                                       <div>
+                                                            <label className="block text-sm font-semibold text-gray-700 mb-2">
+                                                                 Area
+                                                            </label>
+                                                            <TextField
+                                                                 fullWidth
+                                                                 variant="outlined"
+                                                                 value={agencyData.agency_area}
+                                                                 onChange={(e) => handleAgencyChange('agency_area', e.target.value)}
+                                                                 disabled={!editingAgency}
+                                                                 size="small"
+                                                            />
+                                                       </div>
+                                                       <div>
+                                                            <label className="block text-sm font-semibold text-gray-700 mb-2">
+                                                                 Postcode
+                                                            </label>
+                                                            <TextField
+                                                                 fullWidth
+                                                                 variant="outlined"
+                                                                 value={agencyData.agency_postcode}
+                                                                 onChange={(e) => handleAgencyChange('agency_postcode', e.target.value)}
+                                                                 disabled={!editingAgency}
+                                                                 size="small"
+                                                            />
+                                                       </div>
+                                                  </div>
+                                             </div>
+                                        </div>
+
+                                        {/* License & Registration Information */}
+                                        <div className="mb-6 pt-6 border-t">
+                                             <h3 className="text-lg font-semibold text-gray-800 mb-4">
+                                                  License & Registration
                                              </h3>
                                              <div className="space-y-4">
                                                   <div>
@@ -359,16 +533,63 @@ const OwnerProfile = () => {
                                                        <TextField
                                                             fullWidth
                                                             variant="outlined"
-                                                            value={agencyData.license_number}
-                                                            onChange={(e) => handleAgencyChange('license_number', e.target.value)}
+                                                            value={agencyData.license}
+                                                            onChange={(e) => handleAgencyChange('license', e.target.value)}
                                                             disabled={!editingAgency}
                                                             size="small"
                                                        />
                                                   </div>
+
                                                   <div className="grid grid-cols-2 gap-4">
                                                        <div>
                                                             <label className="block text-sm font-semibold text-gray-700 mb-2">
-                                                                 Expiry Date
+                                                                 TIN
+                                                            </label>
+                                                            <TextField
+                                                                 fullWidth
+                                                                 variant="outlined"
+                                                                 value={agencyData.tin}
+                                                                 onChange={(e) => handleAgencyChange('tin', e.target.value)}
+                                                                 disabled={!editingAgency}
+                                                                 size="small"
+                                                            />
+                                                       </div>
+                                                       <div>
+                                                            <label className="block text-sm font-semibold text-gray-700 mb-2">
+                                                                 Insurance Number
+                                                            </label>
+                                                            <TextField
+                                                                 fullWidth
+                                                                 variant="outlined"
+                                                                 value={agencyData.insurancenumber}
+                                                                 onChange={(e) => handleAgencyChange('insurancenumber', e.target.value)}
+                                                                 disabled={!editingAgency}
+                                                                 size="small"
+                                                            />
+                                                       </div>
+                                                  </div>
+
+                                                  <div className="grid grid-cols-2 gap-4">
+                                                       <div>
+                                                            <label className="block text-sm font-semibold text-gray-700 mb-2">
+                                                                 Trade License Expire
+                                                            </label>
+                                                            <TextField
+                                                                 fullWidth
+                                                                 variant="outlined"
+                                                                 type="date"
+                                                                 value={agencyData.tradelicenseexpire}
+                                                                 onChange={(e) => handleAgencyChange('tradelicenseexpire', e.target.value)}
+                                                                 disabled={!editingAgency}
+                                                                 size="small"
+                                                                 InputLabelProps={{
+                                                                      shrink: true,
+                                                                 }}
+                                                            />
+                                                       </div>
+                                                       <div>
+                                                            <label className="block text-sm font-semibold text-gray-700 mb-2">
+                                                                 License Expiry Date
                                                             </label>
                                                             <TextField
                                                                  fullWidth
@@ -383,19 +604,39 @@ const OwnerProfile = () => {
                                                                  }}
                                                             />
                                                        </div>
-                                                       <div>
-                                                            <label className="block text-sm font-semibold text-gray-700 mb-2">
-                                                                 Experience (Years)
-                                                            </label>
-                                                            <TextField
-                                                                 fullWidth
-                                                                 variant="outlined"
-                                                                 value={agencyData.experience}
-                                                                 onChange={(e) => handleAgencyChange('experience', e.target.value)}
-                                                                 disabled={!editingAgency}
-                                                                 size="small"
-                                                            />
-                                                       </div>
+                                                  </div>
+                                             </div>
+                                        </div>
+
+                                        {/* Status Information */}
+                                        <div className="pt-6 border-t">
+                                             <h3 className="text-lg font-semibold text-gray-800 mb-4">
+                                                  Status
+                                             </h3>
+                                             <div className="grid grid-cols-2 gap-4">
+                                                  <div>
+                                                       <label className="block text-sm font-semibold text-gray-700 mb-2">
+                                                            Status
+                                                       </label>
+                                                       <TextField
+                                                            fullWidth
+                                                            variant="outlined"
+                                                            value={agencyData.status}
+                                                            disabled={true}
+                                                            size="small"
+                                                       />
+                                                  </div>
+                                                  <div>
+                                                       <label className="block text-sm font-semibold text-gray-700 mb-2">
+                                                            Verified
+                                                       </label>
+                                                       <TextField
+                                                            fullWidth
+                                                            variant="outlined"
+                                                            value={agencyData.verified ? 'Yes' : 'No'}
+                                                            disabled={true}
+                                                            size="small"
+                                                       />
                                                   </div>
                                              </div>
                                         </div>

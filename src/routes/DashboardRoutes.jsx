@@ -49,15 +49,11 @@ export const DashboardRoutes = [
                     element: <AgencyDashboard />
                },
                {
-                    path: '/dashboard/agency/owner-profile',
+                    path: '/dashboard/agency/profile',
                     element: <OwnerProfile></OwnerProfile>
                },
                {
-                    path: '/dashboard/agency/agency-profile',
-                    element: <AgencyProfile />
-               },
-               {
-                    path: '/dashboard/agency/cars',
+                    path: '/dashboard/agency/vehicles',
                     element: <AgencyCars/>
                },
                {

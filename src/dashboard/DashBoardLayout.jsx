@@ -152,23 +152,15 @@ const DashBoardLayout = () => {
                     </ListNav>
                </ListItem>
                <ListItem disablePadding>
-                    <ListNav onClick={() => handleNavigation('/dashboard/agency/owner-profile')} className={isActive('/dashboard/agency/owner-profile') ? 'active' : ''}>
+                    <ListNav onClick={() => handleNavigation('/dashboard/agency/profile')} className={isActive('/dashboard/agency/owner-profile') ? 'active' : ''}>
                          <ListItemIcon style={{ fontSize: 20 }}>
                               <FaUser className='text-white w-5' />
                          </ListItemIcon>
-                         <ListItemText primary="Owner Profile" />
+                         <ListItemText primary="Profile" />
                     </ListNav>
                </ListItem>
                <ListItem disablePadding>
-                    <ListNav onClick={() => handleNavigation('/dashboard/agency/agency-profile')} className={isActive('/dashboard/agency/agency-profile') ? 'active' : ''}>
-                         <ListItemIcon style={{ fontSize: 20 }}>
-                         <BsShop className='text-white'/>
-                         </ListItemIcon>
-                         <ListItemText primary="Agency Profile" />
-                    </ListNav>
-               </ListItem>
-               <ListItem disablePadding>
-                    <ListNav onClick={() => handleNavigation('/dashboard/agency/cars')} className={isActive('/dashboard/agency/cars') ? 'active' : ''}>
+                    <ListNav onClick={() => handleNavigation('/dashboard/agency/vehicles')} className={isActive('/dashboard/agency/cars') ? 'active' : ''}>
                          <ListItemIcon style={{ fontSize: 20 }}>
                               <IoCarSport className='text-white' />
                          </ListItemIcon>
