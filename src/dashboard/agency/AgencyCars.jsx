@@ -6,6 +6,7 @@ import { Box, IconButton, Paper, styled, Table, TableBody, TableCell, tableCellC
 import { useTheme } from '@emotion/react';
 import { useState } from 'react';
 import useRole from '../../hooks/useRole';
+import Loader from '../../components/Loader';
 
 function TablePaginationActions(props) {
      const theme = useTheme();
@@ -176,7 +177,9 @@ const AgencyCars = () => {
                                    </TableFooter>
                               </Table>
                          </TableContainer> :
-                         <p className="text-center mt-20">Loading ...</p>
+                         <div className="flex justify-center items-center py-20">
+                              <Loader />
+                         </div>
                     }
                </div>
           </div>

@@ -6,6 +6,8 @@ import { Box, IconButton, Paper, styled, Table, TableBody, TableCell, tableCellC
 import { useTheme } from '@emotion/react';
 import { useState } from 'react';
 import useRole from '../../hooks/useRole';
+import Loader from '../../components/Loader';
+import useAuth from '../../hooks/useAuth';
 
 function TablePaginationActions(props) {
      const theme = useTheme();
@@ -71,12 +73,12 @@ TablePaginationActions.propTypes = {
 const ActiveBookings = () => {
 
      const axiosPublic = useAxiosPublic();
-     const role = useRole();
+     const {user} = useAuth();
 
      const { data } = useQuery({
           queryKey: ['bookings'],
           queryFn: async () => {
-               const response = await axiosPublic.get(`carRoutes/agencyActiveBookingCars/${role._id}`, {withCredentials: true});
+               const response = await axiosPublic.get(`agencyRoutes/getAgencyCarsByOwner/${user?.email}`, {withCredentials: true});
                return response.data;
           },
      })
@@ -168,7 +170,9 @@ const ActiveBookings = () => {
                                    </TableFooter>
                               </Table>
                          </TableContainer> :
-                         <p className="text-center mt-20">Loading ...</p>
+                         <div className="flex justify-center items-center py-20">
+                              <Loader />
+                         </div>
                     }
                </div>
           </div>

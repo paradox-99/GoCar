@@ -35,7 +35,7 @@ const adminDropDown = [
 ]
 
 const agencyDropDown = [
-    { title: 'Profile', url: '/dashboard/agency-profile' },
+    { title: 'Profile', url: '/dashboard/agency/profile' },
     { title: 'Dashboard', url: '/dashboard/agency' },
     // { title: 'Notifications', url: '/dashboard/notificationsAgency' }
 ]

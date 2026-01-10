@@ -14,6 +14,8 @@ const OwnerProfile = () => {
      const [editingAgency, setEditingAgency] = useState(false);
      const [ownerData, setOwnerData] = useState(null);
      const [agencyData, setAgencyData] = useState(null);
+     const [originalOwnerData, setOriginalOwnerData] = useState(null);
+     const [originalAgencyData, setOriginalAgencyData] = useState(null);
 
      const { data } = useQuery({
           queryKey: ['user'],
@@ -23,12 +25,9 @@ const OwnerProfile = () => {
           },
      })
 
-     console.log(data);
-     
-
      // Initialize form data when data is fetched
      if (data && !ownerData) {
-          setOwnerData({
+          const initialOwnerData = {
                owner_name: data?.owner_name || '',
                owner_phone: data?.owner_phone || '',
                gender: data?.gender || '',
@@ -41,11 +40,13 @@ const OwnerProfile = () => {
                owner_full_address: data?.owner_full_address || '',
                owner_verified: data?.owner_verified || false,
                accountstatus: data?.accountstatus || ''
-          });
+          };
+          setOwnerData(initialOwnerData);
+          setOriginalOwnerData(initialOwnerData);
      }
 
      if (data && !agencyData) {
-          setAgencyData({
+          const initialAgencyData = {
                agency_name: data?.agency_name || '',
                phone_number: data?.phone_number || '',
                email: data?.email || '',
@@ -62,7 +63,9 @@ const OwnerProfile = () => {
                verified: data?.verified || false,
                cars: data?.cars || 0,
                bikes: data?.bikes || 0
-          });
+          };
+          setAgencyData(initialAgencyData);
+          setOriginalAgencyData(initialAgencyData);
      }
 
      const handleOwnerChange = (field, value) => {
@@ -79,10 +82,38 @@ const OwnerProfile = () => {
           }));
      };
 
+     // Helper function to get only changed fields
+     const getChangedFields = (currentData, originalData) => {
+          if (!originalData) return currentData;
+          
+          const changedFields = {};
+          Object.keys(currentData).forEach(key => {
+               if (currentData[key] !== originalData[key]) {
+                    console.log("changed");
+                    
+                    changedFields[key] = currentData[key];
+               }
+          });
+          return changedFields;
+     };
+
      const handleSaveOwner = async () => {
           try {
-               // Add API call to save owner data
-               console.log('Saving owner data:', ownerData);
+               const changedFields = getChangedFields(ownerData, originalOwnerData);
+               
+               if (Object.keys(changedFields).length === 0) {
+                    console.log('No changes to save');
+                    setEditingOwner(false);
+                    return;
+               }
+
+               // Add API call to save only changed owner data
+               console.log('Saving changed owner data:', changedFields);
+               // Example API call:
+               // const response = await axiosPublic.patch(`agencyRoutes/updateOwnerProfile/${user.email}`, changedFields);
+               
+               // Update original data after successful save
+               setOriginalOwnerData(ownerData);
                setEditingOwner(false);
           } catch (error) {
                console.error('Error saving owner data:', error);
@@ -91,8 +122,21 @@ const OwnerProfile = () => {
 
      const handleSaveAgency = async () => {
           try {
-               // Add API call to save agency data
-               console.log('Saving agency data:', agencyData);
+               const changedFields = getChangedFields(agencyData, originalAgencyData);
+               
+               if (Object.keys(changedFields).length === 0) {
+                    console.log('No changes to save');
+                    setEditingAgency(false);
+                    return;
+               }
+
+               // Add API call to save only changed agency data
+               console.log('Saving changed agency data:', changedFields);
+               // Example API call:
+               // const response = await axiosPublic.patch(`agencyRoutes/updateAgencyProfile/${user.email}`, changedFields);
+               
+               // Update original data after successful save
+               setOriginalAgencyData(agencyData);
                setEditingAgency(false);
           } catch (error) {
                console.error('Error saving agency data:', error);
@@ -100,45 +144,15 @@ const OwnerProfile = () => {
      };
 
      const handleCancelOwner = () => {
-          if (data) {
-               setOwnerData({
-                    owner_name: data?.owner_name || '',
-                    owner_phone: data?.owner_phone || '',
-                    gender: data?.gender || '',
-                    owner_email: data?.owner_email || '',
-                    dob: data?.dob ? data.dob.split('T')[0] : '',
-                    owner_photo: data?.owner_photo || '',
-                    owner_city: data?.owner_city || '',
-                    owner_area: data?.owner_area || '',
-                    owner_postcode: data?.owner_postcode || '',
-                    owner_full_address: data?.owner_full_address || '',
-                    owner_verified: data?.owner_verified || false,
-                    accountstatus: data?.accountstatus || ''
-               });
+          if (originalOwnerData) {
+               setOwnerData(originalOwnerData);
           }
           setEditingOwner(false);
      };
 
      const handleCancelAgency = () => {
-          if (data) {
-               setAgencyData({
-                    agency_name: data?.agency_name || '',
-                    phone_number: data?.phone_number || '',
-                    email: data?.email || '',
-                    agency_city: data?.agency_city || '',
-                    agency_area: data?.agency_area || '',
-                    agency_postcode: data?.agency_postcode || '',
-                    agency_full_address: data?.agency_full_address || '',
-                    license: data?.license || '',
-                    tin: data?.tin || '',
-                    insurancenumber: data?.insurancenumber || '',
-                    tradelicenseexpire: data?.tradelicenseexpire || '',
-                    expire_date: data?.expire_date || '',
-                    status: data?.status || '',
-                    verified: data?.verified || false,
-                    cars: data?.cars || 0,
-                    bikes: data?.bikes || 0
-               });
+          if (originalAgencyData) {
+               setAgencyData(originalAgencyData);
           }
           setEditingAgency(false);
      };
