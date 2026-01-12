@@ -6,12 +6,16 @@ import useAuth from "../../hooks/useAuth";
 import EditIcon from '@mui/icons-material/Edit';
 import SaveIcon from '@mui/icons-material/Save';
 import CancelIcon from '@mui/icons-material/Cancel';
+import toast from "react-hot-toast";
+import Loader from "../../components/Loader";
 
 const OwnerProfile = () => {
      const { user } = useAuth();
      const axiosPublic = useAxiosPublic();
      const [editingOwner, setEditingOwner] = useState(false);
      const [editingAgency, setEditingAgency] = useState(false);
+     const [editingOwnerAddress, setEditingOwnerAddress] = useState(false);
+     const [editingAgencyAddress, setEditingAgencyAddress] = useState(false);
      const [ownerData, setOwnerData] = useState(null);
      const [agencyData, setAgencyData] = useState(null);
      const [originalOwnerData, setOriginalOwnerData] = useState(null);
@@ -57,8 +61,8 @@ const OwnerProfile = () => {
                license: data?.license || '',
                tin: data?.tin || '',
                insurancenumber: data?.insurancenumber || '',
-               tradelicenseexpire: data?.tradelicenseexpire || '',
-               expire_date: data?.expire_date || '',
+               tradelicenseexpire: data?.tradelicenseexpire.split('T')[0] || '',
+               expire_date: data?.expire_date.split('T')[0] || '',
                status: data?.status || '',
                verified: data?.verified || false,
                cars: data?.cars || 0,
@@ -85,12 +89,12 @@ const OwnerProfile = () => {
      // Helper function to get only changed fields
      const getChangedFields = (currentData, originalData) => {
           if (!originalData) return currentData;
-          
+
           const changedFields = {};
           Object.keys(currentData).forEach(key => {
                if (currentData[key] !== originalData[key]) {
                     console.log("changed");
-                    
+
                     changedFields[key] = currentData[key];
                }
           });
@@ -100,7 +104,7 @@ const OwnerProfile = () => {
      const handleSaveOwner = async () => {
           try {
                const changedFields = getChangedFields(ownerData, originalOwnerData);
-               
+
                if (Object.keys(changedFields).length === 0) {
                     console.log('No changes to save');
                     setEditingOwner(false);
@@ -110,20 +114,25 @@ const OwnerProfile = () => {
                // Add API call to save only changed owner data
                console.log('Saving changed owner data:', changedFields);
                // Example API call:
-               // const response = await axiosPublic.patch(`agencyRoutes/updateOwnerProfile/${user.email}`, changedFields);
-               
+               const response = await axiosPublic.patch(`agencyRoutes/updateOwnerInfo/${data?.owner_id}`, changedFields);
+
+               if (response.data.success) {
+                    toast.success(response.data.message);
+               }
+
                // Update original data after successful save
-               setOriginalOwnerData(ownerData);
+               setOriginalOwnerData(response.data.updatedOwner);
                setEditingOwner(false);
           } catch (error) {
                console.error('Error saving owner data:', error);
           }
      };
 
+
      const handleSaveAgency = async () => {
           try {
                const changedFields = getChangedFields(agencyData, originalAgencyData);
-               
+
                if (Object.keys(changedFields).length === 0) {
                     console.log('No changes to save');
                     setEditingAgency(false);
@@ -133,10 +142,14 @@ const OwnerProfile = () => {
                // Add API call to save only changed agency data
                console.log('Saving changed agency data:', changedFields);
                // Example API call:
-               // const response = await axiosPublic.patch(`agencyRoutes/updateAgencyProfile/${user.email}`, changedFields);
-               
+               const response = await axiosPublic.patch(`/agencyRoutes/updateAgencyInfo/${data?.agency_id}`, changedFields);
+
+               if (response.data.success) {
+                    toast.success(response.data.message);
+               }
+
                // Update original data after successful save
-               setOriginalAgencyData(agencyData);
+               setOriginalAgencyData(response.data.updatedAgency);
                setEditingAgency(false);
           } catch (error) {
                console.error('Error saving agency data:', error);
@@ -155,6 +168,104 @@ const OwnerProfile = () => {
                setAgencyData(originalAgencyData);
           }
           setEditingAgency(false);
+     };
+
+     // Address-specific handlers for Owner
+     const handleSaveOwnerAddress = async () => {
+          try {
+               const addressFields = {
+                    owner_full_address: ownerData.owner_full_address,
+                    owner_city: ownerData.owner_city,
+                    owner_area: ownerData.owner_area,
+                    owner_postcode: ownerData.owner_postcode
+               };
+
+               const changedAddressFields = {};
+               Object.keys(addressFields).forEach(key => {
+                    if (addressFields[key] !== originalOwnerData[key]) {
+                         changedAddressFields[key] = addressFields[key];
+                    }
+               });
+
+               if (Object.keys(changedAddressFields).length === 0) {
+                    console.log('No address changes to save');
+                    setEditingOwnerAddress(false);
+                    return;
+               }
+
+               const response = await axiosPublic.patch(`/addressRoutes/updateAddress/${data?.agency_add_id}`, changedAddressFields);
+
+               if (response.data.success) {
+                    toast.success(response.data.message);
+               }
+
+               setOriginalOwnerData(prev => ({ ...prev, ...response.data.updatedAddress }));
+               setEditingOwnerAddress(false);
+          } catch (error) {
+               console.error('Error saving owner address:', error);
+          }
+     };
+
+     const handleCancelOwnerAddress = () => {
+          if (originalOwnerData) {
+               setOwnerData(prev => ({
+                    ...prev,
+                    owner_full_address: originalOwnerData.owner_full_address,
+                    owner_city: originalOwnerData.owner_city,
+                    owner_area: originalOwnerData.owner_area,
+                    owner_postcode: originalOwnerData.owner_postcode
+               }));
+          }
+          setEditingOwnerAddress(false);
+     };
+
+     // Address-specific handlers for Agency
+     const handleSaveAgencyAddress = async () => {
+          try {
+               const addressFields = {
+                    agency_full_address: agencyData.agency_full_address,
+                    agency_city: agencyData.agency_city,
+                    agency_area: agencyData.agency_area,
+                    agency_postcode: agencyData.agency_postcode
+               };
+
+               const changedAddressFields = {};
+               Object.keys(addressFields).forEach(key => {
+                    if (addressFields[key] !== originalAgencyData[key]) {
+                         changedAddressFields[key] = addressFields[key];
+                    }
+               });
+
+               if (Object.keys(changedAddressFields).length === 0) {
+                    console.log('No address changes to save');
+                    setEditingAgencyAddress(false);
+                    return;
+               }
+
+               const response = await axiosPublic.patch(`/addressRoutes/updateAddress/${data?.owner_add_id}`, changedAddressFields);
+
+               if (response.data.success) {
+                    toast.success(response.data.message);
+               }
+
+               setOriginalOwnerData(prev => ({ ...prev, ...response.data.updatedAddress }));
+               setEditingAgencyAddress(false);
+          } catch (error) {
+               console.error('Error saving agency address:', error);
+          }
+     };
+
+     const handleCancelAgencyAddress = () => {
+          if (originalAgencyData) {
+               setAgencyData(prev => ({
+                    ...prev,
+                    agency_full_address: originalAgencyData.agency_full_address,
+                    agency_city: originalAgencyData.agency_city,
+                    agency_area: originalAgencyData.agency_area,
+                    agency_postcode: originalAgencyData.agency_postcode
+               }));
+          }
+          setEditingAgencyAddress(false);
      };
 
      return (
@@ -265,9 +376,6 @@ const OwnerProfile = () => {
                                                             onChange={(e) => handleOwnerChange('dob', e.target.value)}
                                                             disabled={!editingOwner}
                                                             size="small"
-                                                            InputLabelProps={{
-                                                                 shrink: true,
-                                                            }}
                                                        />
                                                   </div>
                                                   <div>
@@ -284,11 +392,47 @@ const OwnerProfile = () => {
                                                   </div>
                                              </div>
 
+                                             {/* Action Buttons */}
+                                             {editingOwner && (
+                                                  <div className="flex gap-4 mt-8">
+                                                       <Button
+                                                            fullWidth
+                                                            startIcon={<SaveIcon />}
+                                                            variant="contained"
+                                                            sx={{ background: '#F58300' }}
+                                                            onClick={handleSaveOwner}
+                                                       >
+                                                            Save
+                                                       </Button>
+                                                       <Button
+                                                            fullWidth
+                                                            startIcon={<CancelIcon />}
+                                                            variant="outlined"
+                                                            onClick={handleCancelOwner}
+                                                       >
+                                                            Cancel
+                                                       </Button>
+                                                  </div>
+                                             )}
+
                                              {/* Address Information */}
                                              <div className="mt-6 pt-6 border-t">
-                                                  <h3 className="text-lg font-semibold text-gray-800 mb-4">
-                                                       Address
-                                                  </h3>
+                                                  <div className="flex items-center justify-between mb-4">
+                                                       <h3 className="text-lg font-semibold text-gray-800">
+                                                            Address
+                                                       </h3>
+                                                       {!editingOwnerAddress && (
+                                                            <Button
+                                                                 size="small"
+                                                                 startIcon={<EditIcon />}
+                                                                 variant="contained"
+                                                                 sx={{ background: '#F58300' }}
+                                                                 onClick={() => setEditingOwnerAddress(true)}
+                                                            >
+                                                                 Edit
+                                                            </Button>
+                                                       )}
+                                                  </div>
                                                   <div className="space-y-4">
                                                        <div>
                                                             <label className="block text-sm font-semibold text-gray-700 mb-2">
@@ -299,7 +443,7 @@ const OwnerProfile = () => {
                                                                  variant="outlined"
                                                                  value={ownerData.owner_full_address}
                                                                  onChange={(e) => handleOwnerChange('owner_full_address', e.target.value)}
-                                                                 disabled={!editingOwner}
+                                                                 disabled={!editingOwnerAddress}
                                                                  size="small"
                                                                  multiline
                                                                  rows={2}
@@ -315,7 +459,7 @@ const OwnerProfile = () => {
                                                                       variant="outlined"
                                                                       value={ownerData.owner_city}
                                                                       onChange={(e) => handleOwnerChange('owner_city', e.target.value)}
-                                                                      disabled={!editingOwner}
+                                                                      disabled={!editingOwnerAddress}
                                                                       size="small"
                                                                  />
                                                             </div>
@@ -328,7 +472,7 @@ const OwnerProfile = () => {
                                                                       variant="outlined"
                                                                       value={ownerData.owner_area}
                                                                       onChange={(e) => handleOwnerChange('owner_area', e.target.value)}
-                                                                      disabled={!editingOwner}
+                                                                      disabled={!editingOwnerAddress}
                                                                       size="small"
                                                                  />
                                                             </div>
@@ -342,36 +486,36 @@ const OwnerProfile = () => {
                                                                  variant="outlined"
                                                                  value={ownerData.owner_postcode}
                                                                  onChange={(e) => handleOwnerChange('owner_postcode', e.target.value)}
-                                                                 disabled={!editingOwner}
+                                                                 disabled={!editingOwnerAddress}
                                                                  size="small"
                                                             />
                                                        </div>
                                                   </div>
+
+                                                  {/* Address Action Buttons */}
+                                                  {editingOwnerAddress && (
+                                                       <div className="flex gap-4 mt-4">
+                                                            <Button
+                                                                 size="small"
+                                                                 startIcon={<SaveIcon />}
+                                                                 variant="contained"
+                                                                 sx={{ background: '#F58300' }}
+                                                                 onClick={handleSaveOwnerAddress}
+                                                            >
+                                                                 Save
+                                                            </Button>
+                                                            <Button
+                                                                 size="small"
+                                                                 startIcon={<CancelIcon />}
+                                                                 variant="outlined"
+                                                                 onClick={handleCancelOwnerAddress}
+                                                            >
+                                                                 Cancel
+                                                            </Button>
+                                                       </div>
+                                                  )}
                                              </div>
                                         </div>
-
-                                        {/* Action Buttons */}
-                                        {editingOwner && (
-                                             <div className="flex gap-4 mt-8">
-                                                  <Button
-                                                       fullWidth
-                                                       startIcon={<SaveIcon />}
-                                                       variant="contained"
-                                                       sx={{ background: '#F58300' }}
-                                                       onClick={handleSaveOwner}
-                                                  >
-                                                       Save
-                                                  </Button>
-                                                  <Button
-                                                       fullWidth
-                                                       startIcon={<CancelIcon />}
-                                                       variant="outlined"
-                                                       onClick={handleCancelOwner}
-                                                  >
-                                                       Cancel
-                                                  </Button>
-                                             </div>
-                                        )}
                                    </CardContent>
                               </Card>
 
@@ -469,71 +613,6 @@ const OwnerProfile = () => {
                                              </div>
                                         </div>
 
-                                        {/* Address Information */}
-                                        <div className="mb-6 pt-6 border-t">
-                                             <h3 className="text-lg font-semibold text-gray-800 mb-4">
-                                                  Address
-                                             </h3>
-                                             <div className="space-y-4">
-                                                  <div>
-                                                       <label className="block text-sm font-semibold text-gray-700 mb-2">
-                                                            Full Address
-                                                       </label>
-                                                       <TextField
-                                                            fullWidth
-                                                            variant="outlined"
-                                                            value={agencyData.agency_full_address}
-                                                            onChange={(e) => handleAgencyChange('agency_full_address', e.target.value)}
-                                                            disabled={!editingAgency}
-                                                            size="small"
-                                                            multiline
-                                                            rows={2}
-                                                       />
-                                                  </div>
-                                                  <div className="grid grid-cols-3 gap-4">
-                                                       <div>
-                                                            <label className="block text-sm font-semibold text-gray-700 mb-2">
-                                                                 City
-                                                            </label>
-                                                            <TextField
-                                                                 fullWidth
-                                                                 variant="outlined"
-                                                                 value={agencyData.agency_city}
-                                                                 onChange={(e) => handleAgencyChange('agency_city', e.target.value)}
-                                                                 disabled={!editingAgency}
-                                                                 size="small"
-                                                            />
-                                                       </div>
-                                                       <div>
-                                                            <label className="block text-sm font-semibold text-gray-700 mb-2">
-                                                                 Area
-                                                            </label>
-                                                            <TextField
-                                                                 fullWidth
-                                                                 variant="outlined"
-                                                                 value={agencyData.agency_area}
-                                                                 onChange={(e) => handleAgencyChange('agency_area', e.target.value)}
-                                                                 disabled={!editingAgency}
-                                                                 size="small"
-                                                            />
-                                                       </div>
-                                                       <div>
-                                                            <label className="block text-sm font-semibold text-gray-700 mb-2">
-                                                                 Postcode
-                                                            </label>
-                                                            <TextField
-                                                                 fullWidth
-                                                                 variant="outlined"
-                                                                 value={agencyData.agency_postcode}
-                                                                 onChange={(e) => handleAgencyChange('agency_postcode', e.target.value)}
-                                                                 disabled={!editingAgency}
-                                                                 size="small"
-                                                            />
-                                                       </div>
-                                                  </div>
-                                             </div>
-                                        </div>
-
                                         {/* License & Registration Information */}
                                         <div className="mb-6 pt-6 border-t">
                                              <h3 className="text-lg font-semibold text-gray-800 mb-4">
@@ -596,9 +675,6 @@ const OwnerProfile = () => {
                                                                  onChange={(e) => handleAgencyChange('tradelicenseexpire', e.target.value)}
                                                                  disabled={!editingAgency}
                                                                  size="small"
-                                                                 InputLabelProps={{
-                                                                      shrink: true,
-                                                                 }}
                                                             />
                                                        </div>
                                                        <div>
@@ -677,14 +753,111 @@ const OwnerProfile = () => {
                                                   </Button>
                                              </div>
                                         )}
+
+                                        {/* Address Information */}
+                                        <div className="mb-6 pt-6 border-t">
+                                             <div className="flex items-center justify-between mb-4">
+                                                  <h3 className="text-lg font-semibold text-gray-800">
+                                                       Address
+                                                  </h3>
+                                                  {!editingAgencyAddress && (
+                                                       <Button
+                                                            size="small"
+                                                            startIcon={<EditIcon />}
+                                                            variant="contained"
+                                                            sx={{ background: '#F58300' }}
+                                                            onClick={() => setEditingAgencyAddress(true)}
+                                                       >
+                                                            Edit
+                                                       </Button>
+                                                  )}
+                                             </div>
+                                             <div className="space-y-4">
+                                                  <div>
+                                                       <label className="block text-sm font-semibold text-gray-700 mb-2">
+                                                            Full Address
+                                                       </label>
+                                                       <TextField
+                                                            fullWidth
+                                                            variant="outlined"
+                                                            value={agencyData.agency_full_address}
+                                                            onChange={(e) => handleAgencyChange('agency_full_address', e.target.value)}
+                                                            disabled={!editingAgencyAddress}
+                                                            size="small"
+                                                            multiline
+                                                            rows={2}
+                                                       />
+                                                  </div>
+                                                  <div className="grid grid-cols-3 gap-4">
+                                                       <div>
+                                                            <label className="block text-sm font-semibold text-gray-700 mb-2">
+                                                                 City
+                                                            </label>
+                                                            <TextField
+                                                                 fullWidth
+                                                                 variant="outlined"
+                                                                 value={agencyData.agency_city}
+                                                                 onChange={(e) => handleAgencyChange('agency_city', e.target.value)}
+                                                                 disabled={!editingAgencyAddress}
+                                                                 size="small"
+                                                            />
+                                                       </div>
+                                                       <div>
+                                                            <label className="block text-sm font-semibold text-gray-700 mb-2">
+                                                                 Area
+                                                            </label>
+                                                            <TextField
+                                                                 fullWidth
+                                                                 variant="outlined"
+                                                                 value={agencyData.agency_area}
+                                                                 onChange={(e) => handleAgencyChange('agency_area', e.target.value)}
+                                                                 disabled={!editingAgencyAddress}
+                                                                 size="small"
+                                                            />
+                                                       </div>
+                                                       <div>
+                                                            <label className="block text-sm font-semibold text-gray-700 mb-2">
+                                                                 Postcode
+                                                            </label>
+                                                            <TextField
+                                                                 fullWidth
+                                                                 variant="outlined"
+                                                                 value={agencyData.agency_postcode}
+                                                                 onChange={(e) => handleAgencyChange('agency_postcode', e.target.value)}
+                                                                 disabled={!editingAgencyAddress}
+                                                                 size="small"
+                                                            />
+                                                       </div>
+                                                  </div>
+                                             </div>
+
+                                             {/* Address Action Buttons */}
+                                             {editingAgencyAddress && (
+                                                  <div className="flex gap-4 mt-4">
+                                                       <Button
+                                                            size="small"
+                                                            startIcon={<SaveIcon />}
+                                                            variant="contained"
+                                                            sx={{ background: '#F58300' }}
+                                                            onClick={handleSaveAgencyAddress}
+                                                       >
+                                                            Save
+                                                       </Button>
+                                                       <Button
+                                                            size="small"
+                                                            startIcon={<CancelIcon />}
+                                                            variant="outlined"
+                                                            onClick={handleCancelAgencyAddress}
+                                                       >
+                                                            Cancel
+                                                       </Button>
+                                                  </div>
+                                             )}
+                                        </div>
                                    </CardContent>
                               </Card>
                          </div>
-                    ) : (
-                         <div className="flex justify-center items-center h-64">
-                              <p className="text-xl text-gray-500">Loading...</p>
-                         </div>
-                    )}
+                    ) : <Loader />}
                </div>
           </div>
      );
