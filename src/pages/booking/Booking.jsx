@@ -420,7 +420,7 @@ const Booking = () => {
                                                   <span className="text-gray-700 font-semibold">Car Rental:</span>
                                                   <span className="font-bold text-gray-800">
                                                        {diff && `${carInfo.rental_price * (diff)} Tk`}
-                                                       {diffInHours !== NaN && !diff && `${carInfo.rental_price * (diffInHours)} Tk`}
+                                                       {!isNaN(diffInHours) && !diff && `${carInfo.rental_price * (diffInHours)} Tk`}
                                                   </span>
                                              </div>
                                              {driver_fee > 0 && (

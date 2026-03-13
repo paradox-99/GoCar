@@ -60,7 +60,7 @@ export const DashboardRoutes = [
                     element: <AddCars />
                },
                {
-                    path: '/dashboard/agency/active-bookings',
+                    path: '/dashboard/agency/bookings',
                     element: <ActiveBookings />
                },
 

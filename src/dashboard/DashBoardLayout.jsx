@@ -176,11 +176,11 @@ const DashBoardLayout = () => {
                     </ListNav>
                </ListItem>
                <ListItem disablePadding>
-                    <ListNav onClick={() => handleNavigation('/dashboard/agency/active-bookings')} className={isActive('/dashboard/agency/active-bookings') ? 'active' : ''}>
+                    <ListNav onClick={() => handleNavigation('/dashboard/agency/bookings')} className={isActive('/dashboard/agency/bookings') ? 'active' : ''}>
                          <ListItemIcon style={{ fontSize: 20 }}>
                               <FaRegCalendarCheck className='text-white'/>
                          </ListItemIcon>
-                         <ListItemText primary="Active Booking" />
+                         <ListItemText primary="Bookings" />
                     </ListNav>
                </ListItem>
           </List>
