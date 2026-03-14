@@ -89,6 +89,21 @@ const MyProfile = () => {
                return;
           }
 
+          // Get only changed fields
+          const getChangedFields = () => {
+               const changed = {};
+               const fieldsToCheck = ['name', 'photo', 'gender', 'license_number', 'expire_date', 'experience'];
+               
+               fieldsToCheck.forEach(field => {
+                    if (editedData[field] !== data[field]) {
+                         changed[field] = editedData[field];
+                    }
+               });
+               return changed;
+          };
+
+          const changedFields = getChangedFields();
+
           // Check if phone number changed
           const phoneChanged = editedData.phone !== data.phone;
 
@@ -96,16 +111,8 @@ const MyProfile = () => {
                setNewPhoneNumber(editedData.phone);
                setIsLoadingSave(true);
                try {
-                    // Save all other changes first
-                    await axiosPublic.put(`userRoute/updateUserInfo/${data._id}`, {
-                         name: editedData.name,
-                         photo: editedData.photo,
-                         gender: editedData.gender,
-                         license_number: editedData.license_number,
-                         expire_date: editedData.expire_date,
-                         experience: editedData.experience,
-                         // Phone should NOT be saved yet, will be saved after OTP verification
-                    });
+                    // Save all other changes first (without phone)
+                    await axiosPublic.patch(`/userRoute/updateUserInfo/${data.user_id}`, changedFields);
                     toast.success('Profile updated! Now please verify your new phone number.');
                     setIsLoadingSave(false);
                     setShowOTPVerification(true);
@@ -117,19 +124,16 @@ const MyProfile = () => {
                return;
           }
 
-          // If no phone change, save normally
+          // If no phone change, save only changed fields
           if (!phoneChanged) {
                setIsLoadingSave(true);
                try {
-                    await axiosPublic.put(`userRoute/updateUserInfo/${data._id}`, {
-                         name: editedData.name,
-                         photo: editedData.photo,
-                         gender: editedData.gender,
-                         phone: editedData.phone,
-                         license_number: editedData.license_number,
-                         expire_date: editedData.expire_date,
-                         experience: editedData.experience,
-                    });
+                    const dataToSend = changedFields;
+                    if (editedData.phone !== data.phone) {
+                         dataToSend.phone = editedData.phone;
+                    }
+                    
+                    await axiosPublic.patch(`/userRoute/updateUserInfo/${data.user_id}`, dataToSend);
                     toast.success('Profile updated successfully!');
                     setIsEditing(false);
                     setIsLoadingSave(false);
@@ -144,16 +148,24 @@ const MyProfile = () => {
 
      const handleOTPVerified = async (verifiedPhone) => {
           try {
+               // Get changed fields only
+               const getChangedFields = () => {
+                    const changed = {};
+                    const fieldsToCheck = ['name', 'photo', 'gender', 'license_number', 'expire_date', 'experience'];
+                    
+                    fieldsToCheck.forEach(field => {
+                         if (editedData[field] !== data[field]) {
+                              changed[field] = editedData[field];
+                         }
+                    });
+                    return changed;
+               };
+
+               const changedFields = getChangedFields();
+               changedFields.phone = verifiedPhone;
+               
                // Update phone number after OTP verification
-               await axiosPublic.put(`userRoute/updateUserInfo/${data._id}`, {
-                    name: editedData.name,
-                    photo: editedData.photo,
-                    gender: editedData.gender,
-                    phone: verifiedPhone,
-                    license_number: editedData.license_number,
-                    expire_date: editedData.expire_date,
-                    experience: editedData.experience,
-               });
+               await axiosPublic.patch(`/userRoute/updateUserInfo/${data.user_id}`, changedFields);
                toast.success('Phone number updated and verified!');
                setIsEditing(false);
                setShowOTPVerification(false);
@@ -171,7 +183,7 @@ const MyProfile = () => {
      };
 
      // Fields that cannot be edited
-     const readOnlyFields = ['email', 'dob', 'verified', 'user_id', 'userrole', 'accountstatus', 'license_status'];
+     const readOnlyFields = ['email', 'dob', 'verified', 'user_id', 'userrole', 'accountstatus', 'license_status', 'city', 'area', 'postcode', 'display_address', 'display_name'];
 
      // Helper function to format field labels
      const formatLabel = (field) => {
@@ -368,48 +380,9 @@ const MyProfile = () => {
                                    </CardContent>
                               </Card>
 
-                              {/* Address Section */}
-                              <Card className="mb-8 shadow-lg">
-                                   <CardContent>
-                                        <div className="flex justify-between items-center mb-6 pb-3 border-b-2 border-orange-300">
-                                             <h3 className="text-2xl font-bold text-gray-800">Address Information</h3>
-                                             {!isEditing && (
-                                                  <Button
-                                                       variant="outlined"
-                                                       startIcon={<EditIcon />}
-                                                       onClick={() => setIsAddressModalOpen(true)}
-                                                       sx={{
-                                                            color: '#f58300',
-                                                            borderColor: '#f58300',
-                                                            '&:hover': {
-                                                                 background: '#fff5e6',
-                                                            },
-                                                       }}
-                                                  >
-                                                       Edit Address
-                                                  </Button>
-                                             )}
-                                        </div>
-                                        <Grid container spacing={3}>
-                                             <Grid item xs={12} sm={6} md={4}>
-                                                  <ProfileField label="City" field="city" value={data?.city} />
-                                             </Grid>
-                                             <Grid item xs={12} sm={6} md={4}>
-                                                  <ProfileField label="Area" field="area" value={data?.area} />
-                                             </Grid>
-                                             <Grid item xs={12} sm={6} md={4}>
-                                                  <ProfileField label="Postcode" field="postcode" value={data?.postcode} />
-                                             </Grid>
-                                             <Grid item xs={12}>
-                                                  <ProfileField label="Details Address" field="display_address" value={data?.display_name} />
-                                             </Grid>
-                                        </Grid>
-                                   </CardContent>
-                              </Card>
-
                               {/* Action Buttons */}
                               {isEditing && (
-                                   <Card className="shadow-lg">
+                                   <Card className="shadow-lg mb-8">
                                         <CardContent className="flex justify-center gap-4 py-6 flex-wrap">
                                              <Button
                                                   variant="contained"
@@ -444,12 +417,49 @@ const MyProfile = () => {
                                    </Card>
                               )}
 
+                              {/* Address Section */}
+                              <Card className="mb-8 shadow-lg">
+                                   <CardContent>
+                                        <div className="flex justify-between items-center mb-6 pb-3 border-b-2 border-orange-300">
+                                             <h3 className="text-2xl font-bold text-gray-800">Address Information</h3>
+                                             <Button
+                                                  variant="outlined"
+                                                  startIcon={<EditIcon />}
+                                                  onClick={() => setIsAddressModalOpen(true)}
+                                                  sx={{
+                                                       color: '#f58300',
+                                                       borderColor: '#f58300',
+                                                       '&:hover': {
+                                                            background: '#fff5e6',
+                                                       },
+                                                  }}
+                                             >
+                                                  Edit Address
+                                             </Button>
+                                        </div>
+                                        <Grid container spacing={3}>
+                                             <Grid item xs={12} sm={6} md={4}>
+                                                  <ProfileField label="City" field="city" value={data?.city} />
+                                             </Grid>
+                                             <Grid item xs={12} sm={6} md={4}>
+                                                  <ProfileField label="Area" field="area" value={data?.area} />
+                                             </Grid>
+                                             <Grid item xs={12} sm={6} md={4}>
+                                                  <ProfileField label="Postcode" field="postcode" value={data?.postcode} />
+                                             </Grid>
+                                             <Grid item xs={12}>
+                                                  <ProfileField label="Details Address" field="display_address" value={data?.display_name} />
+                                             </Grid>
+                                        </Grid>
+                                   </CardContent>
+                              </Card>
+
                               {/* Address Edit Modal */}
                               <AddressEditModal
                                    open={isAddressModalOpen}
                                    onClose={() => setIsAddressModalOpen(false)}
                                    addressData={data}
-                                   userId={data?._id}
+                                   userId={data?.user_id}
                                    onAddressUpdated={handleAddressUpdated}
                               />
 
@@ -457,7 +467,7 @@ const MyProfile = () => {
                               {showOTPVerification && (
                                    <PhoneOTPVerification
                                         phoneNumber={newPhoneNumber}
-                                        userId={data?._id}
+                                        userId={data?.user_id}
                                         onVerified={handleOTPVerified}
                                         onCancel={() => {
                                              setShowOTPVerification(false);

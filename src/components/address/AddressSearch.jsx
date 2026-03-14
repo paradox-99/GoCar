@@ -23,6 +23,7 @@ export default function AddressSearch({ onSelect, apiKey, provider = 'locationiq
   const [open, setOpen] = useState(false);
   const containerRef = useRef(null);
   const [error, setError] = useState(null);
+  const justSelectedRef = useRef(false); // Track when user just selected an item
   const countryFilter = 'bd';
   const navigate = useNavigate();
   const location = useLocation();
@@ -46,6 +47,12 @@ export default function AddressSearch({ onSelect, apiKey, provider = 'locationiq
 
   useEffect(() => {
     async function fetchSuggestions(q) {
+      // Skip fetch if user just selected an item (to prevent dropdown from reopening)
+      if (justSelectedRef.current) {
+        justSelectedRef.current = false;
+        return;
+      }
+
       if (!q || q.length < 2) {
         setResults([]);
         setLoading(false);
@@ -102,6 +109,7 @@ export default function AddressSearch({ onSelect, apiKey, provider = 'locationiq
   }, [debouncedQuery, apiKey, provider]);
 
   function handleSelect(item) {
+    justSelectedRef.current = true; // Mark that user just selected an item to prevent dropdown reopening
     setQuery(item.display_name);
     setOpen(false);
     setResults([]);
@@ -140,7 +148,8 @@ export default function AddressSearch({ onSelect, apiKey, provider = 'locationiq
             zIndex: 1000,
             left: 0,
             right: 0,
-            marginTop: 6,
+            bottom: '100%',
+            marginBottom: 6,
             listStyle: 'none',
             padding: 0,
             borderRadius: 8,
