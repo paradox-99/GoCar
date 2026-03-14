@@ -44,7 +44,7 @@ const Banner = () => {
                <div className="absolute top-10 right-10 w-40 h-40 bg-orange-400/15 rounded-full blur-3xl animate-pulse"></div>
                <div className="absolute bottom-10 left-10 w-32 h-32 bg-orange-500/10 rounded-full blur-3xl animate-pulse" style={{animationDelay: '1s'}}></div>
                
-               <div className="relative z-10">
+               <div className="relative z-1">
                     <h1 className="text-3xl md:text-5xl lg:text-6xl xl:text-7xl font-bold w-full max-w-3xl text-black drop-shadow-2xl leading-tight mb-4">Drive Your Way, Anytime, Anywhere</h1>
                     <p className="text-lg md:text-xl lg:text-2xl max-w-2xl text-gray-700 drop-shadow-lg mb-8">Affordable Car Rentals Made Simple - Explore, Book, and Go!</p>
                     <div className="flex flex-col sm:flex-row gap-3">
@@ -81,7 +81,7 @@ const Banner = () => {
                     </div>
                </div>
 
-               <div className="mt-10 md:mt-5 flex flex-col items-center md:items-start relative z-10">
+               <div className="mt-10 md:mt-5 flex flex-col items-center md:items-start relative z-1">
                     <div className="flex flex-col xl:flex-row gap-4 max-w-6xl bg-white/5 backdrop-blur-2xl p-8 rounded-3xl border border-white/10 shadow-2xl">
                          <div >
                               <h3 className="font-semibold text-black mb-5 text-sm uppercase tracking-wider">📍 Pickup Location</h3>

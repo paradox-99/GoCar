@@ -6,10 +6,15 @@ import Benefit from "./Benefit";
 import HowItWorks from "./HowItWorks";
 import WhyChooseUs from "./WhyChooseUs";
 import Testimonial from "./Testimonial";
+import Stats from "./Stats";
+import FAQ from "./FAQ";
+import CTA from "./CTA";
+import FeaturedAgencies from "./FeaturedAgencies";
+import TrustSecurity from "./TrustSecurity";
 
 const HomePage = () => {
     return (
-        <div className="pt-[72px] lg:pt-20">
+        <div className="pt-[72px] lg:pt-16">
             <Helmet>
                 <title>goCar</title>
             </Helmet>
@@ -18,10 +23,17 @@ const HomePage = () => {
                 <Benefit></Benefit>
                 <TopBrands></TopBrands>
                 <CarTypes></CarTypes>
+            </div>
+            <Stats></Stats>
+            <div className="max-w-[1360px] mx-4 md:mx-8 xl:mx-auto">
                 <HowItWorks></HowItWorks>
                 <WhyChooseUs></WhyChooseUs>
                 <Testimonial></Testimonial>
             </div>
+            {/* <FeaturedAgencies></FeaturedAgencies> */}
+            <TrustSecurity></TrustSecurity>
+            <FAQ></FAQ>
+            <CTA></CTA>
         </div>
     );
 };
