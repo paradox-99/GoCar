@@ -19,8 +19,11 @@ import { IoNotifications } from "react-icons/io5";
 
 const pages = [
     { title: 'Home', url: '/' },
+    { title: 'Find Cars', url: '/search' },
     { title: 'Agencies', url: '/agencies' },
-    { title: 'Support', url: '/services' }
+    { title: 'How It Works', url: '/how-it-works' },
+    { title: 'About', url: '/about' },
+    { title: 'Contact', url: '/contact' },
 ];
 
 const userDropdown = [
@@ -56,9 +59,6 @@ const Navbar = () => {
     const [anchorElUser, setAnchorElUser] = React.useState(null);
     const data = useRole();
     let dashboard = [''];
-
-    console.log(data);
-
 
     const handleOpenNavMenu = (event) => {
         setAnchorElNav(event.currentTarget);
@@ -168,13 +168,13 @@ const Navbar = () => {
                                 >
                                     {pages.map((page) => (
                                         <MenuItem key={page.title} onClick={handleCloseNavMenu}>
-                                            <Typography sx={{ textAlign: 'center', color: "black" }} component="a" href={page.url}>{page.title}</Typography>
+                                            <Typography sx={{ textAlign: 'center', color: "black", padding: 2 }} component="a" href={page.url}>{page.title}</Typography>
                                         </MenuItem>
                                     ))}
                                     {
                                         !user &&
                                         <MenuItem onClick={handleCloseNavMenu}>
-                                            <Typography sx={{ textAlign: 'center', color: "black" }} component="a" href={'/sign-in'}>Login</Typography>
+                                            <Typography sx={{ textAlign: 'center', color: "black", padding: 2 }} component="a" href={'/sign-in'}>Login</Typography>
                                         </MenuItem>
                                     }
                                 </Menu>
@@ -205,41 +205,12 @@ const Navbar = () => {
                                         key={page.title}
                                         onClick={handleCloseNavMenu}
                                         href={page.url}
-                                        sx={{ my: 2, color: 'black', display: 'block', fontWeight: 600, textTransform: "none", fontSize: 16 }}
+                                        sx={{ my: 2, color: 'black', display: 'block', fontWeight: 600, textTransform: "none", fontSize: 18, padding: 2 }}
                                     >
                                         {page.title}
                                     </Button>
                                 ))}
                             </Box>
-                            <Box sx={{
-                                mr: { md: 1 },
-                                ml: { md: 3 }
-                            }}>
-                                <IconButton href='/search'>
-                                    <LuSearch className='text-primary text-xl'/>
-                                </IconButton>
-                            </Box>
-                            {
-                                user &&
-                                <>
-                                    <Box sx={{
-                                        mr: { md: 1 },
-                                        ml: { md: 1 }
-                                    }}>
-                                        <IconButton href='/search'>
-                                            <LuMessageSquareText className='text-primary text-xl'/>
-                                        </IconButton>
-                                    </Box>
-                                    <Box sx={{
-                                        mr: { md: 1 },
-                                        ml: { md: 1 }
-                                    }}>
-                                        <IconButton href='/search'>
-                                            <IoNotifications  className='text-primary text-xl'/>
-                                        </IconButton>
-                                    </Box>
-                                </>
-                            }
                             {
                                 user &&
                                 <Box sx={{ flexGrow: 0, color: "black", ml: 2 }}>

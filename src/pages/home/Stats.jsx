@@ -29,13 +29,13 @@ const Stats = () => {
   ];
 
   return (
-    <section className="py-16 md:py-20 bg-gradient-to-r from-orange-50 to-orange-100">
+    <section className="py-16 md:py-20 bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900">
       <div className="max-w-4xl mx-auto px-4 md:px-8">
         <div className="text-center mb-12">
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+          <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
             Why Choose goCar?
           </h2>
-          <p className="text-gray-600 text-lg">
+          <p className="text-gray-400 text-lg">
             Trusted by thousands of customers across Bangladesh
           </p>
         </div>

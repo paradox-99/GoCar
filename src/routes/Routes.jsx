@@ -13,7 +13,10 @@ import CarTypePage from "../components/CarTypePage";
 import DriverSignUp from "../pages/sign_up/driver_signup/DriverSignUp";
 import AgencySignUp from "../pages/sign_up/agency_sign_up/AgencySignUp";
 import ViewAgencyDetails from "../pages/agency/ViewAgencyDetails";
-import Filter from "../pages/search/Filter";
+import BrowseCars from "../pages/search/BrowseCars";
+import HowItWorksPage from "../pages/how-it-works/HowItWorksPage";
+import About from "../pages/about/About";
+import Contact from "../pages/contact/Contact";
 import ViewDetails from "../components/ViewDetails";
 import Booking from "../pages/booking/Booking";
 import BookingSuccess from "../pages/booking/BookingSuccess";
@@ -155,7 +158,19 @@ const router = createBrowserRouter([
             },
             {
                 path: '/search',
-                element: <Filter></Filter>
+                element: <BrowseCars />
+            },
+            {
+                path: '/how-it-works',
+                element: <HowItWorksPage />
+            },
+            {
+                path: '/about',
+                element: <About />
+            },
+            {
+                path: '/contact',
+                element: <Contact />
             },
             {
                 path: '/details/:name',

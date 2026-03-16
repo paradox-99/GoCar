@@ -39,12 +39,12 @@ const Agencies = () => {
                </Helmet>
                <div className="pt-20 pb-20">
                     {/* Header Section */}
-                    <div className="bg-gradient-to-r from-primary to-orange-600 py-16 text-white">
-                         <div className="max-w-[1360px] mx-4 md:mx-8 xl:mx-auto">
+                    <div className="bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 py-16 text-white">
+                         <div className="max-w-[1360px] mx-4 md:mx-8 xl:mx-auto text-center">
                               <h1 className="text-4xl md:text-5xl font-bold mb-4">
                                    Trusted Agency Partners
                               </h1>
-                              <p className="text-orange-100 text-lg max-w-2xl">
+                              <p className="text-gray-400 text-lg max-w-2xl text-center mx-auto">
                                    Explore our verified network of professional car rental agencies across Bangladesh. Each agency is carefully vetted to ensure quality vehicles and excellent service.
                               </p>
                          </div>

@@ -11,10 +11,7 @@ const Cart = ({ car, carBookingInfo }) => {
      if (car?.status === "Available") {
           Availability = true;
      }
-
-     console.log(carBookingInfo);
      
-
      return (
           <div className="w-[395px] p-5 rounded-lg border-2 border-[#F9F9F9] shadow-lg">
                <figure className="h-[231px]">

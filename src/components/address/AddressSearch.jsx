@@ -129,7 +129,7 @@ export default function AddressSearch({ onSelect, apiKey, provider = 'locationiq
         value={query}
         onChange={(e) => { setQuery(e.target.value); }}
         onFocus={() => { if (results.length) setOpen(true); }}
-        className='md:w-[500px] h-[61px] rounded p-4 border border-gray-300 focus:border-blue-500 focus:ring-1 focus:ring-blue-500'
+        className='md:w-[500px] h-[61px] rounded p-4 border border-gray-300 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 text-black'
       />
 
 
@@ -158,6 +158,7 @@ export default function AddressSearch({ onSelect, apiKey, provider = 'locationiq
             boxShadow: '0 6px 18px rgba(0,0,0,0.12)',
             background: '#fff',
             border: '1px solid rgba(0,0,0,0.08)',
+            color: '#000000',
           }}
         >
           <li
