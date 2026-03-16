@@ -2,7 +2,8 @@ import PropTypes from "prop-types";
 import { BsFuelPumpFill } from "react-icons/bs";
 import { FaCarSide, FaStar } from "react-icons/fa";
 import { PiSeatFill } from "react-icons/pi";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
+import { IoSpeedometer } from "react-icons/io5";
 
 const Cart = ({ car, carBookingInfo }) => {
 
@@ -11,6 +12,9 @@ const Cart = ({ car, carBookingInfo }) => {
      if (car?.status === "Available") {
           Availability = true;
      }
+
+     console.log(car);
+     
      
      return (
           <div className="w-[395px] p-5 rounded-lg border-2 border-[#F9F9F9] shadow-lg">
@@ -44,12 +48,27 @@ const Cart = ({ car, carBookingInfo }) => {
                               {car?.fuel}
                          </span>
                     </p>
-                    <p className="flex gap-1 lg:gap-2 items-center">
+
+                    {
+                         car?.vehicle_type === "Car" &&
+                         <p className="flex gap-1 lg:gap-2 items-center">
                          <PiSeatFill className="text-primary" />
                          <span className="pl-2 border-l-2 border-l-primary border-secondary">
                               {car?.seats}
                          </span>
                     </p>
+
+                    }
+                    {
+                         car?.vehicle_type === "Bike" &&
+                         <p className="flex gap-1 lg:gap-2 items-center">
+                         <IoSpeedometer className="text-primary" />
+                         <span className="pl-2 border-l-2 border-l-primary border-secondary">
+                              {car?.seats} km
+                         </span>
+                    </p>
+                    }
+                    
                     <p className="flex gap-1 lg:gap-2 items-center">
                          <FaStar className="text-primary" />
                          <span className="pl-2 border-l-2 border-l-primary border-secondary">

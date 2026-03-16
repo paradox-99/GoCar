@@ -22,7 +22,7 @@ const AddressEditModal = ({ open, onClose, addressData, userId, onAddressUpdated
           }
           setIsLoading(true);
           try {
-               await axiosPublic.put(`userRoute/updateUserAddress/${userId}`, {
+               await axiosPublic.patch(`/userRoute/updateUserAddress/${userId}`, {
                     city: editData.city,
                     area: editData.area,
                     postcode: editData.postcode,

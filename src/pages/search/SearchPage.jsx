@@ -1,7 +1,7 @@
-import { Skeleton, Stack, TextField, Tabs, Tab, Box, Button } from "@mui/material";
+import { Skeleton, TextField, Tabs, Tab, Box, Button } from "@mui/material";
 import { FaSearch } from "react-icons/fa";
-import Cart from "../../components/Cart/Cart";
-import { useLocation, useNavigate } from "react-router-dom";
+import CarCard from "./CarCard";
+import { useLocation } from "react-router-dom";
 import useAxiosPublic from "../../hooks/useAxiosPublic";
 import { useState, useEffect } from "react";
 import DateTime from "../../components/dateTime/DateTime";
@@ -11,7 +11,6 @@ import toast from "react-hot-toast";
 
 const SearchPage = () => {
     const location = useLocation();
-    const navigate = useNavigate();
     const params = new URLSearchParams(location.search);
     const axiosPublic = useAxiosPublic();
 
@@ -215,25 +214,38 @@ const SearchPage = () => {
                 </Tabs>
             </Box>
 
-            <div className="w-full flex gap-5 justify-center items-center flex-wrap my-8 md:my-12">
-                {
-                    isPending ? Array.from({ length: 3 }).map((_, index) => (
-                        <Stack spacing={2} key={index}>
-                            {/* For variant="text", adjust the height via font-size */}
-                            <Skeleton variant="text" sx={{ fontSize: '2rem' }} />
-                            {/* For other variants, adjust the size with `width` and `height` */}
-                            <Skeleton variant="circular" width={60} height={60} />
-                            <Skeleton variant="rectangular" width={300} height={80} />
-                            <Skeleton variant="rounded" width={300} height={80} />
-                        </Stack>
-                    ))
-                        :
-                        filteredCars?.map(car => <Cart
-                            key={car.vehicle_id}
-                            car={car}
-                            carBookingInfo={carBookingInfo}
-                        ></Cart>)
-                }
+            <div className="max-w-[1360px] mx-auto px-4 my-8 md:my-12">
+                {isPending ? (
+                    <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+                        {Array.from({ length: 8 }).map((_, i) => (
+                            <div key={i} className="rounded-xl overflow-hidden border border-gray-100">
+                                <Skeleton variant="rectangular" sx={{ aspectRatio: '16/9', width: '100%' }} />
+                                <div className="p-4">
+                                    <Skeleton height={22} width="65%" />
+                                    <Skeleton height={16} width="40%" sx={{ mt: 0.5 }} />
+                                    <Skeleton height={18} width="85%" sx={{ mt: 1.5 }} />
+                                    <Skeleton height={22} width="45%" sx={{ mt: 1.5 }} />
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                ) : filteredCars.length > 0 ? (
+                    <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+                        {filteredCars.map(car => (
+                            <CarCard
+                                key={car.car_id || car.vehicle_id}
+                                car={car}
+                                carBookingInfo={carBookingInfo}
+                            />
+                        ))}
+                    </div>
+                ) : (
+                    <div className="flex flex-col items-center justify-center py-24 text-center text-gray-400">
+                        <p className="text-5xl mb-4">🚗</p>
+                        <p className="text-lg font-semibold text-gray-600">No vehicles found</p>
+                        <p className="text-sm mt-1">Try a different location or adjust your dates.</p>
+                    </div>
+                )}
             </div>
         </div>
     );

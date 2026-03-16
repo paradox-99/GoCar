@@ -13,6 +13,7 @@ import Bookings from "../dashboard/admin/Bookings";
 import PaymentHistory from "../dashboard/admin/PaymentHistory";
 import OwnerProfile from "../dashboard/agency/OwnerProfile";
 import AgencyCars from "../dashboard/agency/AgencyCars";
+import AgencyCarDetails from "../dashboard/agency/AgencyCarDetails";
 import AddCars from "../dashboard/agency/AddCars";
 import ActiveBookings from "../dashboard/agency/ActiveBookings";
 
@@ -54,6 +55,10 @@ export const DashboardRoutes = [
                {
                     path: '/dashboard/agency/vehicles',
                     element: <AgencyCars/>
+               },
+               {
+                    path: '/dashboard/agency/vehicles/:id',
+                    element: <AgencyCarDetails />
                },
                {
                     path: '/dashboard/agency/add-cars',

@@ -2,7 +2,7 @@ import { useState, useEffect, useMemo } from "react";
 import { useLocation } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
 import {
-    Button, Slider, FormGroup, FormControlLabel, Checkbox,
+    Button, FormGroup, FormControlLabel, Checkbox,
     Radio, RadioGroup, FormControl, Skeleton, Box, Drawer, IconButton
 } from "@mui/material";
 import {
@@ -10,16 +10,14 @@ import {
     FaCreditCard, FaUndo, FaHeadset, FaMapMarkerAlt, FaCar
 } from "react-icons/fa";
 import { MdClose } from "react-icons/md";
-import Cart from "../../components/Cart/Cart";
+import CarCard from "./CarCard";
 import AddressSearch from "../../components/address/AddressSearch";
 import DateTime from "../../components/dateTime/DateTime";
 import useAxiosPublic from "../../hooks/useAxiosPublic";
 import toast from "react-hot-toast";
 
-const BRANDS = ["Toyota", "Nissan", "Mitsubishi", "Hyundai", "Honda", "Suzuki", "Tata", "Kia", "Volkswagen"];
-const VEHICLE_TYPES = ["Sedan", "Hatchback", "Van", "Minivan", "SUV"];
+const VEHICLE_TYPES = ["Car", "Bike"];
 const FUEL_TYPES = ["Petrol", "Diesel", "CNG", "Electric", "Hybrid"];
-const TRANSMISSIONS = ["Automatic", "Manual"];
 const SORT_OPTIONS = [
     { value: "default", label: "Default" },
     { value: "price-asc", label: "Price: Low to High" },
@@ -48,10 +46,8 @@ const BrowseCars = () => {
 
     // Filter state
     const [filterDrawerOpen, setFilterDrawerOpen] = useState(false);
-    const [selectedBrands, setSelectedBrands] = useState([]);
     const [selectedTypes, setSelectedTypes] = useState([]);
     const [selectedFuels, setSelectedFuels] = useState([]);
-    const [selectedTransmission, setSelectedTransmission] = useState("all");
     const [maxPrice, setMaxPrice] = useState(5000);
     const [minSeats, setMinSeats] = useState(0);
     const [minRating, setMinRating] = useState(0);
@@ -80,9 +76,6 @@ const BrowseCars = () => {
         fetchCars();
     }, [lat, lon, fromTs, untilTs, axiosPublic]);
 
-    console.log(allCars);
-    
-
     const handleSearch = () => {
         if (!selectedPlace) {
             toast.error("Please select a pickup location.");
@@ -106,35 +99,29 @@ const BrowseCars = () => {
     const filteredAndSorted = useMemo(() => {
         let results = [...allCars];
         if (availableOnly) results = results.filter(c => c.status === "Available");
-        if (selectedBrands.length) results = results.filter(c => selectedBrands.includes(c.brand));
         if (selectedTypes.length) results = results.filter(c =>
             selectedTypes.some(t =>
-                c.car_type?.toLowerCase().includes(t.toLowerCase()) ||
-                c.type?.toLowerCase().includes(t.toLowerCase())
+                c.vehicle_type?.toLowerCase() === t.toLowerCase() ||
+                c.car_type?.toLowerCase() === t.toLowerCase()
             )
         );
         if (selectedFuels.length) results = results.filter(c =>
             selectedFuels.some(f => c.fuel?.toLowerCase() === f.toLowerCase())
         );
-        if (selectedTransmission !== "all") results = results.filter(c =>
-            c.transmission?.toLowerCase() === selectedTransmission.toLowerCase()
-        );
         if (minSeats > 0) results = results.filter(c => (c.seats || 0) >= minSeats);
-        if (minRating > 0) results = results.filter(c => (c.rating || 0) >= minRating);
+        if (minRating > 0) results = results.filter(c => parseFloat(c.rating || 0) >= minRating);
         results = results.filter(c => (c.rental_price || 0) <= maxPrice);
 
         if (sortBy === "price-asc") results.sort((a, b) => (a.rental_price || 0) - (b.rental_price || 0));
         else if (sortBy === "price-desc") results.sort((a, b) => (b.rental_price || 0) - (a.rental_price || 0));
-        else if (sortBy === "rating-desc") results.sort((a, b) => (b.rating || 0) - (a.rating || 0));
+        else if (sortBy === "rating-desc") results.sort((a, b) => parseFloat(b.rating || 0) - parseFloat(a.rating || 0));
 
         return results;
-    }, [allCars, selectedBrands, selectedTypes, selectedFuels, selectedTransmission, maxPrice, minSeats, minRating, availableOnly, sortBy]);
+    }, [allCars, selectedTypes, selectedFuels, maxPrice, minSeats, minRating, availableOnly, sortBy]);
 
     const resetFilters = () => {
-        setSelectedBrands([]);
         setSelectedTypes([]);
         setSelectedFuels([]);
-        setSelectedTransmission("all");
         setMaxPrice(5000);
         setMinSeats(0);
         setMinRating(0);
@@ -205,23 +192,6 @@ const BrowseCars = () => {
 
             <hr />
 
-            {/* Transmission */}
-            <div>
-                <h3 className="font-bold text-gray-800 mb-2 text-sm uppercase tracking-wide">Transmission</h3>
-                <FormControl>
-                    <RadioGroup value={selectedTransmission} onChange={e => setSelectedTransmission(e.target.value)}>
-                        <FormControlLabel value="all" control={<Radio size="small" sx={radioSx} />} label={<span className="text-sm">All</span>} />
-                        {TRANSMISSIONS.map(t => (
-                            <FormControlLabel key={t} value={t}
-                                control={<Radio size="small" sx={radioSx} />}
-                                label={<span className="text-sm">{t}</span>} />
-                        ))}
-                    </RadioGroup>
-                </FormControl>
-            </div>
-
-            <hr />
-
             {/* Fuel */}
             <div>
                 <h3 className="font-bold text-gray-800 mb-2 text-sm uppercase tracking-wide">Fuel Type</h3>
@@ -230,20 +200,6 @@ const BrowseCars = () => {
                         <FormControlLabel key={f}
                             control={<Checkbox checked={selectedFuels.includes(f)} onChange={() => toggleCheckbox(selectedFuels, setSelectedFuels, f)} size="small" sx={checkboxSx} />}
                             label={<span className="text-sm">{f}</span>} />
-                    ))}
-                </FormGroup>
-            </div>
-
-            <hr />
-
-            {/* Brand */}
-            <div>
-                <h3 className="font-bold text-gray-800 mb-2 text-sm uppercase tracking-wide">Brand</h3>
-                <FormGroup>
-                    {BRANDS.map(b => (
-                        <FormControlLabel key={b}
-                            control={<Checkbox checked={selectedBrands.includes(b)} onChange={() => toggleCheckbox(selectedBrands, setSelectedBrands, b)} size="small" sx={checkboxSx} />}
-                            label={<span className="text-sm">{b}</span>} />
                     ))}
                 </FormGroup>
             </div>
@@ -396,13 +352,15 @@ const BrowseCars = () => {
 
                         {/* Skeleton loading */}
                         {isPending && (
-                            <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-6 justify-items-center">
+                            <div className="grid sm:grid-cols-2 xl:grid-cols-3 gap-4">
                                 {Array.from({ length: 6 }).map((_, i) => (
-                                    <div key={i} className="w-full max-w-[395px]">
-                                        <Skeleton variant="rectangular" height={231} sx={{ borderRadius: 2, mb: 1 }} />
-                                        <Skeleton height={28} width="70%" />
-                                        <Skeleton height={20} width="50%" />
-                                        <Skeleton height={20} width="60%" />
+                                    <div key={i} className="rounded-xl overflow-hidden border border-gray-100">
+                                        <Skeleton variant="rectangular" sx={{ aspectRatio: '16/9', width: '100%' }} />
+                                        <div className="p-4">
+                                            <Skeleton height={24} width="60%" />
+                                            <Skeleton height={18} width="80%" sx={{ mt: 1 }} />
+                                            <Skeleton height={22} width="40%" sx={{ mt: 1 }} />
+                                        </div>
                                     </div>
                                 ))}
                             </div>
@@ -410,10 +368,10 @@ const BrowseCars = () => {
 
                         {/* Car grid */}
                         {!isPending && filteredAndSorted.length > 0 && (
-                            <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-6 justify-items-center">
+                            <div className="grid sm:grid-cols-2 xl:grid-cols-3 gap-4">
                                 {filteredAndSorted.map(car => (
-                                    <Cart
-                                        key={car.vehicle_id || car._id}
+                                    <CarCard
+                                        key={car.car_id || car.vehicle_id || car._id}
                                         car={car}
                                         carBookingInfo={{ fromTs, untilTs, lat, lon }}
                                     />
