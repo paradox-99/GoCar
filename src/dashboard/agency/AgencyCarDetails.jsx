@@ -4,7 +4,7 @@ import { BsFuelPumpFill } from "react-icons/bs";
 import { FaStar, FaCheckCircle, FaTimesCircle, FaPencilAlt } from "react-icons/fa";
 import { PiSeatFill } from "react-icons/pi";
 import { TbManualGearbox, TbSteeringWheel } from "react-icons/tb";
-import { MdAir, MdBluetooth, MdGpsFixed, MdLock, MdCalendarToday, MdSpeed } from "react-icons/md";
+import { MdCalendarToday, MdSpeed } from "react-icons/md";
 import {
     Dialog, DialogTitle, DialogContent, DialogActions,
     Button, TextField, Select, MenuItem, FormControl, InputLabel
@@ -88,7 +88,7 @@ const AgencyCarDetails = () => {
     const handleStatusUpdate = async () => {
         setStatusLoading(true);
         try {
-            await axiosPublic.patch(`carRoutes/updateStatus/${car.car_id}`, { status: selectedStatus });
+            await axiosPublic.patch(`carRoutes/updateCarInfo/${car.car_id}`, { status: selectedStatus });
             setCar(prev => ({ ...prev, status: selectedStatus }));
             toast.success("Status updated successfully.");
         } catch {
@@ -107,7 +107,8 @@ const AgencyCarDetails = () => {
         }
         setPriceLoading(true);
         try {
-            await axiosPublic.patch(`carRoutes/updatePrice/${car.car_id}`, { rental_price: parsed });
+            console.log(`Updating price for car ${car.car_id}: ${parsed}`);
+            await axiosPublic.patch(`carRoutes/updateCarInfo/${car.car_id}`, { rental_price: parsed });
             setCar(prev => ({ ...prev, rental_price: parsed }));
             toast.success("Price updated successfully.");
             setPriceOpen(false);
@@ -126,7 +127,7 @@ const AgencyCarDetails = () => {
         }
         setAboutLoading(true);
         try {
-            await axiosPublic.patch(`carRoutes/updateAbout/${car.car_id}`, { about: newAbout.trim() });
+            await axiosPublic.patch(`carRoutes/updateCarInfo/${car.car_id}`, { about: newAbout.trim() });
             setCar(prev => ({ ...prev, about: newAbout.trim() }));
             toast.success("Description updated successfully.");
             setAboutOpen(false);
