@@ -27,6 +27,26 @@ const featureFields = [
      { label: 'Central Locking' },
 ];
 
+const bikeFields = [
+     { label: 'Brand' },
+     { label: 'Model' },
+     { label: 'Bike Type' },
+     { label: 'Build Year' },
+     { label: 'Mileage' },
+     { label: 'Fuel' },
+     { label: 'Fuel Capacity' },
+     { label: 'Engine Capacity' },
+     { label: 'Gear' },
+     { label: 'Engine Start Type' },
+     { label: 'Helmet Count' },
+     { label: 'Rental Price' },
+];
+
+const bikeFeatureFields = [
+     { label: 'ABS' },
+     { label: 'Disk Brake' },
+];
+
 const complianceFields = [
      { label: 'License Number' },
      { label: 'License Expire Date' },
@@ -43,6 +63,7 @@ const AddCars = () => {
      // const role = useRole();
      // const axiosPublic = useAxiosPublic();
      const [imagePreview, setImagePreview] = useState(null);
+     const [vehicleType, setVehicleType] = useState(null);
 
      const handleImageChange = (event) => {
           const file = event.target.files[0];
@@ -77,9 +98,25 @@ const AddCars = () => {
           borderRadius: 999,
           textTransform: 'none',
           fontWeight: 700,
+          color: '#fff',
           '&:hover': {
                background: 'linear-gradient(135deg, #e67600 0%, #f58300 100%)',
                boxShadow: '0 14px 28px rgba(245, 131, 0, 0.3)',
+          },
+     };
+
+     const outlinedBrandButtonSx = {
+          border: '2px solid #F58300',
+          color: '#F58300',
+          bgcolor: 'transparent',
+          px: 2.5,
+          py: 1,
+          borderRadius: 999,
+          textTransform: 'none',
+          fontWeight: 700,
+          '&:hover': {
+               background: 'rgba(245, 131, 0, 0.08)',
+               border: '2px solid #e67600',
           },
      };
 
@@ -96,6 +133,94 @@ const AddCars = () => {
           />
      );
 
+     if (!vehicleType) {
+          return (
+               <Box
+                    sx={{
+                         px: { xs: 2, md: 4 },
+                         py: { xs: 4, md: 8 },
+                         minHeight: '100%',
+                         background: 'linear-gradient(180deg, rgba(245,131,0,0.08) 0%, rgba(255,255,255,1) 18%, rgba(255,250,244,1) 100%)',
+                         display: 'flex',
+                         flexDirection: 'column',
+                         alignItems: 'center',
+                    }}
+               >
+                    <Box textAlign="center" mb={6}>
+                         <Typography variant="h3" component="h1" sx={{ fontWeight: 800, color: '#1f2937', mb: 2 }}>
+                              Add a new vehicle
+                         </Typography>
+                         <Typography variant="body1" sx={{ color: '#6b7280', maxWidth: 600, mx: 'auto' }}>
+                              Choose whether you want to add a car or a bike to your agency fleet. Each vehicle type has tailored options to ensure you capture the right details.
+                         </Typography>
+                    </Box>
+
+                    <Stack direction={{ xs: 'column', sm: 'row' }} spacing={4} justifyContent="center" width="100%" maxWidth={800}>
+                         <Paper
+                              elevation={0}
+                              onClick={() => setVehicleType('car')}
+                              sx={{
+                                   flex: 1,
+                                   p: 5,
+                                   textAlign: 'center',
+                                   cursor: 'pointer',
+                                   borderRadius: 5,
+                                   border: '2px solid transparent',
+                                   background: 'linear-gradient(135deg, #FFF7ED 0%, #FFFFFF 52%, #FFF1DE 100%)',
+                                   boxShadow: '0 12px 24px rgba(245, 131, 0, 0.08)',
+                                   transition: 'all 0.3s ease',
+                                   '&:hover': {
+                                        transform: 'translateY(-4px)',
+                                        border: '2px solid rgba(245, 131, 0, 0.4)',
+                                        boxShadow: '0 20px 40px rgba(245, 131, 0, 0.16)',
+                                   }
+                              }}
+                         >
+                              <Typography sx={{ fontSize: 72, mb: 2, lineHeight: 1 }}>🚗</Typography>
+                              <Typography variant="h4" sx={{ fontWeight: 800, color: '#1f2937' }}>
+                                   Add a Car
+                              </Typography>
+                              <Typography variant="body2" sx={{ color: '#6b7280', mt: 1 }}>
+                                   Standard vehicles, SUVs, Sedans.
+                              </Typography>
+                         </Paper>
+
+                         <Paper
+                              elevation={0}
+                              onClick={() => setVehicleType('bike')}
+                              sx={{
+                                   flex: 1,
+                                   p: 5,
+                                   textAlign: 'center',
+                                   cursor: 'pointer',
+                                   borderRadius: 5,
+                                   border: '2px solid transparent',
+                                   background: 'linear-gradient(135deg, #FFF7ED 0%, #FFFFFF 52%, #FFF1DE 100%)',
+                                   boxShadow: '0 12px 24px rgba(245, 131, 0, 0.08)',
+                                   transition: 'all 0.3s ease',
+                                   '&:hover': {
+                                        transform: 'translateY(-4px)',
+                                        border: '2px solid rgba(245, 131, 0, 0.4)',
+                                        boxShadow: '0 20px 40px rgba(245, 131, 0, 0.16)',
+                                   }
+                              }}
+                         >
+                              <Typography sx={{ fontSize: 72, mb: 2, lineHeight: 1 }}>🏍️</Typography>
+                              <Typography variant="h4" sx={{ fontWeight: 800, color: '#1f2937' }}>
+                                   Add a Bike
+                              </Typography>
+                              <Typography variant="body2" sx={{ color: '#6b7280', mt: 1 }}>
+                                   Motorbikes, Scooters.
+                              </Typography>
+                         </Paper>
+                    </Stack>
+               </Box>
+          );
+     }
+
+     const currentVehicleFields = vehicleType === 'car' ? vehicleFields : bikeFields;
+     const currentFeatureFields = vehicleType === 'car' ? featureFields : bikeFeatureFields;
+
      return (
           <Box
                sx={{
@@ -105,6 +230,23 @@ const AddCars = () => {
                     background: 'linear-gradient(180deg, rgba(245,131,0,0.08) 0%, rgba(255,255,255,1) 18%, rgba(255,250,244,1) 100%)',
                }}
           >
+               <Stack direction="row" spacing={2} sx={{ mb: 4, justifyContent: 'center' }}>
+                    <Button 
+                         variant={vehicleType === 'car' ? 'contained' : 'outlined'} 
+                         sx={vehicleType === 'car' ? brandButtonSx : outlinedBrandButtonSx}
+                         onClick={() => setVehicleType('car')}
+                    >
+                         Add Car
+                    </Button>
+                    <Button 
+                         variant={vehicleType === 'bike' ? 'contained' : 'outlined'} 
+                         sx={vehicleType === 'bike' ? brandButtonSx : outlinedBrandButtonSx}
+                         onClick={() => setVehicleType('bike')}
+                    >
+                         Add Bike
+                    </Button>
+               </Stack>
+
                <Paper
                     elevation={0}
                     sx={{
@@ -136,7 +278,7 @@ const AddCars = () => {
                                    }}
                               />
                               <Typography variant="h3" component="h1" sx={{ fontWeight: 800, color: '#1f2937', lineHeight: 1.05 }}>
-                                   Add cars with a polished, structured flow.
+                                   Add {vehicleType === 'car' ? 'cars' : 'bikes'} with a polished, structured flow.
                               </Typography>
                               <Typography variant="body1" sx={{ color: '#6b7280', maxWidth: 760 }}>
                                    Capture each vehicle in a clean layout with grouped details, compliance fields, and a visual upload area that feels closer to a premium dashboard than a plain form.
@@ -158,7 +300,7 @@ const AddCars = () => {
                                         One vehicle per submission
                                    </Typography>
                                    <Typography variant="body2" sx={{ color: '#6b7280' }}>
-                                        Submit a single car now. You can come back and add another vehicle after this one is saved.
+                                        Submit a single {vehicleType === 'car' ? 'car' : 'bike'} now. You can come back and add another vehicle after this one is saved.
                                    </Typography>
                               </Stack>
                          </Paper>
@@ -185,8 +327,8 @@ const AddCars = () => {
                     >
                          <Stack direction={{ xs: 'column', sm: 'row' }} spacing={1.5} alignItems={{ sm: 'center' }} justifyContent="space-between">
                               <Box>
-                                   <Typography variant="h5" component="h2" sx={{ fontWeight: 800, color: '#1f2937' }}>
-                                        Car details
+                                   <Typography variant="h5" component="h2" sx={{ fontWeight: 800, color: '#1f2937', textTransform: 'capitalize' }}>
+                                        {vehicleType} details
                                    </Typography>
                                    <Typography variant="body2" sx={{ color: '#6b7280' }}>
                                         Fill in the vehicle specs, registration details, and supporting documents.
@@ -219,12 +361,12 @@ const AddCars = () => {
                                                        </Typography>
                                                   </Box>
                                                   <Grid container spacing={2}>
-                                                       {vehicleFields.map((field, index) => (
+                                                       {currentVehicleFields.map((field, index) => (
                                                             <Grid item xs={12} sm={6} key={`${field.label}-${index}`}>
                                                                  {renderField(field)}
                                                             </Grid>
                                                        ))}
-                                                       {featureFields.map((field, index) => (
+                                                       {currentFeatureFields.map((field, index) => (
                                                             <Grid item xs={12} sm={6} key={`${field.label}-${index}`}>
                                                                  {renderField(field)}
                                                             </Grid>
@@ -288,7 +430,7 @@ const AddCars = () => {
                                                   <Box
                                                        component="img"
                                                        src={imagePreview || profile}
-                                                       alt="Car preview"
+                                                       alt={`${vehicleType} preview`}
                                                        sx={{
                                                             width: 168,
                                                             height: 168,
@@ -301,8 +443,8 @@ const AddCars = () => {
                                              </Box>
 
                                              <Box>
-                                                  <Typography variant="h6" sx={{ fontWeight: 800, color: '#111827' }}>
-                                                       Vehicle image
+                                                  <Typography variant="h6" sx={{ fontWeight: 800, color: '#111827', textTransform: 'capitalize' }}>
+                                                       {vehicleType} image
                                                   </Typography>
                                                   <Typography variant="body2" sx={{ color: '#6b7280', mt: 0.5 }}>
                                                        Upload a sharp cover photo to make the listing feel premium.
@@ -317,7 +459,7 @@ const AddCars = () => {
                                                   startIcon={<CloudUpload />}
                                                   sx={brandButtonSx}
                                              >
-                                                  Car Picture
+                                                  {vehicleType === 'car' ? 'Car Picture' : 'Bike Picture'}
                                                   <VisuallyHiddenInput
                                                        type="file"
                                                        accept="image/*"
@@ -346,7 +488,7 @@ const AddCars = () => {
 
                <Box sx={{ display: 'flex', justifyContent: 'center', pb: 2 }}>
                     <Button variant="contained" size="large" sx={brandButtonSx}>
-                         Add Car
+                         Add {vehicleType === 'car' ? 'Car' : 'Bike'}
                     </Button>
                </Box>
           </Box>
