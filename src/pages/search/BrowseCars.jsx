@@ -10,7 +10,7 @@ import {
     FaCreditCard, FaUndo, FaHeadset, FaMapMarkerAlt, FaCar
 } from "react-icons/fa";
 import { MdClose } from "react-icons/md";
-import CarCard from "./CarCard";
+import Cart from "../../components/Cart/Cart";
 import AddressSearch from "../../components/address/AddressSearch";
 import DateTime from "../../components/dateTime/DateTime";
 import useAxiosPublic from "../../hooks/useAxiosPublic";
@@ -263,21 +263,21 @@ const BrowseCars = () => {
                                 <p className="text-gray-700 font-semibold text-sm mb-1">Pickup &amp; Return Dates</p>
                                 <DateTime getTime={setTime} time={{ fromTs, untilTs }} dis={false} />
                             </div>
-                            <Button
-                                variant="contained"
-                                startIcon={<FaSearch />}
-                                onClick={handleSearch}
-                                sx={{
-                                    backgroundColor: '#F58300', width: '100%', color: '#fff', fontWeight: 700,
-                                    textTransform: 'none', px: 10, py: 1.75, borderRadius: '10px',
-                                    fontSize: '16px', whiteSpace: 'nowrap',
-                                    '&:hover': { backgroundColor: '#e07500' }
-                                }}
-                            >
-                                Search Cars
-                            </Button>
                         </div>
                     </div>
+                    <Button
+                        variant="contained"
+                        startIcon={<FaSearch />}
+                        onClick={handleSearch}
+                        sx={{
+                            backgroundColor: '#F58300', width: 'fit-content', color: '#fff', fontWeight: 700, mt: 2,
+                            textTransform: 'none', px: 10, py: 1.75, borderRadius: '10px',
+                            fontSize: '16px', whiteSpace: 'nowrap',
+                            '&:hover': { backgroundColor: '#e07500' }
+                        }}
+                    >
+                        Search Cars
+                    </Button>
                 </div>
             </div>
 
@@ -370,7 +370,7 @@ const BrowseCars = () => {
                         {!isPending && filteredAndSorted.length > 0 && (
                             <div className="grid sm:grid-cols-2 xl:grid-cols-3 gap-4">
                                 {filteredAndSorted.map(car => (
-                                    <CarCard
+                                    <Cart
                                         key={car.car_id || car.vehicle_id || car._id}
                                         car={car}
                                         carBookingInfo={{ fromTs, untilTs, lat, lon }}

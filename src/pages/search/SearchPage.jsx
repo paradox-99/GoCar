@@ -1,6 +1,6 @@
 import { Skeleton, TextField, Tabs, Tab, Box, Button } from "@mui/material";
 import { FaSearch } from "react-icons/fa";
-import CarCard from "./CarCard";
+import Cart from "../../components/Cart/Cart";
 import { useLocation } from "react-router-dom";
 import useAxiosPublic from "../../hooks/useAxiosPublic";
 import { useState, useEffect } from "react";
@@ -232,7 +232,7 @@ const SearchPage = () => {
                 ) : filteredCars.length > 0 ? (
                     <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
                         {filteredCars.map(car => (
-                            <CarCard
+                            <Cart
                                 key={car.car_id || car.vehicle_id}
                                 car={car}
                                 carBookingInfo={carBookingInfo}

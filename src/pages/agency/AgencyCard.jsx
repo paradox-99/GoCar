@@ -4,7 +4,7 @@ import { HiMapPin, HiCog6Tooth, HiStar } from "react-icons/hi2";
 
 const AgencyCard = ({ agency }) => {
 
-     const { agency_id, agency_Name, image, total_vehicles, area } = agency
+     const { agency_id, agency_name, image, total_vehicles, area } = agency
      const navigate = useNavigate();
 
      // Mock rating for now - can be replaced with real data
@@ -20,7 +20,7 @@ const AgencyCard = ({ agency }) => {
                <div className="relative overflow-hidden h-48 bg-gradient-to-br from-orange-50 to-orange-100">
                     <img 
                          src={image} 
-                         alt={agency_Name}
+                         alt={agency_name}
                          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
                     />
                     <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300"></div>
@@ -30,7 +30,7 @@ const AgencyCard = ({ agency }) => {
                <div className="p-6">
                     {/* Agency Name */}
                     <h3 className="text-xl font-bold text-gray-900 mb-2 group-hover:text-primary transition-colors">
-                         {agency_Name}
+                         {agency_name}
                     </h3>
 
                     {/* Rating */}

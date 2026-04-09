@@ -3,7 +3,7 @@ import { useQuery } from '@tanstack/react-query';
 import { Skeleton, Pagination } from '@mui/material';
 import { useState } from 'react';
 import useRole from '../../hooks/useRole';
-import CarCard from '../../pages/search/CarCard';
+import Cart from '../../components/Cart/Cart';
 
 const ITEMS_PER_PAGE = 8;
 
@@ -66,7 +66,7 @@ const AgencyCars = () => {
                 <>
                     <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
                         {paginated.map(car => (
-                            <CarCard
+                            <Cart
                                 key={car.car_id}
                                 car={car}
                                 to={`/dashboard/agency/vehicles/${car.car_id}`}

@@ -34,7 +34,7 @@ const HowItWorks = () => {
 
                          <VerticalTimelineElement
                               className="vertical-timeline-element--work"
-                              contentStyle={{ background: "white", boxShadow: "0 8px 32px rgba(0,0,0,0.1)", borderRadius: "12px", borderLeft: "4px solid #F58300" }}
+                              contentStyle={{ background: "white", boxShadow: "0 8px 32px rgba(0,0,0,0.1)", borderRadius: "12px", borderRight: "4px solid #F58300" }}
                               contentArrowStyle={{ borderRight: '12px solid white' }}
                               date="Step 2"
                               dateClassName={"font-bold text-primary text-base"}
@@ -64,7 +64,7 @@ const HowItWorks = () => {
 
                          <VerticalTimelineElement
                               className="vertical-timeline-element--work"
-                              contentStyle={{ background: "white", boxShadow: "0 8px 32px rgba(0,0,0,0.1)", borderRadius: "12px", borderLeft: "4px solid #F58300" }}
+                              contentStyle={{ background: "white", boxShadow: "0 8px 32px rgba(0,0,0,0.1)", borderRadius: "12px", borderRight: "4px solid #F58300" }}
                               contentArrowStyle={{ borderRight: '12px solid white' }}
                               date="Step 4"
                               dateClassName={"font-bold text-primary text-base"}
@@ -93,7 +93,7 @@ const HowItWorks = () => {
                          </VerticalTimelineElement>
                          <VerticalTimelineElement
                               className="vertical-timeline-element--work"
-                              contentStyle={{ background: "white", boxShadow: "0 8px 32px rgba(0,0,0,0.1)", borderRadius: "12px", borderLeft: "4px solid #F58300" }}
+                              contentStyle={{ background: "white", boxShadow: "0 8px 32px rgba(0,0,0,0.1)", borderRadius: "12px", borderRight: "4px solid #F58300" }}
                               contentArrowStyle={{ borderRight: '12px solid white' }}
                               date="Step 6"
                               dateClassName={"font-bold text-primary text-base"}

@@ -1,102 +1,86 @@
 import PropTypes from "prop-types";
-import { BsFuelPumpFill } from "react-icons/bs";
-import { FaCarSide, FaStar } from "react-icons/fa";
-import { PiSeatFill } from "react-icons/pi";
 import { Link } from "react-router-dom";
-import { IoSpeedometer } from "react-icons/io5";
+import { BsFuelPumpFill } from "react-icons/bs";
+import { FaStar, FaCheckCircle } from "react-icons/fa";
+import { PiSeatFill } from "react-icons/pi";
+import { TbManualGearbox } from "react-icons/tb";
 
-const Cart = ({ car, carBookingInfo }) => {
+const Cart = ({ car, carBookingInfo, to, state }) => {
+    const available = car?.status === "Available";
+    const image = Array.isArray(car?.images) ? car.images[0] : car?.images;
+    const id = car?.car_id || car?.vehicle_id;
 
-     let Availability = false;
+    return (
+        <Link
+            to={to ?? `/details/${id}`}
+            state={state ?? { carBookingInfo }}
+            className="group block bg-white rounded-xl border border-gray-100 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 overflow-hidden"
+        >
+            {/* Image */}
+            <div className="relative aspect-video overflow-hidden bg-gray-100">
+                <img
+                    src={image}
+                    alt={`${car?.brand} ${car?.model}`}
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                />
+                <span className={`absolute top-2.5 right-2.5 text-xs font-semibold px-2 py-0.5 rounded-full ${available ? "bg-green-100 text-green-700" : "bg-red-100 text-red-600"}`}>
+                    {available ? "Available" : "Unavailable"}
+                </span>
+                {car?.verified && (
+                    <span className="absolute top-2.5 left-2.5 flex items-center gap-1 bg-white/90 text-blue-600 text-xs font-semibold px-2 py-0.5 rounded-full">
+                        <FaCheckCircle className="text-xs" /> Verified
+                    </span>
+                )}
+            </div>
 
-     if (car?.status === "Available") {
-          Availability = true;
-     }
+            {/* Info */}
+            <div className="p-4">
+                {/* Title row */}
+                <div className="flex items-start justify-between gap-2 mb-1">
+                    <h3 className="font-bold text-gray-900 text-base leading-snug">
+                        {car?.brand} {car?.model}
+                    </h3>
+                    <span className="text-xs text-gray-400 whitespace-nowrap mt-0.5">{car?.build_year}</span>
+                </div>
 
-     console.log(car);
-     
-     
-     return (
-          <div className="w-[395px] p-5 rounded-lg border-2 border-[#F9F9F9] shadow-lg">
-               <figure className="h-[231px]">
-                    <img src={car?.images} alt="photo" className="rounded-lg h-[231px] w-[351px]" />
-               </figure>
-               <div className="pt-5 flex justify-between items-start pb-3">
-                    <h2 className="text-lg font-bold">{car?.brand} {car?.model}</h2>
-                    <div className="flex flex-col items-end">
-                         
-                         {/* Availability Status */}
-                         <p className="text-sm mt-1 flex items-center gap-1">
-                              <span
-                                   className={`w-3 h-3 rounded-full ${Availability ? "bg-green-500" : "bg-red-500"}`}
-                              ></span>
-                              {Availability ? "Available" : "Unavailable"}
-                         </p>
-                    </div>
+                <p className="text-xs text-gray-400 mb-3">{car?.car_type}</p>
 
-               </div>
-               <div className="grid grid-cols-2 gap-3 font-medium py-4 ">
-                    <p className="flex gap-1 lg:gap-2 items-center">
-                         <FaCarSide className="text-primary" />
-                         <span className="pl-2 border-l-2 border-l-primary border-secondary">
-                              {car?.brand}
-                         </span>
-                    </p>
-                    <p className="flex gap-1 lg:gap-2 items-center">
-                         <BsFuelPumpFill className="text-primary" />
-                         <span className="pl-2 border-l-2 border-l-primary border-secondary">
-                              {car?.fuel}
-                         </span>
-                    </p>
+                {/* Specs row */}
+                <div className="flex flex-wrap items-center gap-x-4 gap-y-1.5 text-gray-500 text-sm mb-4">
+                    <span className="flex items-center gap-1.5">
+                        <BsFuelPumpFill className="text-primary text-xs" />
+                        {car?.fuel}
+                    </span>
+                    <span className="flex items-center gap-1.5">
+                        <PiSeatFill className="text-primary text-xs" />
+                        {car?.seats} seats
+                    </span>
+                    <span className="flex items-center gap-1.5">
+                        <TbManualGearbox className="text-primary text-xs" />
+                        {car?.transmission_type}
+                    </span>
+                    <span className="flex items-center gap-1">
+                        <FaStar className="text-yellow-400 text-xs" />
+                        <span className="text-gray-600">{parseFloat(car?.rating || 0).toFixed(1)}</span>
+                        <span className="text-gray-400 text-xs">({car?.rating_count ?? 0})</span>
+                    </span>
+                </div>
 
-                    {
-                         car?.vehicle_type === "Car" &&
-                         <p className="flex gap-1 lg:gap-2 items-center">
-                         <PiSeatFill className="text-primary" />
-                         <span className="pl-2 border-l-2 border-l-primary border-secondary">
-                              {car?.seats}
-                         </span>
-                    </p>
-
-                    }
-                    {
-                         car?.vehicle_type === "Bike" &&
-                         <p className="flex gap-1 lg:gap-2 items-center">
-                         <IoSpeedometer className="text-primary" />
-                         <span className="pl-2 border-l-2 border-l-primary border-secondary">
-                              {car?.seats} km
-                         </span>
-                    </p>
-                    }
-                    
-                    <p className="flex gap-1 lg:gap-2 items-center">
-                         <FaStar className="text-primary" />
-                         <span className="pl-2 border-l-2 border-l-primary border-secondary">
-                              {car?.rating}
-                         </span>
-                    </p>
-               </div>
-               <hr className="h-[3px] bg-secondary" />
-               <div className="flex justify-between items-center py-3">
-                    <div>
-                         <h2 className=" font-semibold text-center">
-                              <span className="text-primary text-2xl">৳{car?.rental_price}</span>
-                              <span className="text-gray-500">/hour</span>
-                         </h2>
-                    </div>
-                    <div>
-                         <Link to={`/details/${car.vehicle_id}`} state={{ carBookingInfo }} className="bg-primary hover:bg-transparent hover:border-2 border-primary hover:text-primary duration-500 active:scale-75 shadow-inner shadow-secondary border-2 px-3 py-2 text-white rounded-lg font-semibold">
-                              Details
-                         </Link>
-                    </div>
-               </div>
-          </div>
-     );
+                {/* Price */}
+                <div className="flex items-baseline gap-1 pt-3 border-t border-gray-100">
+                    <span className="text-primary text-xl font-extrabold">৳{car?.rental_price}</span>
+                    <span className="text-gray-400 text-sm">/hour</span>
+                </div>
+            </div>
+        </Link>
+    );
 };
 
 Cart.propTypes = {
-     car: PropTypes.object.isRequired,
-     carBookingInfo: PropTypes.object.isRequired,
-}
+    car: PropTypes.object.isRequired,
+    carBookingInfo: PropTypes.object,
+    to: PropTypes.string,
+    state: PropTypes.object,
+};
 
 export default Cart;
