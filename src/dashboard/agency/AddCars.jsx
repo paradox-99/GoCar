@@ -1,62 +1,96 @@
 // import useAxiosPublic from '../../hooks/useAxiosPublic';
 // import useRole from '../../hooks/useRole';
-import { Box, Button, Card, CardContent, Chip, Divider, Grid, Paper, Stack, styled, TextField, Typography } from '@mui/material';
+import { Autocomplete, Box, Button, Card, CardContent, Checkbox, Chip, Divider, FormControlLabel, Grid, Paper, Stack, styled, TextField, Typography } from '@mui/material';
 import { useState } from 'react';
 import { CloudUpload } from '@mui/icons-material';
+import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
+import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
+import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import profile from "../../assets/travel.png"
 
+const carBrandOptions = [
+     'Toyota', 'Honda', 'Hyundai', 'Ford', 'Chevrolet',
+     'BMW', 'Mercedes-Benz', 'Audi', 'Volkswagen', 'Nissan',
+     'Kia', 'Mazda', 'Subaru', 'Lexus', 'Jeep',
+     'Tesla', 'Volvo', 'Porsche', 'Land Rover', 'Jaguar',
+     'Mitsubishi', 'Suzuki', 'Peugeot', 'Renault', 'Fiat',
+     'Škoda', 'Citroën', 'Chrysler', 'Dodge', 'Ram',
+     'GMC', 'Cadillac', 'Buick', 'Lincoln', 'Acura',
+     'Infiniti', 'Genesis', 'Alfa Romeo', 'Maserati', 'Mini',
+     'Tata', 'Mahindra', 'MG', 'BYD', 'Chery',
+     'Proton', 'Perodua', 'Geely', 'Great Wall', 'Haval',
+];
+
+const carTypeOptions = [
+     'Sedan', 'SUV', 'Hatchback', 'Coupe', 'Convertible',
+     'Wagon', 'Minivan', 'Pickup Truck', 'Crossover', 'Sports Car',
+     'Luxury', 'Electric', 'Hybrid', 'Compact', 'Micro Car',
+     'Off-Road', 'Limousine', 'Van', 'MPV',
+];
+
+const bikeBrandOptions = [
+     'Yamaha', 'Honda', 'Suzuki', 'Kawasaki', 'Ducati',
+     'BMW Motorrad', 'Harley-Davidson', 'KTM', 'Royal Enfield', 'Triumph',
+     'Aprilia', 'Bajaj', 'TVS', 'Hero', 'Benelli',
+     'Husqvarna', 'Indian', 'MV Agusta', 'Piaggio', 'Vespa',
+     'CFMoto', 'Zero Motorcycles', 'Energica', 'Norton', 'Moto Guzzi',
+];
+
 const vehicleFields = [
-     { label: 'Brand' },
+     { label: 'Brand', fieldType: 'select', options: carBrandOptions },
      { label: 'Model' },
-     { label: 'Car Type' },
+     { label: 'Car Type', fieldType: 'select', options: carTypeOptions },
      { label: 'Trim Level' },
-     { label: 'Build Year' },
-     { label: 'Seats' },
-     { label: 'Mileage' },
+     { label: 'Build Year', type: 'number' },
+     { label: 'Seats', type: 'number' },
+     { label: 'Mileage', type: 'number' },
      { label: 'Fuel' },
-     { label: 'Gear' },
+     { label: 'Gear', type: 'number' },
      { label: 'Transmission Type' },
-     { label: 'Rental Price' },
+     { label: 'Rental Price', type: 'number' },
 ];
 
 const featureFields = [
-     { label: 'AC' },
-     { label: 'Bluetooth' },
-     { label: 'GPS' },
-     { label: 'Heater' },
-     { label: 'Central Locking' },
+     { label: 'AC', key: 'air_conditioning' },
+     { label: 'Bluetooth', key: 'bluetooth' },
+     { label: 'GPS', key: 'gps' },
+     { label: 'Heater', key: 'heater' },
+     { label: 'Central Locking', key: 'central_locking' },
 ];
 
 const bikeFields = [
-     { label: 'Brand' },
+     { label: 'Brand', fieldType: 'select', options: bikeBrandOptions },
      { label: 'Model' },
      { label: 'Bike Type' },
-     { label: 'Build Year' },
-     { label: 'Mileage' },
+     { label: 'Build Year', type: 'number' },
+     { label: 'Mileage', type: 'number' },
      { label: 'Fuel' },
-     { label: 'Fuel Capacity' },
-     { label: 'Engine Capacity' },
-     { label: 'Gear' },
+     { label: 'Fuel Capacity', type: 'number' },
+     { label: 'Engine Capacity', type: 'number' },
+     { label: 'Gear', type: 'number' },
      { label: 'Engine Start Type' },
-     { label: 'Helmet Count' },
-     { label: 'Rental Price' },
+     { label: 'Helmet Count', type: 'number' },
+     { label: 'Rental Price', type: 'number' },
 ];
 
 const bikeFeatureFields = [
-     { label: 'ABS' },
-     { label: 'Disk Brake' },
+     { label: 'ABS', key: 'abs' },
+     { label: 'Disk Brake', key: 'disk_brake' },
 ];
 
-const complianceFields = [
+const complianceTextFields = [
      { label: 'License Number' },
-     { label: 'License Expire Date' },
      { label: 'Fitness Certificate' },
      { label: 'Issuing Authority' },
      { label: 'Insurance Number' },
      { label: 'Insurance Provider' },
-     { label: 'Insurance Start Date' },
-     { label: 'Insurance End Date' },
      { label: 'Insurance Coverage Type' },
+];
+
+const complianceDateFields = [
+     { label: 'License Expire Date', key: 'licenseExpireDate' },
+     { label: 'Insurance Start Date', key: 'insuranceStartDate' },
+     { label: 'Insurance End Date', key: 'insuranceEndDate' },
 ];
 
 const AddCars = () => {
@@ -64,6 +98,16 @@ const AddCars = () => {
      // const axiosPublic = useAxiosPublic();
      const [imagePreview, setImagePreview] = useState(null);
      const [vehicleType, setVehicleType] = useState(null);
+     const [features, setFeatures] = useState({});
+     const [dates, setDates] = useState({});
+
+     const handleFeatureToggle = (key) => {
+          setFeatures((prev) => ({ ...prev, [key]: !prev[key] }));
+     };
+
+     const handleDateChange = (key, value) => {
+          setDates((prev) => ({ ...prev, [key]: value }));
+     };
 
      const handleImageChange = (event) => {
           const file = event.target.files[0];
@@ -120,17 +164,90 @@ const AddCars = () => {
           },
      };
 
-     const renderField = (field) => (
-          <TextField
+     const checkboxSx = {
+          color: 'rgba(245, 131, 0, 0.5)',
+          '&.Mui-checked': {
+               color: '#F58300',
+          },
+     };
+
+     const renderField = (field) => {
+          if (field.fieldType === 'select') {
+               return (
+                    <Autocomplete
+                         key={field.label}
+                         options={field.options}
+                         size="small"
+                         fullWidth
+                         renderInput={(params) => (
+                              <TextField {...params} label={field.label} variant="outlined" />
+                         )}
+                    />
+               );
+          }
+          return (
+               <TextField
+                    key={field.label}
+                    fullWidth
+                    size="small"
+                    label={field.label}
+                    variant="outlined"
+                    multiline={field.multiline}
+                    rows={field.rows}
+                    type={field.type || 'text'}
+               />
+          );
+     };
+
+     const renderCheckbox = (field) => (
+          <FormControlLabel
                key={field.label}
-               fullWidth
-               size="small"
-               label={field.label}
-               variant="outlined"
-               multiline={field.multiline}
-               rows={field.rows}
-               type={field.type}
+               control={
+                    <Checkbox
+                         checked={!!features[field.key]}
+                         onChange={() => handleFeatureToggle(field.key)}
+                         size="small"
+                         sx={checkboxSx}
+                    />
+               }
+               label={
+                    <Typography variant="body2" sx={{ fontWeight: 600, color: '#374151' }}>
+                         {field.label}
+                    </Typography>
+               }
+               sx={{
+                    m: 0,
+                    px: 1.5,
+                    py: 0.75,
+                    borderRadius: 2.5,
+                    border: '1px solid',
+                    borderColor: features[field.key] ? 'rgba(245, 131, 0, 0.4)' : 'rgba(0, 0, 0, 0.12)',
+                    background: features[field.key] ? 'rgba(245, 131, 0, 0.06)' : 'transparent',
+                    transition: 'all 0.2s ease',
+                    '&:hover': {
+                         borderColor: 'rgba(245, 131, 0, 0.4)',
+                         background: 'rgba(245, 131, 0, 0.04)',
+                    },
+               }}
           />
+     );
+
+     const renderDatePicker = (field) => (
+          <LocalizationProvider dateAdapter={AdapterMoment} key={field.key}>
+               <DemoContainer components={['DatePicker']} sx={{ pt: 0 }}>
+                    <DatePicker
+                         label={field.label}
+                         value={dates[field.key] || null}
+                         onChange={(newValue) => handleDateChange(field.key, newValue)}
+                         slotProps={{
+                              textField: {
+                                   size: 'small',
+                                   fullWidth: true,
+                              },
+                         }}
+                    />
+               </DemoContainer>
+          </LocalizationProvider>
      );
 
      if (!vehicleType) {
@@ -366,11 +483,6 @@ const AddCars = () => {
                                                                  {renderField(field)}
                                                             </Grid>
                                                        ))}
-                                                       {currentFeatureFields.map((field, index) => (
-                                                            <Grid item xs={12} sm={6} key={`${field.label}-${index}`}>
-                                                                 {renderField(field)}
-                                                            </Grid>
-                                                       ))}
                                                        <Grid item xs={12}>
                                                             <TextField
                                                                  fullWidth
@@ -382,6 +494,20 @@ const AddCars = () => {
                                                             />
                                                        </Grid>
                                                   </Grid>
+
+                                                  {/* ── Features (boolean checkboxes) ── */}
+                                                  <Divider sx={{ borderColor: 'rgba(245, 131, 0, 0.12)' }} />
+                                                  <Box>
+                                                       <Typography variant="subtitle1" sx={{ fontWeight: 700, color: '#111827', mb: 1 }}>
+                                                            Features
+                                                       </Typography>
+                                                       <Typography variant="body2" sx={{ color: '#6b7280', mb: 2 }}>
+                                                            Toggle the features available in this {vehicleType}.
+                                                       </Typography>
+                                                       <Stack direction="row" flexWrap="wrap" gap={1.5}>
+                                                            {currentFeatureFields.map((field) => renderCheckbox(field))}
+                                                       </Stack>
+                                                  </Box>
                                              </Stack>
                                         </Paper>
 
@@ -396,9 +522,16 @@ const AddCars = () => {
                                                        </Typography>
                                                   </Box>
                                                   <Grid container spacing={2}>
-                                                       {complianceFields.map((field, index) => (
+                                                       {complianceTextFields.map((field, index) => (
                                                             <Grid item xs={12} sm={6} key={`${field.label}-${index}`}>
                                                                  {renderField(field)}
+                                                            </Grid>
+                                                       ))}
+
+                                                       {/* ── Date picker fields ── */}
+                                                       {complianceDateFields.map((field) => (
+                                                            <Grid item xs={12} sm={6} key={field.key}>
+                                                                 {renderDatePicker(field)}
                                                             </Grid>
                                                        ))}
                                                   </Grid>
