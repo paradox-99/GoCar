@@ -1,10 +1,10 @@
 import { useState, useEffect } from "react";
 import toast from "react-hot-toast";
 import { FcList, FcViewDetails } from "react-icons/fc";
-import Slider from 'react-slick';
-import { Link, useLocation, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
 import useAxiosPublic from "../hooks/useAxiosPublic";
+import useAuth from "../hooks/useAuth";
 import { PiSeatFill } from "react-icons/pi";
 import build from "../assets/icons/transport.png";
 import fuel from "../assets/icons/gas-pump.png";
@@ -24,6 +24,8 @@ const ViewDetails = () => {
     const [loading, setLoading] = useState(true);
     const axiosPublic = useAxiosPublic();
     const location = useLocation();
+    const navigate = useNavigate();
+    const { user } = useAuth();
     const { carBookingInfo } = location?.state || {};
 
     // Extract vehicle_id from the name parameter (format: "brand_model")
@@ -84,14 +86,26 @@ const ViewDetails = () => {
         if (name) {
             isCar ? fetchCarAndReviews() : fetchBikeAndReviews();
         }
-    }, [name, axiosPublic]);
+    }, [name, axiosPublic, isCar]);
 
     const bookingData = {
         carBookingInfo,
         car,
     }
 
+    const redirectToLogin = () => {
+        toast.error("Please login first");
+        navigate('/sign-in', {
+            state: { from: `${location.pathname}${location.search || ''}` }
+        });
+    };
+
     const handleAddToFavorites = (carId) => {
+        if (!user) {
+            redirectToLogin();
+            return;
+        }
+
         const existingFavorites = JSON.parse(localStorage.getItem('favorites')) || [];
 
         if (!existingFavorites.includes(carId)) {
@@ -101,6 +115,15 @@ const ViewDetails = () => {
         } else {
             toast("Already in Favorites");
         }
+    };
+
+    const handleRentNow = () => {
+        if (!user) {
+            redirectToLogin();
+            return;
+        }
+
+        navigate('/booking-info', { state: { bookingData } });
     };
     
 
@@ -127,9 +150,12 @@ const ViewDetails = () => {
                                 className="h-[50px] md:h-[60px] w-1/2 text-[14px] md:text-[16px] bg-black font-semibold text-white rounded-lg hover:bg-gray-800 transition">
                                 ♥ Add to Favorite
                             </button>
-                            <Link to={'/booking-info'} state={{bookingData}} className="h-[50px] md:h-[60px] w-1/2 text-[14px] md:text-[16px] font-semibold bg-primary text-white rounded-lg flex justify-center items-center hover:bg-orange-600 transition">
+                            <button
+                                onClick={handleRentNow}
+                                className="h-[50px] md:h-[60px] w-1/2 text-[14px] md:text-[16px] font-semibold bg-primary text-white rounded-lg flex justify-center items-center hover:bg-orange-600 transition"
+                            >
                                 Rent Now
-                            </Link>
+                            </button>
                         </div>
                     </div>
 
@@ -324,7 +350,7 @@ const ViewDetails = () => {
                 </div>
 
                 {/* Reviews Section */}
-                <div className='mt-12'>
+                <div className='my-12'>
                     <div className="flex justify-between items-center mb-6">
                         <h2 className='text-3xl font-bold'>Customer Reviews</h2>
                         <span className="text-sm text-gray-600">({car?.review_count} total reviews)</span>

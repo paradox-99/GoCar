@@ -8,7 +8,7 @@ const PaymentFail = () => {
                <h1 className="text-4xl font-bold">Sorry, payment failed..</h1>
                <div className="flex justify-center gap-10 mt-20">
                     <Button variant="contained" href="/" sx={{background: '#f58300'}}>Home page</Button>
-                    <Button variant="contained" href="/donation" sx={{background: '#f58300'}}>Donation page</Button>
+                    <Button variant="contained" href="/search" sx={{background: '#f58300'}}>Try another booking</Button>
                </div>
           </div>
      );

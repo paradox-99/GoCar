@@ -50,14 +50,12 @@ const AuthProvider = ({children}) => {
             setUser(user);
             setStatus(false);
             
-            if(!user){ {
+            if(!user){
                 axiosPublic.post('authorization/logout', {}, { withCredentials: true })
                 .then(() => console.log("Logged out"))
                 .catch(err => console.error("Logout error:", err));
-
-                logOut();
-            }}
-    });
+            }
+        });
 
         return (() => {
             unsubscribe();

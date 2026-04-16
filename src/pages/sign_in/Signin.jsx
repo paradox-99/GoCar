@@ -1,7 +1,7 @@
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { Button, Divider, FormControl, IconButton, InputAdornment, InputLabel, OutlinedInput, TextField } from "@mui/material";
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import google from "../../assets/search.png"
 import useAuth from "../../hooks/useAuth";
 import toast from "react-hot-toast";
@@ -31,8 +31,10 @@ const Signin = () => {
     const [showPassword, setShowPassword] = useState(false);
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
+    const location = useLocation();
     const dispatch = useDispatch();
     const axiosPublic = useAxiosPublic();
+    const redirectPath = location.state?.from || location.state || '/';
 
     const { register, handleSubmit, formState: { errors } } = useForm({
         resolver: zodResolver(schema)
@@ -47,17 +49,15 @@ const Signin = () => {
 
         try {
             const result = await handleEmailLogin(email, password);
-            console.log(result);
             
             if (result.user.email) {
                 const userInfo = { email: result.user.email };
-                axiosPublic.post('authorization/jwt', userInfo, { withCredentials: true })
-                    .then(res => console.log("JWT issued:", res.data))
-                    .catch(err => console.error("JWT error:", err));
+                console.log(userInfo);
+                await axiosPublic.post('/authorization/jwt', userInfo, { withCredentials: true });
             }
             setUser(result.user);
             toast.success("Log in successful.")
-            navigate('/');
+            navigate(redirectPath, { replace: true });
         }
         catch (error) {
             toast.error('Login failed.')
@@ -72,8 +72,10 @@ const Signin = () => {
             setUser(result.user);
 
             if (result.user.metadata.lastLoginAt - result.user.metadata.createdAt > 5000) {
+                const userInfo = { email: result.user.email };
+                await axiosPublic.post('authorization/jwt', userInfo, { withCredentials: true });
                 toast.success("Log in successful.")
-                navigate('/');
+                navigate(redirectPath, { replace: true });
             }
             else {
                 const user = result.user;
