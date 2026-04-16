@@ -1,11 +1,13 @@
-// import useAxiosPublic from '../../hooks/useAxiosPublic';
-// import useRole from '../../hooks/useRole';
-import { Autocomplete, Box, Button, Card, CardContent, Checkbox, Chip, Divider, FormControlLabel, Grid, Paper, Stack, styled, TextField, Typography } from '@mui/material';
+import useAxiosPublic from '../../hooks/useAxiosPublic';
+import useAuth from '../../hooks/useAuth';
+import { Autocomplete, Box, Button, Card, CardContent, Checkbox, Chip, CircularProgress, Divider, FormControlLabel, Grid, Paper, Stack, styled, TextField, Typography } from '@mui/material';
 import { useState } from 'react';
 import { CloudUpload } from '@mui/icons-material';
 import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
+import { useQuery } from '@tanstack/react-query';
+import toast from 'react-hot-toast';
 import profile from "../../assets/travel.png"
 
 const carBrandOptions = [
@@ -21,12 +23,7 @@ const carBrandOptions = [
      'Proton', 'Perodua', 'Geely', 'Great Wall', 'Haval',
 ];
 
-const carTypeOptions = [
-     'Sedan', 'SUV', 'Hatchback', 'Coupe', 'Convertible',
-     'Wagon', 'Minivan', 'Pickup Truck', 'Crossover', 'Sports Car',
-     'Luxury', 'Electric', 'Hybrid', 'Compact', 'Micro Car',
-     'Off-Road', 'Limousine', 'Van', 'MPV',
-];
+const carTypeOptions = ['Sedan', 'SUV', 'Hatchback', 'Pickup', 'Van', 'Micro', 'Luxury', 'Sports'];
 
 const bikeBrandOptions = [
      'Yamaha', 'Honda', 'Suzuki', 'Kawasaki', 'Ducati',
@@ -36,41 +33,49 @@ const bikeBrandOptions = [
      'CFMoto', 'Zero Motorcycles', 'Energica', 'Norton', 'Moto Guzzi',
 ];
 
+const bikeTypeOptions = ['Standard', 'Sports', 'Cruiser', 'Scooter', 'Dirt'];
+
+const fuelOptions = ['Petrol', 'Diesel', 'Octane', 'Electric', 'Hybrid', 'CNG'];
+
+const transmissionOptions = ['Manual', 'Automatic', 'Semi-Automatic'];
+
+const engineStartOptions = ['Kick', 'Self', 'Both'];
+
+const insuranceCoverageOptions = ['Comprehensive', 'Third_Party', 'Basic'];
+
 const vehicleFields = [
-     { label: 'Brand', fieldType: 'select', options: carBrandOptions },
-     { label: 'Model' },
-     { label: 'Car Type', fieldType: 'select', options: carTypeOptions },
-     { label: 'Trim Level' },
-     { label: 'Build Year', type: 'number' },
-     { label: 'Seats', type: 'number' },
-     { label: 'Mileage', type: 'number' },
-     { label: 'Fuel' },
-     { label: 'Gear', type: 'number' },
-     { label: 'Transmission Type' },
-     { label: 'Rental Price', type: 'number' },
+     { label: 'Brand', key: 'brand', fieldType: 'select', options: carBrandOptions, required: true },
+     { label: 'Model', key: 'model', required: true },
+     { label: 'Car Type', key: 'car_type', fieldType: 'select', options: carTypeOptions, required: true },
+     { label: 'Build Year', key: 'build_year', type: 'number' },
+     { label: 'Seats', key: 'seats', type: 'number' },
+     { label: 'Mileage', key: 'mileage', type: 'number' },
+     { label: 'Fuel', key: 'fuel', fieldType: 'select', options: fuelOptions },
+     { label: 'Gear', key: 'gear', type: 'number' },
+     { label: 'Transmission Type', key: 'transmission_type', fieldType: 'select', options: transmissionOptions },
+     { label: 'Rental Price', key: 'rental_price', type: 'number', required: true },
 ];
 
 const featureFields = [
      { label: 'AC', key: 'air_conditioning' },
      { label: 'Bluetooth', key: 'bluetooth' },
      { label: 'GPS', key: 'gps' },
-     { label: 'Heater', key: 'heater' },
      { label: 'Central Locking', key: 'central_locking' },
 ];
 
 const bikeFields = [
-     { label: 'Brand', fieldType: 'select', options: bikeBrandOptions },
-     { label: 'Model' },
-     { label: 'Bike Type' },
-     { label: 'Build Year', type: 'number' },
-     { label: 'Mileage', type: 'number' },
-     { label: 'Fuel' },
-     { label: 'Fuel Capacity', type: 'number' },
-     { label: 'Engine Capacity', type: 'number' },
-     { label: 'Gear', type: 'number' },
-     { label: 'Engine Start Type' },
-     { label: 'Helmet Count', type: 'number' },
-     { label: 'Rental Price', type: 'number' },
+     { label: 'Brand', key: 'brand', fieldType: 'select', options: bikeBrandOptions, required: true },
+     { label: 'Model', key: 'model', required: true },
+     { label: 'Bike Type', key: 'car_type', fieldType: 'select', options: bikeTypeOptions, required: true },
+     { label: 'Build Year', key: 'build_year', type: 'number' },
+     { label: 'Mileage', key: 'mileage', type: 'number' },
+     { label: 'Fuel', key: 'fuel', fieldType: 'select', options: fuelOptions },
+     { label: 'Fuel Capacity', key: 'fuel_capacity', type: 'number' },
+     { label: 'Engine Capacity', key: 'engine_capacity', type: 'number' },
+     { label: 'Gear', key: 'gear', type: 'number' },
+     { label: 'Engine Start Type', key: 'engine_start_type', fieldType: 'select', options: engineStartOptions },
+     { label: 'Helmet Count', key: 'helmet_count', type: 'number' },
+     { label: 'Rental Price', key: 'rental_price', type: 'number', required: true },
 ];
 
 const bikeFeatureFields = [
@@ -79,27 +84,62 @@ const bikeFeatureFields = [
 ];
 
 const complianceTextFields = [
-     { label: 'License Number' },
-     { label: 'Fitness Certificate' },
-     { label: 'Issuing Authority' },
-     { label: 'Insurance Number' },
-     { label: 'Insurance Provider' },
-     { label: 'Insurance Coverage Type' },
+     { label: 'License Number', key: 'license_number' },
+     { label: 'Fitness Certificate', key: 'fitness_certificate' },
+     { label: 'Issuing Authority', key: 'issuing_authority' },
+     { label: 'Insurance Number', key: 'insurance_number' },
+     { label: 'Insurance Provider', key: 'insurance_provider' },
+     { label: 'Insurance Coverage Type', key: 'insurance_coverage_type', fieldType: 'select', options: insuranceCoverageOptions },
 ];
 
 const complianceDateFields = [
-     { label: 'License Expire Date', key: 'licenseExpireDate' },
-     { label: 'Insurance Start Date', key: 'insuranceStartDate' },
-     { label: 'Insurance End Date', key: 'insuranceEndDate' },
+     { label: 'License Expire Date', key: 'expire_date' },
+     { label: 'Insurance Start Date', key: 'insurance_start_date' },
+     { label: 'Insurance End Date', key: 'insurance_ending_date' },
 ];
 
 const AddCars = () => {
-     // const role = useRole();
-     // const axiosPublic = useAxiosPublic();
+     const { user } = useAuth();
+     const axiosPublic = useAxiosPublic();
+
      const [imagePreview, setImagePreview] = useState(null);
+     const [imageFile, setImageFile] = useState(null);
      const [vehicleType, setVehicleType] = useState(null);
+     const [formData, setFormData] = useState({});
+     const [aboutText, setAboutText] = useState('');
      const [features, setFeatures] = useState({});
+     const [complianceData, setComplianceData] = useState({});
      const [dates, setDates] = useState({});
+     const [submitting, setSubmitting] = useState(false);
+
+     // Fetch agency profile to get agency_id
+     const { data: agencyProfile, isLoading: agencyLoading } = useQuery({
+          queryKey: ['agencyProfile', user?.email],
+          enabled: !!user?.email,
+          queryFn: async () => {
+               const response = await axiosPublic.get(`agencyRoutes/getAgencyProfile/${user.email}`);
+               return response.data;
+          },
+     });
+
+     const handleVehicleTypeChange = (type) => {
+          setVehicleType(type);
+          setFormData({});
+          setAboutText('');
+          setFeatures({});
+          setComplianceData({});
+          setDates({});
+          setImagePreview(null);
+          setImageFile(null);
+     };
+
+     const handleFieldChange = (key, value) => {
+          setFormData((prev) => ({ ...prev, [key]: value }));
+     };
+
+     const handleComplianceChange = (key, value) => {
+          setComplianceData((prev) => ({ ...prev, [key]: value }));
+     };
 
      const handleFeatureToggle = (key) => {
           setFeatures((prev) => ({ ...prev, [key]: !prev[key] }));
@@ -112,6 +152,7 @@ const AddCars = () => {
      const handleImageChange = (event) => {
           const file = event.target.files[0];
           if (file) {
+               setImageFile(file);
                const reader = new FileReader();
                reader.onload = (e) => {
                     setImagePreview(e.target.result);
@@ -119,6 +160,139 @@ const AddCars = () => {
                reader.readAsDataURL(file);
           } else {
                setImagePreview(null);
+               setImageFile(null);
+          }
+     };
+
+     const resetForm = () => {
+          setFormData({});
+          setAboutText('');
+          setFeatures({});
+          setComplianceData({});
+          setDates({});
+          setImagePreview(null);
+          setImageFile(null);
+     };
+
+     const handleSubmit = async () => {
+          if (submitting) return;
+
+          if (!agencyProfile?.agency_id) {
+               toast.error('Agency profile not found. Please try again.');
+               return;
+          }
+
+          // Client-side required field check
+          const requiredFields = ['brand', 'model', 'car_type', 'rental_price'];
+          const missingFields = requiredFields.filter((f) => !formData[f]);
+          if (missingFields.length > 0) {
+               toast.error(`Please fill in: ${missingFields.map(f => f.replace(/_/g, ' ')).join(', ')}`);
+               return;
+          }
+
+          setSubmitting(true);
+
+          try {
+               let imageUrl = null;
+               if (imageFile) {
+                    const imgData = new FormData();
+                    imgData.append('image', imageFile);
+                    try {
+                         const imgRes = await fetch(`https://api.imgbb.com/1/upload?key=${import.meta.env.VITE_imgbb_api_key}`, {
+                              method: 'POST',
+                              body: imgData,
+                         });
+                         const imgJson = await imgRes.json();
+                         if (imgJson.success) {
+                              imageUrl = imgJson.data.display_url;
+                         } else {
+                              toast.error('Failed to upload image to imgbb.');
+                              setSubmitting(false);
+                              return;
+                         }
+                    } catch (err) {
+                         toast.error('Error uploading image.');
+                         setSubmitting(false);
+                         return;
+                    }
+               }
+
+               // Build base payload
+               const payload = {
+                    agency_id: agencyProfile.agency_id,
+                    brand: formData.brand,
+                    model: formData.model,
+                    car_type: formData.car_type,
+                    rental_price: formData.rental_price,
+               };
+
+               if (imageUrl) {
+                    payload.images = imageUrl;
+               }
+
+               // Add optional vehicle fields
+               if (formData.build_year) payload.build_year = formData.build_year;
+               if (formData.mileage) payload.mileage = formData.mileage;
+               if (formData.fuel) payload.fuel = formData.fuel;
+               if (formData.gear) payload.gear = formData.gear;
+               if (aboutText.trim()) payload.about = aboutText.trim();
+
+               if (vehicleType === 'car') {
+                    if (formData.seats) payload.seats = formData.seats;
+                    if (formData.transmission_type) payload.transmission_type = formData.transmission_type;
+                    // Boolean features
+                    payload.air_conditioning = !!features.air_conditioning;
+                    payload.gps = !!features.gps;
+                    payload.bluetooth = !!features.bluetooth;
+                    payload.central_locking = !!features.central_locking;
+               } else {
+                    // Bike-specific fields
+                    if (formData.fuel_capacity) payload.fuel_capacity = formData.fuel_capacity;
+                    if (formData.engine_capacity) payload.engine_capacity = formData.engine_capacity;
+                    if (formData.engine_start_type) payload.engine_start_type = formData.engine_start_type;
+                    if (formData.helmet_count) payload.helmet_count = formData.helmet_count;
+                    // Boolean features
+                    payload.abs = !!features.abs;
+                    payload.disk_brake = !!features.disk_brake;
+               }
+
+               // Build documentation object
+               const documentation = {};
+               if (complianceData.license_number?.trim()) documentation.license_number = complianceData.license_number.trim();
+               if (complianceData.fitness_certificate?.trim()) documentation.fitness_certificate = complianceData.fitness_certificate.trim();
+               if (complianceData.issuing_authority?.trim()) documentation.issuing_authority = complianceData.issuing_authority.trim();
+               if (complianceData.insurance_number?.trim()) documentation.insurance_number = complianceData.insurance_number.trim();
+               if (complianceData.insurance_provider?.trim()) documentation.insurance_provider = complianceData.insurance_provider.trim();
+               if (complianceData.insurance_coverage_type) documentation.insurance_coverage_type = complianceData.insurance_coverage_type;
+               if (dates.expire_date) documentation.expire_date = dates.expire_date.format('YYYY-MM-DD');
+               if (dates.insurance_start_date) documentation.insurance_start_date = dates.insurance_start_date.format('YYYY-MM-DD');
+               if (dates.insurance_ending_date) documentation.insurance_ending_date = dates.insurance_ending_date.format('YYYY-MM-DD');
+
+               payload.documentation = documentation;
+
+               // Determine endpoint
+               const endpoint = vehicleType === 'car'
+                    ? '/carRoutes/addCar'
+                    : '/bikeRoutes/addBike';
+
+               const response = await axiosPublic.post(endpoint, payload);
+
+               if (response.data.success) {
+                    toast.success(response.data.message || `${vehicleType === 'car' ? 'Car' : 'Bike'} added successfully!`);
+                    resetForm();
+               }
+          } catch (error) {
+               console.error('Vehicle submission error:', error);
+               const errData = error.response?.data;
+               if (errData?.errors && Array.isArray(errData.errors)) {
+                    // Show first validation error
+                    const firstErr = errData.errors[0];
+                    toast.error(`${firstErr.field}: ${firstErr.message}`);
+               } else {
+                    toast.error(errData?.message || 'Failed to add vehicle. Please try again.');
+               }
+          } finally {
+               setSubmitting(false);
           }
      };
 
@@ -179,8 +353,10 @@ const AddCars = () => {
                          options={field.options}
                          size="small"
                          fullWidth
+                         value={formData[field.key] || null}
+                         onChange={(_, newValue) => handleFieldChange(field.key, newValue)}
                          renderInput={(params) => (
-                              <TextField {...params} label={field.label} variant="outlined" />
+                              <TextField {...params} label={field.label} variant="outlined" required={field.required} />
                          )}
                     />
                );
@@ -195,6 +371,38 @@ const AddCars = () => {
                     multiline={field.multiline}
                     rows={field.rows}
                     type={field.type || 'text'}
+                    value={formData[field.key] ?? ''}
+                    onChange={(e) => handleFieldChange(field.key, e.target.value)}
+                    required={field.required}
+               />
+          );
+     };
+
+     const renderComplianceField = (field) => {
+          if (field.fieldType === 'select') {
+               return (
+                    <Autocomplete
+                         key={field.label}
+                         options={field.options}
+                         size="small"
+                         fullWidth
+                         value={complianceData[field.key] || null}
+                         onChange={(_, newValue) => handleComplianceChange(field.key, newValue)}
+                         renderInput={(params) => (
+                              <TextField {...params} label={field.label} variant="outlined" />
+                         )}
+                    />
+               );
+          }
+          return (
+               <TextField
+                    key={field.label}
+                    fullWidth
+                    size="small"
+                    label={field.label}
+                    variant="outlined"
+                    value={complianceData[field.key] ?? ''}
+                    onChange={(e) => handleComplianceChange(field.key, e.target.value)}
                />
           );
      };
@@ -275,7 +483,7 @@ const AddCars = () => {
                     <Stack direction={{ xs: 'column', sm: 'row' }} spacing={4} justifyContent="center" width="100%" maxWidth={800}>
                          <Paper
                               elevation={0}
-                              onClick={() => setVehicleType('car')}
+                              onClick={() => handleVehicleTypeChange('car')}
                               sx={{
                                    flex: 1,
                                    p: 5,
@@ -304,7 +512,7 @@ const AddCars = () => {
 
                          <Paper
                               elevation={0}
-                              onClick={() => setVehicleType('bike')}
+                              onClick={() => handleVehicleTypeChange('bike')}
                               sx={{
                                    flex: 1,
                                    p: 5,
@@ -351,14 +559,14 @@ const AddCars = () => {
                     <Button 
                          variant={vehicleType === 'car' ? 'contained' : 'outlined'} 
                          sx={vehicleType === 'car' ? brandButtonSx : outlinedBrandButtonSx}
-                         onClick={() => setVehicleType('car')}
+                         onClick={() => handleVehicleTypeChange('car')}
                     >
                          Add Car
                     </Button>
                     <Button 
                          variant={vehicleType === 'bike' ? 'contained' : 'outlined'} 
                          sx={vehicleType === 'bike' ? brandButtonSx : outlinedBrandButtonSx}
-                         onClick={() => setVehicleType('bike')}
+                         onClick={() => handleVehicleTypeChange('bike')}
                     >
                          Add Bike
                     </Button>
@@ -491,6 +699,8 @@ const AddCars = () => {
                                                                  variant="outlined"
                                                                  multiline
                                                                  rows={4}
+                                                                 value={aboutText}
+                                                                 onChange={(e) => setAboutText(e.target.value)}
                                                             />
                                                        </Grid>
                                                   </Grid>
@@ -524,7 +734,7 @@ const AddCars = () => {
                                                   <Grid container spacing={2}>
                                                        {complianceTextFields.map((field, index) => (
                                                             <Grid item xs={12} sm={6} key={`${field.label}-${index}`}>
-                                                                 {renderField(field)}
+                                                                 {renderComplianceField(field)}
                                                             </Grid>
                                                        ))}
 
@@ -620,8 +830,15 @@ const AddCars = () => {
                </Card>
 
                <Box sx={{ display: 'flex', justifyContent: 'center', pb: 2 }}>
-                    <Button variant="contained" size="large" sx={brandButtonSx}>
-                         Add {vehicleType === 'car' ? 'Car' : 'Bike'}
+                    <Button
+                         variant="contained"
+                         size="large"
+                         sx={brandButtonSx}
+                         onClick={handleSubmit}
+                         disabled={submitting || agencyLoading}
+                         startIcon={submitting ? <CircularProgress size={20} sx={{ color: '#fff' }} /> : null}
+                    >
+                         {submitting ? 'Adding...' : `Add ${vehicleType === 'car' ? 'Car' : 'Bike'}`}
                     </Button>
                </Box>
           </Box>
