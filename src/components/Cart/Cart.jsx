@@ -26,11 +26,14 @@ const Cart = ({ car, carBookingInfo, to, state }) => {
                 <span className={`absolute top-2.5 right-2.5 text-xs font-semibold px-2 py-0.5 rounded-full ${available ? "bg-green-100 text-green-700" : "bg-red-100 text-red-600"}`}>
                     {available ? "Available" : "Unavailable"}
                 </span>
-                {car?.verified && (
+                {car?.verified ?
                     <span className="absolute top-2.5 left-2.5 flex items-center gap-1 bg-white/90 text-blue-600 text-xs font-semibold px-2 py-0.5 rounded-full">
                         <FaCheckCircle className="text-xs" /> Verified
+                    </span>:
+                    <span className="absolute top-2.5 left-2.5 flex items-center gap-1 bg-white/90 text-red-600 text-xs font-semibold px-2 py-0.5 rounded-full">
+                        <FaCheckCircle className="text-xs" /> Unverified
                     </span>
-                )}
+                }
             </div>
 
             {/* Info */}

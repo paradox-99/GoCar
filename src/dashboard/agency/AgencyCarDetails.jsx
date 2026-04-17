@@ -157,11 +157,14 @@ const AgencyCarDetails = () => {
                 <span className={`text-xs font-semibold px-2.5 py-1 rounded-full ${STATUS_STYLES[car.status] ?? "bg-gray-100 text-gray-600"}`}>
                     {car.status}
                 </span>
-                {car.verified && (
+                {car.verified ?
                     <span className="flex items-center gap-1 text-xs font-semibold px-2.5 py-1 rounded-full bg-blue-50 text-blue-600">
                         <FaCheckCircle className="text-xs" /> Verified
+                    </span>:
+                    <span className="flex items-center gap-1 text-xs font-semibold px-2.5 py-1 rounded-full bg-red-50 text-red-600">
+                        <FaCheckCircle className="text-xs" /> Unverified
                     </span>
-                )}
+                }
             </div>
 
             <div className="grid lg:grid-cols-5 gap-6">
@@ -219,6 +222,7 @@ const AgencyCarDetails = () => {
                                 value={selectedStatus}
                                 label="Status"
                                 onChange={e => setSelectedStatus(e.target.value)}
+                                disabled={car.verified === false}
                                 sx={{
                                     "& .MuiOutlinedInput-notchedOutline": { borderColor: "#e5e7eb" },
                                     "&:hover .MuiOutlinedInput-notchedOutline": { borderColor: "#F58300" },
