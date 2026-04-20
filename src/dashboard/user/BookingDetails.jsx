@@ -73,7 +73,8 @@ const BookingDetails = () => {
           setCancelReason('');
      };
 
-     const canCancel = ['Requested', 'Confirmed'].includes(bookingData.status);
+     const isPastPickup = moment().isAfter(moment(bookingData.start_ts));
+     const canCancel = ['Requested', 'Confirmed'].includes(bookingData.status) && !isPastPickup;
 
      return (
           <div className="p-6 bg-gray-50 min-h-screen">
@@ -186,7 +187,8 @@ const BookingDetails = () => {
                                         <p className={`font-semibold px-3 py-1 rounded-full text-sm w-fit ${bookingData.status === 'Confirmed' ? 'bg-green-100 text-green-700' :
                                                   bookingData.status === 'Requested' ? 'bg-yellow-100 text-yellow-700' :
                                                        bookingData.status === 'Completed' ? 'bg-blue-100 text-blue-700' :
-                                                            'bg-gray-100 text-gray-700'
+                                                            bookingData.status === 'Overdue' ? 'bg-red-100 text-red-700' :
+                                                                 'bg-gray-100 text-gray-700'
                                              }`}>
                                              {bookingData.status}
                                         </p>

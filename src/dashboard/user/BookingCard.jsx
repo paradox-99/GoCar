@@ -15,6 +15,8 @@ const BookingCard = ({ booking }) => {
       return "bg-blue-100 text-blue-700";
     } else if (lowerStatus === "cancelled") {
       return "bg-red-100 text-red-700";
+    } else if (lowerStatus === "overdue") {
+      return "bg-red-100 text-red-700 border border-red-200";
     }
     return "bg-gray-100 text-gray-700";
   };
@@ -23,6 +25,7 @@ const BookingCard = ({ booking }) => {
   const startDate = moment(booking.start_ts);
   const endDate = moment(booking.end_ts);
   const rentalType = booking.driver_id ? "With Driver" : "Self-drive";
+  const isOverdue = (booking.status === 'Requested' || booking.status === 'Confirmed') && moment().isAfter(startDate);
 
   return (
     <div className="bg-white border border-gray-200 rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow">
@@ -75,8 +78,8 @@ const BookingCard = ({ booking }) => {
           </div>
           <div className="flex justify-between">
             <span className="text-gray-600">Status:</span>
-            <span className={`px-3 py-1 rounded text-xs font-semibold ${getStatusBadge(booking.status)}`}>
-              {booking.status || "Pending"}
+            <span className={`px-3 py-1 rounded text-xs font-semibold ${getStatusBadge(isOverdue ? "Overdue" : booking.status)}`}>
+              {isOverdue ? "Overdue" : (booking.status || "Pending")}
             </span>
           </div>
         </div>

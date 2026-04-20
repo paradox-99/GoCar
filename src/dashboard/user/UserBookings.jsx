@@ -29,27 +29,31 @@ const UserBookings = () => {
           return bookings.filter(booking => {
                const startDate = moment(booking.start_ts);
                const endDate = moment(booking.end_ts);
+               const isOverdue = (booking.status === 'Requested' || booking.status === 'Confirmed') && startDate.isBefore(now);
                
                if (activeTab === 'Requested') {
-                    return booking.status === 'Requested';
+                    return booking.status === 'Requested' && !isOverdue;
                } else if (activeTab === 'Upcoming') {
                     return startDate.isAfter(now) && (booking.status === 'Confirmed');
                } else if (activeTab === 'Current') {
                     return now.isBetween(startDate, endDate) && (booking.status === 'Running');
                } else if (activeTab === 'Past') {
-                    return endDate.isBefore(now);
+                    return endDate.isBefore(now) || (booking.status === 'Completed') || (booking.status === 'Cancelled');
+               } else if (activeTab === 'Overdue') {
+                    return booking.status === 'Overdue' || isOverdue;
                }
                return false;
           });
      };
 
      const filteredBookings = getFilteredBookings();
-     const tabs = ['Requested', 'Upcoming', 'Current', 'Past'];
+     const tabs = ['Requested', 'Upcoming', 'Current', 'Past', 'Overdue'];
      const tabColors = {
           'Requested': '#2563eb',
           'Upcoming': '#3b82f6',
           'Current': '#22c55e',
-          'Past': '#8b5cf6'
+          'Past': '#8b5cf6',
+          'Overdue': '#ef4444'
      };
 
      return (
