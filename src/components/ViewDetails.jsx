@@ -100,22 +100,69 @@ const ViewDetails = () => {
         });
     };
 
-    const handleAddToFavorites = (carId) => {
+    // ── DB user id + favourite state ─────────────────────────────────────────
+    const [dbUserId, setDbUserId] = useState(null);
+    const [isFavourite, setIsFavourite] = useState(false);
+    const [favLoading, setFavLoading] = useState(false);
+
+    // Fetch the user's DB user_id once we have their email
+    useEffect(() => {
+        if (!user?.email) return;
+        axiosPublic
+            .get(`userRoute/getUserInfo/${user.email}`)
+            .then(res => {
+                const u = res.data?.[0];
+                setDbUserId(u?.user_id || u?._id || null);
+            })
+            .catch(() => {});
+    }, [user, axiosPublic]);
+
+    // Check if this car is already favourited
+    useEffect(() => {
+        if (!dbUserId || !name || !isCar) return;
+        axiosPublic
+            .get(`carRoutes/checkFavourite/${dbUserId}/${name}`)
+            .then(res => setIsFavourite(res.data?.isFavourite ?? false))
+            .catch(() => {});
+    }, [dbUserId, name, isCar, axiosPublic]);
+
+    const toggleFavourite = async () => {
         if (!user) {
             redirectToLogin();
             return;
         }
+        if (!isCar) {
+            toast('Favouriting bikes is not supported yet.');
+            return;
+        }
+        if (!dbUserId) {
+            toast.error('Could not identify your account. Please try again.');
+            return;
+        }
 
-        const existingFavorites = JSON.parse(localStorage.getItem('favorites')) || [];
-
-        if (!existingFavorites.includes(carId)) {
-            existingFavorites.push(carId);
-            localStorage.setItem('favorites', JSON.stringify(existingFavorites));
-            toast.success("Added to Favorites");
-        } else {
-            toast("Already in Favorites");
+        setFavLoading(true);
+        try {
+            if (isFavourite) {
+                await axiosPublic.delete('carRoutes/removeFavourite', {
+                    data: { userId: dbUserId, carId: name },
+                });
+                setIsFavourite(false);
+                toast.success('Removed from Favourites');
+            } else {
+                await axiosPublic.post('carRoutes/addFavourite', {
+                    userId: dbUserId,
+                    carId: name,
+                });
+                setIsFavourite(true);
+                toast.success('Added to Favourites ♥');
+            }
+        } catch (err) {
+            toast.error(err?.response?.data?.message || 'Something went wrong');
+        } finally {
+            setFavLoading(false);
         }
     };
+
 
     const handleRentNow = () => {
         if (!user) {
@@ -146,9 +193,15 @@ const ViewDetails = () => {
                         </div>
                         <div className="flex gap-3 mt-12">
                             <button
-                                onClick={() => handleAddToFavorites(car?.vehicle_id)}
-                                className="h-[50px] md:h-[60px] w-1/2 text-[14px] md:text-[16px] bg-black font-semibold text-white rounded-lg hover:bg-gray-800 transition">
-                                ♥ Add to Favorite
+                                onClick={toggleFavourite}
+                                disabled={favLoading}
+                                className={`h-[50px] md:h-[60px] w-1/2 text-[14px] md:text-[16px] font-semibold rounded-lg transition
+                                    ${isFavourite
+                                        ? 'bg-red-500 hover:bg-red-600 text-white'
+                                        : 'bg-black hover:bg-gray-800 text-white'}
+                                    ${favLoading ? 'opacity-60 cursor-not-allowed' : ''}`}
+                            >
+                                {favLoading ? '...' : isFavourite ? '♥ Saved to Favourites' : '♡ Add to Favourite'}
                             </button>
                             <button
                                 onClick={handleRentNow}

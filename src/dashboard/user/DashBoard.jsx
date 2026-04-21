@@ -1,17 +1,12 @@
 import useAuth from '../../hooks/useAuth';
 import useAxiosPublic from '../../hooks/useAxiosPublic';
 import { useQuery } from '@tanstack/react-query';
-import {
-  Card, CardContent, Grid, Avatar, Button, LinearProgress,
-  Chip, Divider, Skeleton, Alert,
-} from '@mui/material';
+import { Card, CardContent, Grid, Avatar, Button, Chip, Divider, Skeleton, Alert } from '@mui/material';
 import DirectionsCarIcon from '@mui/icons-material/DirectionsCar';
 import BookmarkIcon from '@mui/icons-material/Bookmark';
 import FavoriteIcon from '@mui/icons-material/Favorite';
-import VerifiedUserIcon from '@mui/icons-material/VerifiedUser';
-import ErrorIcon from '@mui/icons-material/Error';
 import EditIcon from '@mui/icons-material/Edit';
-import CurrencyRupeeIcon from '@mui/icons-material/CurrencyRupee'; // closest to BDT symbol in MUI
+import CurrenyTaka from '../../assets/icons/taka.png'; 
 import NotificationsActiveIcon from '@mui/icons-material/NotificationsActive';
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import HistoryIcon from '@mui/icons-material/History';
@@ -50,7 +45,11 @@ const StatCard = ({ icon: Icon, label, value, color, badge }) => (
           <p className="text-3xl font-bold text-gray-800">{value}</p>
         </div>
         <div className={`p-4 rounded-full ${color} flex-shrink-0`}>
-          <Icon sx={{ fontSize: 32, color: 'white' }} />
+          {typeof Icon === 'string' ? (
+            <img src={Icon} alt="icon" style={{ width: 32, height: 32, filter: 'brightness(0) invert(1)' }} />
+          ) : (
+            <Icon sx={{ fontSize: 32, color: 'white' }} />
+          )}
         </div>
       </div>
     </CardContent>
@@ -397,7 +396,7 @@ const DashBoard = () => {
               <StatCardSkeleton />
             ) : (
               <StatCard
-                icon={CurrencyRupeeIcon}
+                icon={CurrenyTaka}
                 label="Total Spent"
                 value={`৳ ${Number(stats?.total_spent ?? 0).toLocaleString()}`}
                 color="bg-green-500"
@@ -405,15 +404,7 @@ const DashBoard = () => {
             )}
           </Grid>
 
-          {/* Account Status */}
-          <Grid item xs={12} sm={6} md={6} lg={20/6}>
-            <StatCard
-              icon={VerifiedUserIcon}
-              label="Account Status"
-              value={data?.accountstatus === 'active' ? '✓ Active' : 'Pending'}
-              color={data?.accountstatus === 'active' ? 'bg-green-500' : 'bg-yellow-500'}
-            />
-          </Grid>
+
 
           {/* Profile Score */}
           <Grid item xs={12} sm={6} md={6} lg={20/6}>
@@ -473,82 +464,7 @@ const DashBoard = () => {
             </Card>
           </Grid>
 
-          {/* Account Status */}
-          <Grid item xs={12} md={6}>
-            <Card className="shadow-lg h-full">
-              <CardContent>
-                <h2 className="text-2xl font-bold text-gray-800 mb-6">Account Status</h2>
-                <Divider className="mb-6" />
 
-                <div className="space-y-6">
-                  <div>
-                    <div className="flex items-center justify-between mb-3">
-                      <span className="font-semibold text-gray-700">Profile Completion</span>
-                      <span className="text-lg font-bold text-orange-600">{profileCompletion}%</span>
-                    </div>
-                    <LinearProgress
-                      variant="determinate"
-                      value={profileCompletion}
-                      sx={{
-                        height: 10,
-                        borderRadius: 5,
-                        backgroundColor: '#f0f0f0',
-                        '& .MuiLinearProgress-bar': { backgroundColor: '#f58300' },
-                      }}
-                    />
-                  </div>
-
-                  <div className="bg-blue-50 p-4 rounded-lg border-l-4 border-blue-500">
-                    <p className="text-blue-900 text-sm">
-                      <strong>Total Bookings:</strong> You have made{' '}
-                      {statsLoading
-                        ? <Skeleton component="span" variant="text" width={20} sx={{ display: 'inline-block' }} />
-                        : stats?.total_bookings ?? 0
-                      } bookings
-                    </p>
-                  </div>
-
-                  <div>
-                    <p className="font-semibold text-gray-700 mb-3">Verification Status</p>
-                    <div className="space-y-2">
-                      <div className="flex items-center gap-3">
-                        {data?.verified
-                          ? <VerifiedUserIcon sx={{ color: '#10b981', fontSize: 20 }} />
-                          : <ErrorIcon sx={{ color: '#ef4444', fontSize: 20 }} />
-                        }
-                        <span className="text-gray-700">
-                          Account {data?.verified ? 'Verified' : 'Not Verified'}
-                        </span>
-                      </div>
-                      <div className="flex items-center gap-3">
-                        {data?.accountstatus === 'active'
-                          ? <VerifiedUserIcon sx={{ color: '#10b981', fontSize: 20 }} />
-                          : <ErrorIcon sx={{ color: '#ef4444', fontSize: 20 }} />
-                        }
-                        <span className="text-gray-700">
-                          Account is {data?.accountstatus === 'active' ? 'Active' : 'Inactive'}
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="flex gap-3 flex-wrap">
-                    {data?.verified && (
-                      <Chip label="Verified" color="success" variant="outlined" />
-                    )}
-                    {data?.accountstatus === 'active' && (
-                      <Chip
-                        label="Active"
-                        color="primary"
-                        variant="outlined"
-                        sx={{ color: '#f58300', borderColor: '#f58300' }}
-                      />
-                    )}
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          </Grid>
 
           {/* Quick Actions */}
           <Grid item xs={12}>
