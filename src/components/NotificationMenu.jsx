@@ -46,8 +46,8 @@ const NotificationMenu = ({ color = "inherit" }) => {
 
     useEffect(() => {
         fetchNotifications();
-        // Set up polling every 30 seconds for new notifications
-        const interval = setInterval(fetchNotifications, 30000);
+        // Set up polling every 60 seconds for new notifications
+        const interval = setInterval(fetchNotifications, 60000);
         return () => clearInterval(interval);
     }, [user]);
 

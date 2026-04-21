@@ -4,12 +4,8 @@ import { HiMapPin, HiCog6Tooth, HiStar } from "react-icons/hi2";
 
 const AgencyCard = ({ agency }) => {
 
-     const { agency_id, agency_name, image, total_vehicles, area } = agency
-     const navigate = useNavigate();
-
-     // Mock rating for now - can be replaced with real data
-     const rating = 4.5;
-     const reviews = 120;
+     const { agency_id, agency_name, image, total_vehicles, display_name, rating, review_count, cars, bikes } = agency
+     const navigate = useNavigate();    
 
      return (
           <div 
@@ -48,7 +44,7 @@ const AgencyCard = ({ agency }) => {
                               ))}
                          </div>
                          <span className="text-sm text-gray-600">
-                              {rating} ({reviews} reviews)
+                              {rating} ({review_count} reviews)
                          </span>
                     </div>
 
@@ -59,7 +55,7 @@ const AgencyCard = ({ agency }) => {
                               <HiMapPin className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" />
                               <div>
                                    <p className="text-xs text-gray-500 font-semibold uppercase">Location</p>
-                                   <p className="text-sm text-gray-700 font-medium">{area}</p>
+                                   <p className="text-sm text-gray-700 font-medium">{display_name}</p>
                               </div>
                          </div>
 
@@ -68,7 +64,7 @@ const AgencyCard = ({ agency }) => {
                               <HiCog6Tooth className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" />
                               <div>
                                    <p className="text-xs text-gray-500 font-semibold uppercase">Vehicles</p>
-                                   <p className="text-sm text-gray-700 font-medium">{total_vehicles} cars available</p>
+                                   <p className="text-sm text-gray-700 font-medium"> {cars == 0 ? '' : `${cars} Cars`} {cars > 0 && bikes > 0 ? '&' : ''} {bikes == 0 ? '' : `${bikes} Bikes`}</p>
                               </div>
                          </div>
                     </div>

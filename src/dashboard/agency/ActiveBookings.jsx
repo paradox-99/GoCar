@@ -2,209 +2,293 @@ import { Link } from 'react-router-dom';
 import moment from 'moment';
 import useAxiosPublic from '../../hooks/useAxiosPublic';
 import { useQuery } from '@tanstack/react-query';
-import PropTypes from 'prop-types';
-import { FirstPage, KeyboardArrowLeft, KeyboardArrowRight, LastPage } from '@mui/icons-material';
-import { Box, IconButton, Paper, styled, Table, TableBody, TableCell, tableCellClasses, TableContainer, TableFooter, TableHead, TablePagination, TableRow, Button } from '@mui/material';
-import { useTheme } from '@emotion/react';
-import { useState } from 'react';
-import useRole from '../../hooks/useRole';
+import { 
+    Grid, 
+    Box, 
+    Typography, 
+    Button, 
+    TextField, 
+    InputAdornment, 
+    Chip,
+    Avatar
+} from '@mui/material';
+import { 
+    Search, 
+    CalendarMonth, 
+    Person, 
+    DirectionsCar, 
+    ArrowForward,
+    FilterList
+} from '@mui/icons-material';
+import { useState, useMemo } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Loader from '../../components/Loader';
 import useAuth from '../../hooks/useAuth';
 
-function TablePaginationActions(props) {
-     const theme = useTheme();
-     const { count, page, rowsPerPage, onPageChange } = props;
-
-     const handleFirstPageButtonClick = (event) => {
-          onPageChange(event, 0);
-     };
-
-     const handleBackButtonClick = (event) => {
-          onPageChange(event, page - 1);
-     };
-
-     const handleNextButtonClick = (event) => {
-          onPageChange(event, page + 1);
-     };
-
-     const handleLastPageButtonClick = (event) => {
-          onPageChange(event, Math.max(0, Math.ceil(count / rowsPerPage) - 1));
-     };
-
-     return (
-          <Box sx={{ flexShrink: 0, ml: 2.5 }}>
-               <IconButton
-                    onClick={handleFirstPageButtonClick}
-                    disabled={page === 0}
-                    aria-label="first page"
-               >
-                    {theme.direction === 'rtl' ? <LastPage /> : <FirstPage />}
-               </IconButton>
-               <IconButton
-                    onClick={handleBackButtonClick}
-                    disabled={page === 0}
-                    aria-label="previous page"
-               >
-                    {theme.direction === 'rtl' ? <KeyboardArrowRight /> : <KeyboardArrowLeft />}
-               </IconButton>
-               <IconButton
-                    onClick={handleNextButtonClick}
-                    disabled={page >= Math.ceil(count / rowsPerPage) - 1}
-                    aria-label="next page"
-               >
-                    {theme.direction === 'rtl' ? <KeyboardArrowLeft /> : <KeyboardArrowRight />}
-               </IconButton>
-               <IconButton
-                    onClick={handleLastPageButtonClick}
-                    disabled={page >= Math.ceil(count / rowsPerPage) - 1}
-                    aria-label="last page"
-               >
-                    {theme.direction === 'rtl' ? <FirstPage /> : <LastPage />}
-               </IconButton>
-          </Box>
-     );
-}
-
-TablePaginationActions.propTypes = {
-     count: PropTypes.number.isRequired,
-     onPageChange: PropTypes.func.isRequired,
-     page: PropTypes.number.isRequired,
-     rowsPerPage: PropTypes.number.isRequired,
-};
-
 const ActiveBookings = () => {
+    const axiosPublic = useAxiosPublic();
+    const { user } = useAuth();
+    const [filter, setFilter] = useState('All');
+    const [searchQuery, setSearchQuery] = useState('');
 
-     const axiosPublic = useAxiosPublic();
-     const {user} = useAuth();
+    const { data, isLoading } = useQuery({
+        queryKey: ['bookings', user?.email],
+        queryFn: async () => {
+            const response = await axiosPublic.get(`agencyRoutes/getAgencyBookingsByEmail/${user?.email}`, { withCredentials: true });
+            return response.data;
+        },
+        enabled: !!user?.email
+    });
 
-     const { data, isLoading } = useQuery({
-          queryKey: ['bookings'],
-          queryFn: async () => {
-               const response = await axiosPublic.get(`agencyRoutes/getAgencyBookingsByEmail/${user?.email}`, {withCredentials: true});
-               return response.data;
-          },
-          enabled: !!user?.email
-     })
+    const statusMap = {
+        'Requested': 'Requested',
+        'Active': 'Running',
+        'Upcoming': 'Confirmed',
+        'Cancelled': 'Cancelled',
+        'Overdue': 'Overdue',
+    };
 
-     const [page, setPage] = useState(0);
-     const [rowsPerPage, setRowsPerPage] = useState(8);
+    const filteredBookings = useMemo(() => {
+        if (!data) return [];
+        
+        let filtered = data;
 
-     if (isLoading) return <div className="flex justify-center items-center py-20"><Loader /></div>;
+        if (filter !== 'All') {
+            const targetStatus = statusMap[filter];
+            filtered = filtered.filter(booking => booking.status === targetStatus);
+        }
 
-     // Avoid a layout jump when reaching the last page with empty rows.
-     const emptyRows =
-          page > 0 ? Math.max(0, (1 + page) * rowsPerPage - data?.length) : 0;
+        if (searchQuery) {
+            const query = searchQuery.toLowerCase();
+            filtered = filtered.filter(booking => 
+                booking.booking_id.toString().includes(query) ||
+                booking.user_name.toLowerCase().includes(query) ||
+                `${booking.brand} ${booking.model}`.toLowerCase().includes(query)
+            );
+        }
 
-     const handleChangePage = (event, newPage) => {
-          setPage(newPage);
-     };
+        return filtered;
+    }, [data, filter, searchQuery]);
 
-     const handleChangeRowsPerPage = (event) => {
-          setRowsPerPage(parseInt(event.target.value, 10));
-          setPage(0);
-     };
+    if (isLoading) return <div className="flex justify-center items-center py-20"><Loader /></div>;
 
-     const StyledTableCell = styled(TableCell)(({ theme }) => ({
-          [`&.${tableCellClasses.head}`]: {
-               backgroundColor: "#F58300",
-               color: theme.palette.common.white,
-               fontSize: 16,
-               fontWeight: 600,
-          },
-          [`&.${tableCellClasses.body}`]: {
-               fontSize: 14,
-          },
-     }));
+    const FilterButton = ({ label, count }) => (
+        <button
+            onClick={() => setFilter(label)}
+            className={`px-6 py-2 rounded-full text-sm font-medium transition-all duration-300 flex items-center gap-2 ${
+                filter === label 
+                ? 'bg-[#F58300] text-white shadow-lg shadow-orange-200 transform scale-105' 
+                : 'bg-white text-gray-600 hover:bg-gray-50 border border-gray-100'
+            }`}
+        >
+            {label}
+            {count !== undefined && (
+                <span className={`px-2 py-0.5 rounded-full text-[10px] ${
+                    filter === label ? 'bg-white/20 text-white' : 'bg-gray-100 text-gray-500'
+                }`}>
+                    {count}
+                </span>
+            )}
+        </button>
+    );
 
-     return (
-          <div>
-               <h1 className="text-4xl text-center mt-8 font-semibold">Active Bookings</h1>
-               <div className="mt-10 pb-10">
-                    {data ?
-                         <TableContainer component={Paper}>
-                              <Table sx={{ minWidth: 500 }} aria-label="custom pagination table">
-                                   <TableHead>
-                                        <TableRow>
-                                             <StyledTableCell >Vehicle</StyledTableCell>
-                                             <StyledTableCell >Customer</StyledTableCell>
-                                             <StyledTableCell >Pickup Date</StyledTableCell>
-                                             <StyledTableCell >Status</StyledTableCell>
-                                             <StyledTableCell >Action</StyledTableCell>
-                                        </TableRow>
-                                   </TableHead>
-                                   <TableBody>
-                                        {(rowsPerPage > 0
-                                             ? data.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                                             : data
-                                        ).map((row) => (
-                                             <TableRow key={row.booking_id}>
-                                                  <StyledTableCell component="th" scope="row">
-                                                      <div className="font-bold">{row.brand} {row.model}</div>
-                                                      <div className="text-xs text-gray-500">ID: {row.booking_id}</div>
-                                                  </StyledTableCell>
-                                                  <StyledTableCell>{row.user_name}</StyledTableCell>
-                                                  <StyledTableCell>{row.start_ts ? moment(row.start_ts).format('DD-MMM-YYYY') : 'N/A'}</StyledTableCell>
-                                                  <StyledTableCell>
-                                                       <span className={`px-2 py-1 rounded-full text-xs font-semibold ${
-                                                            row.status === 'Confirmed' ? 'bg-green-100 text-green-700' :
-                                                            row.status === 'Requested' ? 'bg-yellow-100 text-yellow-700' :
-                                                            row.status === 'Running' ? 'bg-blue-100 text-blue-700' :
-                                                            'bg-gray-100 text-gray-700'
-                                                       }`}>
-                                                            {row.status}
-                                                       </span>
-                                                  </StyledTableCell>
-                                                  <StyledTableCell>
-                                                      <Button 
-                                                          component={Link}
-                                                          to={`/dashboard/agency/bookings/${row.booking_id}`}
-                                                          state={{ booking: row }}
-                                                          variant="outlined" 
-                                                          size="small"
-                                                          sx={{ color: '#F58300', borderColor: '#F58300', '&:hover': { background: '#F58300', color: '#fff' }}}
-                                                      >
-                                                          Manage
-                                                      </Button>
-                                                  </StyledTableCell>
-                                             </TableRow>
-                                        ))}
-                                        {emptyRows > 0 && (
-                                             <TableRow style={{ height: 53 * emptyRows }}>
-                                                  <TableCell colSpan={6} />
-                                             </TableRow>
-                                        )}
-                                   </TableBody>
-                                   <TableFooter>
-                                        <TableRow>
-                                             <TablePagination
-                                                  rowsPerPageOptions={[8]}
-                                                  colSpan={3}
-                                                  count={data?.length}
-                                                  rowsPerPage={rowsPerPage}
-                                                  page={page}
-                                                  slotProps={{
-                                                       select: {
-                                                            inputProps: {
-                                                                 'aria-label': 'rows per page',
-                                                            },
-                                                            native: true,
-                                                       },
-                                                  }}
-                                                  onPageChange={handleChangePage}
-                                                  onRowsPerPageChange={handleChangeRowsPerPage}
-                                                  ActionsComponent={TablePaginationActions}
-                                             />
-                                        </TableRow>
-                                   </TableFooter>
-                              </Table>
-                         </TableContainer> :
-                         <div className="flex justify-center items-center py-20">
-                              <Loader />
-                         </div>
-                    }
-               </div>
-          </div>
-     );
+    const BookingCard = ({ booking }) => {
+        const navigate = useNavigate();
+        
+        const getStatusStyles = (status) => {
+            switch(status) {
+                case 'Requested': return 'bg-yellow-50 text-yellow-700 border-yellow-100';
+                case 'Running': return 'bg-blue-50 text-blue-700 border-blue-100';
+                case 'Confirmed': return 'bg-green-50 text-green-700 border-green-100';
+                case 'Cancelled': return 'bg-red-50 text-red-700 border-red-100';
+                default: return 'bg-gray-50 text-gray-700 border-gray-100';
+            }
+        };
+
+        const displayStatus = Object.keys(statusMap).find(key => statusMap[key] === booking.status) || booking.status;
+
+        const handleCardClick = () => {
+            navigate(`/dashboard/agency/bookings/${booking.booking_id}`, { state: { booking } });
+        };
+
+        return (
+            <div 
+                onClick={handleCardClick}
+                className="group cursor-pointer bg-white rounded-2xl border border-gray-100 shadow-sm hover:shadow-xl transition-all duration-500 overflow-hidden flex flex-col h-full hover:-translate-y-1"
+            >
+                {/* Header: Image & Status */}
+                <div className="relative h-48 overflow-hidden">
+                    <img 
+                        src={booking.images || booking.car_image || 'https://via.placeholder.com/400x300?text=No+Image'} 
+                        alt={booking.model}
+                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                    />
+                    <div className="absolute top-4 right-4">
+                        <span className={`px-3 py-1 rounded-full text-xs font-bold border ${getStatusStyles(booking.status)} backdrop-blur-sm shadow-sm`}>
+                            {displayStatus}
+                        </span>
+                    </div>
+                    <div className="absolute top-4 left-4">
+                        <span className="bg-black/50 text-white px-3 py-1 rounded-full text-[10px] backdrop-blur-md">
+                            ID: #{booking.booking_id}
+                        </span>
+                    </div>
+                </div>
+
+                {/* Content */}
+                <div className="p-5 flex-grow">
+                    <div className="flex justify-between items-start mb-4">
+                        <div>
+                            <Typography variant="h6" className="font-bold text-gray-800 leading-tight">
+                                {booking.brand} {booking.model}
+                            </Typography>
+                            <div className="flex items-center gap-1 text-gray-500 mt-1">
+                                <DirectionsCar fontSize="inherit" />
+                                <span className="text-xs uppercase tracking-wider font-medium">{booking.car_type || 'Vehicle'}</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="space-y-3 mb-6">
+                        <div className="flex items-center gap-3">
+                            <Avatar sx={{ width: 32, height: 32, bgcolor: '#f3f4f6', color: '#6b7280' }}>
+                                <Person fontSize="small" />
+                            </Avatar>
+                            <div>
+                                <p className="text-[10px] text-gray-400 uppercase font-bold tracking-tighter">Customer</p>
+                                <p className="text-sm font-semibold text-gray-700">{booking.user_name}</p>
+                            </div>
+                        </div>
+                        <div className="flex items-center gap-3">
+                            <Avatar sx={{ width: 32, height: 32, bgcolor: '#eff6ff', color: '#3b82f6' }}>
+                                <CalendarMonth fontSize="small" />
+                            </Avatar>
+                            <div>
+                                <p className="text-[10px] text-gray-400 uppercase font-bold tracking-tighter">Pickup Date</p>
+                                <p className="text-sm font-semibold text-gray-700">
+                                    {booking.start_ts ? moment(booking.start_ts).format('DD MMM, YYYY') : 'N/A'}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                {/* Footer Actions */}
+                <div className="px-5 pb-5 mt-auto">
+                    <Button 
+                        component={Link}
+                        to={`/dashboard/agency/bookings/${booking.booking_id}`}
+                        state={{ booking }}
+                        fullWidth
+                        variant="contained"
+                        endIcon={<ArrowForward />}
+                        sx={{ 
+                            borderRadius: '12px',
+                            py: 1.2,
+                            textTransform: 'none',
+                            fontWeight: 600,
+                            backgroundColor: '#F58300',
+                            '&:hover': {
+                                backgroundColor: '#d17000',
+                                boxShadow: '0 8px 20px -6px rgba(245, 131, 0, 0.4)'
+                            },
+                            boxShadow: 'none'
+                        }}
+                    >
+                        Manage Booking
+                    </Button>
+                </div>
+            </div>
+        );
+    };
+
+    return (
+        <div className="min-h-screen bg-gray-50/50 p-4 md:p-8">
+            <div className="max-w-7xl mx-auto">
+                {/* Header Section */}
+                <header className="mb-10 text-center md:text-left flex flex-col md:flex-row md:items-end justify-between gap-6">
+                    <div>
+                        <Typography variant="h3" className="font-extrabold text-[#1a1a1a] tracking-tight">
+                            Manage Bookings
+                        </Typography>
+                        <p className="text-gray-500 mt-2 text-lg">
+                            Track and manage all your customer reservations in one place.
+                        </p>
+                    </div>
+                    
+                    <div className="flex flex-col sm:flex-row gap-4 items-center">
+                        <TextField
+                            placeholder="Search by ID or Name..."
+                            size="small"
+                            value={searchQuery}
+                            onChange={(e) => setSearchQuery(e.target.value)}
+                            sx={{ 
+                                width: { xs: '100%', sm: 300 },
+                                '& .MuiOutlinedInput-root': {
+                                    borderRadius: '12px',
+                                    backgroundColor: 'white',
+                                    '& fieldset': { borderColor: '#e5e7eb' },
+                                    '&:hover fieldset': { borderColor: '#F58300' },
+                                    '&.Mui-focused fieldset': { borderColor: '#F58300' },
+                                }
+                            }}
+                            InputProps={{
+                                startAdornment: (
+                                    <InputAdornment position="start">
+                                        <Search sx={{ color: '#9ca3af' }} />
+                                    </InputAdornment>
+                                ),
+                            }}
+                        />
+                    </div>
+                </header>
+
+                {/* Filter Bar */}
+                <div className="flex flex-wrap items-center gap-3 mb-8 pb-4 border-b border-gray-100">
+                    <div className="flex items-center gap-2 text-gray-400 mr-2">
+                        <FilterList fontSize="small" />
+                        <span className="text-xs font-bold uppercase tracking-widest">Filter by</span>
+                    </div>
+                    <FilterButton label="All" count={data?.length} />
+                    <FilterButton label="Requested" count={data?.filter(b => b.status === statusMap['Requested']).length} />
+                    <FilterButton label="Active" count={data?.filter(b => b.status === statusMap['Active']).length} />
+                    <FilterButton label="Upcoming" count={data?.filter(b => b.status === statusMap['Upcoming']).length} />
+                    <FilterButton label="Cancelled" count={data?.filter(b => b.status === statusMap['Cancelled']).length} />
+                    <FilterButton label="Overdue" count={data?.filter(b => b.status === statusMap['Overdue']).length} />
+                </div>
+
+                {/* Grid Content */}
+                {filteredBookings.length > 0 ? (
+                    <Grid container spacing={4}>
+                        {filteredBookings.map((booking) => (
+                            <Grid item xs={12} sm={6} lg={4} xl={3} key={booking.booking_id}>
+                                <BookingCard booking={booking} />
+                            </Grid>
+                        ))}
+                    </Grid>
+                ) : (
+                    <div className="bg-white rounded-3xl p-20 text-center border-2 border-dashed border-gray-200">
+                        <div className="bg-gray-50 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6">
+                            <FilterList sx={{ fontSize: 40, color: '#d1d5db' }} />
+                        </div>
+                        <Typography variant="h5" color="textPrimary" fontWeight="bold">
+                            No Bookings Found
+                        </Typography>
+                        <p className="text-gray-400 mt-2">
+                            We couldn't find any bookings matching your current filter.
+                        </p>
+                        <Button 
+                            onClick={() => {setFilter('All'); setSearchQuery('');}} 
+                            variant="text" 
+                            sx={{ mt: 2, color: '#F58300', fontWeight: 'bold' }}
+                        >
+                            Clear all filters
+                        </Button>
+                    </div>
+                )}
+            </div>
+        </div>
+    );
 };
 
 export default ActiveBookings;
