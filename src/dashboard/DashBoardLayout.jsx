@@ -7,7 +7,7 @@ import { FaUsersGear } from "react-icons/fa6";
 import { BiSolidCoupon } from "react-icons/bi";
 import { TbLayoutDashboardFilled } from "react-icons/tb";
 import { CgProfile } from "react-icons/cg";
-import { FaHome, FaUser, FaUsers } from "react-icons/fa";
+import { FaHome, FaUser, FaUsers, FaUserTie } from "react-icons/fa";
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { HiMenu } from "react-icons/hi";
 import useRole from '../hooks/useRole';
@@ -70,11 +70,19 @@ const DashBoardLayout = () => {
                     </ListNav>
                </ListItem>
                <ListItem disablePadding>
-                    <ListNav onClick={() => handleNavigation('/dashboard/user/bookings')} className={isActive('/dashboard/user/bookings') ? 'active' : ''}>
+                    <ListNav onClick={() => handleNavigation('/dashboard/my-bookings')} className={isActive('/dashboard/my-bookings') ? 'active' : ''}>
                          <ListItemIcon style={{ fontSize: 20 }}>
                               <FaListAlt color='white' />
                          </ListItemIcon>
-                         <ListItemText primary="Bookings" />
+                         <ListItemText primary="My Bookings" />
+                    </ListNav>
+               </ListItem>
+               <ListItem disablePadding>
+                    <ListNav onClick={() => handleNavigation('/dashboard/my-damage-reports')} className={isActive('/dashboard/my-damage-reports') ? 'active' : ''}>
+                         <ListItemIcon style={{ fontSize: 20 }}>
+                              <ReportOutlined className='text-white'/>
+                         </ListItemIcon>
+                         <ListItemText primary="Damage Reports" />
                     </ListNav>
                </ListItem>
                <ListItem disablePadding>
@@ -112,6 +120,22 @@ const DashBoardLayout = () => {
                          <FaUsers className='text-white' />
                          </ListItemIcon>
                          <ListItemText primary="Users" />
+                    </ListNav>
+               </ListItem>
+               <ListItem disablePadding>
+                    <ListNav onClick={() => handleNavigation('/dashboard/admin/agencies')} className={isActive('/dashboard/admin/agencies') ? 'active' : ''}>
+                         <ListItemIcon style={{ fontSize: 20 }}>
+                              <BsShop className='text-white' />
+                         </ListItemIcon>
+                         <ListItemText primary="Agencies" />
+                    </ListNav>
+               </ListItem>
+               <ListItem disablePadding>
+                    <ListNav onClick={() => handleNavigation('/dashboard/admin/drivers')} className={isActive('/dashboard/admin/drivers') ? 'active' : ''}>
+                         <ListItemIcon style={{ fontSize: 20 }}>
+                              <FaUserTie className='text-white' />
+                         </ListItemIcon>
+                         <ListItemText primary="Drivers" />
                     </ListNav>
                </ListItem>
                <ListItem disablePadding>
@@ -181,6 +205,51 @@ const DashBoardLayout = () => {
                               <FaRegCalendarCheck className='text-white'/>
                          </ListItemIcon>
                          <ListItemText primary="Bookings" />
+                    </ListNav>
+               </ListItem>
+               <ListItem disablePadding>
+                    <ListNav onClick={() => handleNavigation('/dashboard/agency/drivers')} className={isActive('/dashboard/agency/drivers') ? 'active' : ''}>
+                         <ListItemIcon style={{ fontSize: 20 }}>
+                              <FaUserTie className='text-white'/>
+                         </ListItemIcon>
+                         <ListItemText primary="Drivers" />
+                    </ListNav>
+               </ListItem>
+          </List>
+     )
+
+     const driverRoutes = (
+          <List component="nav" aria-label="main mailbox folders">
+               <ListItem disablePadding>
+                    <ListNav onClick={() => handleNavigation('/dashboard/driver')} className={isActive('/dashboard/driver') ? 'active' : ''}>
+                         <ListItemIcon style={{ fontSize: 20 }}>
+                              <TbLayoutDashboardFilled className='text-white' />
+                         </ListItemIcon>
+                         <ListItemText primary="Dashboard" />
+                    </ListNav>
+               </ListItem>
+               <ListItem disablePadding>
+                    <ListNav onClick={() => handleNavigation('/dashboard/driver-profile')} className={isActive('/dashboard/driver-profile') ? 'active' : ''}>
+                         <ListItemIcon style={{ fontSize: 20 }}>
+                              <FaUser className='text-white w-5' />
+                         </ListItemIcon>
+                         <ListItemText primary="Profile" />
+                    </ListNav>
+               </ListItem>
+               <ListItem disablePadding>
+                    <ListNav onClick={() => handleNavigation('/dashboard/driver/trips')} className={isActive('/dashboard/driver/trips') ? 'active' : ''}>
+                         <ListItemIcon style={{ fontSize: 20 }}>
+                              <FaListAlt className='text-white' />
+                         </ListItemIcon>
+                         <ListItemText primary="My Trips" />
+                    </ListNav>
+               </ListItem>
+               <ListItem disablePadding>
+                    <ListNav onClick={() => handleNavigation('/dashboard/notificationsDriver')} className={isActive('/dashboard/notificationsDriver') ? 'active' : ''}>
+                         <ListItemIcon style={{ fontSize: 20 }}>
+                              <ReviewsOutlined className='text-white' />
+                         </ListItemIcon>
+                         <ListItemText primary="Notifications" />
                     </ListNav>
                </ListItem>
           </List>
@@ -318,6 +387,7 @@ const DashBoardLayout = () => {
                               {designation === 'user' && userRoutes}
                               {designation === 'admin' && adminRoutes}
                               {designation === 'agency' && agencyRoutes}
+                              {designation === 'driver' && driverRoutes}
                          </nav>
                          <nav className="absolute bottom-0 w-full" aria-label="main mailbox folders">
                               <List component="nav" aria-label="main mailbox folders">

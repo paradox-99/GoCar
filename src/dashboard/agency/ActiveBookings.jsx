@@ -1,8 +1,10 @@
+import { Link } from 'react-router-dom';
+import moment from 'moment';
 import useAxiosPublic from '../../hooks/useAxiosPublic';
 import { useQuery } from '@tanstack/react-query';
 import PropTypes from 'prop-types';
 import { FirstPage, KeyboardArrowLeft, KeyboardArrowRight, LastPage } from '@mui/icons-material';
-import { Box, IconButton, Paper, styled, Table, TableBody, TableCell, tableCellClasses, TableContainer, TableFooter, TableHead, TablePagination, TableRow } from '@mui/material';
+import { Box, IconButton, Paper, styled, Table, TableBody, TableCell, tableCellClasses, TableContainer, TableFooter, TableHead, TablePagination, TableRow, Button } from '@mui/material';
 import { useTheme } from '@emotion/react';
 import { useState } from 'react';
 import useRole from '../../hooks/useRole';
@@ -75,16 +77,19 @@ const ActiveBookings = () => {
      const axiosPublic = useAxiosPublic();
      const {user} = useAuth();
 
-     const { data } = useQuery({
+     const { data, isLoading } = useQuery({
           queryKey: ['bookings'],
           queryFn: async () => {
-               const response = await axiosPublic.get(`agencyRoutes/getAgencyCarsByOwner/${user?.email}`, {withCredentials: true});
+               const response = await axiosPublic.get(`agencyRoutes/getAgencyBookingsByEmail/${user?.email}`, {withCredentials: true});
                return response.data;
           },
+          enabled: !!user?.email
      })
 
      const [page, setPage] = useState(0);
      const [rowsPerPage, setRowsPerPage] = useState(8);
+
+     if (isLoading) return <div className="flex justify-center items-center py-20"><Loader /></div>;
 
      // Avoid a layout jump when reaching the last page with empty rows.
      const emptyRows =
@@ -120,11 +125,11 @@ const ActiveBookings = () => {
                               <Table sx={{ minWidth: 500 }} aria-label="custom pagination table">
                                    <TableHead>
                                         <TableRow>
-                                             <StyledTableCell >Name</StyledTableCell>
-                                             <StyledTableCell >Start Date</StyledTableCell>
-                                             <StyledTableCell >End Date</StyledTableCell>
-                                             <StyledTableCell >Total Amount</StyledTableCell>
-                                             <StyledTableCell >Total Hours</StyledTableCell>
+                                             <StyledTableCell >Vehicle</StyledTableCell>
+                                             <StyledTableCell >Customer</StyledTableCell>
+                                             <StyledTableCell >Pickup Date</StyledTableCell>
+                                             <StyledTableCell >Status</StyledTableCell>
+                                             <StyledTableCell >Action</StyledTableCell>
                                         </TableRow>
                                    </TableHead>
                                    <TableBody>
@@ -132,12 +137,35 @@ const ActiveBookings = () => {
                                              ? data.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                                              : data
                                         ).map((row) => (
-                                             <TableRow key={row.donor_id}>
-                                                  <StyledTableCell component="th" scope="row">{row.brand} {row.model}</StyledTableCell>
-                                                  <StyledTableCell component="th" scope="row">{row.pickup_date}</StyledTableCell>
-                                                  <StyledTableCell>{row.dropoff_date}</StyledTableCell>
-                                                  <StyledTableCell>{row.total_cost}</StyledTableCell>
-                                                  <StyledTableCell>{row.total_rent_hours}</StyledTableCell>
+                                             <TableRow key={row.booking_id}>
+                                                  <StyledTableCell component="th" scope="row">
+                                                      <div className="font-bold">{row.brand} {row.model}</div>
+                                                      <div className="text-xs text-gray-500">ID: {row.booking_id}</div>
+                                                  </StyledTableCell>
+                                                  <StyledTableCell>{row.user_name}</StyledTableCell>
+                                                  <StyledTableCell>{row.start_ts ? moment(row.start_ts).format('DD-MMM-YYYY') : 'N/A'}</StyledTableCell>
+                                                  <StyledTableCell>
+                                                       <span className={`px-2 py-1 rounded-full text-xs font-semibold ${
+                                                            row.status === 'Confirmed' ? 'bg-green-100 text-green-700' :
+                                                            row.status === 'Requested' ? 'bg-yellow-100 text-yellow-700' :
+                                                            row.status === 'Running' ? 'bg-blue-100 text-blue-700' :
+                                                            'bg-gray-100 text-gray-700'
+                                                       }`}>
+                                                            {row.status}
+                                                       </span>
+                                                  </StyledTableCell>
+                                                  <StyledTableCell>
+                                                      <Button 
+                                                          component={Link}
+                                                          to={`/dashboard/agency/bookings/${row.booking_id}`}
+                                                          state={{ booking: row }}
+                                                          variant="outlined" 
+                                                          size="small"
+                                                          sx={{ color: '#F58300', borderColor: '#F58300', '&:hover': { background: '#F58300', color: '#fff' }}}
+                                                      >
+                                                          Manage
+                                                      </Button>
+                                                  </StyledTableCell>
                                              </TableRow>
                                         ))}
                                         {emptyRows > 0 && (

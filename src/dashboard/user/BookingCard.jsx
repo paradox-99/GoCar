@@ -1,16 +1,23 @@
 import { Button } from "@mui/material";
 import moment from "moment";
 import { useNavigate } from "react-router-dom";
+import useRole from "../../hooks/useRole";
 
 const BookingCard = ({ booking }) => {
   const navigate = useNavigate();
+  const role = useRole();
+
   const getStatusBadge = (status) => {
     const lowerStatus = status?.toLowerCase() || "pending";
     
     if (lowerStatus === "pending") {
       return "bg-yellow-100 text-yellow-700";
+    } else if (lowerStatus === "requested") {
+      return "bg-yellow-100 text-yellow-700";
     } else if (lowerStatus === "confirmed") {
       return "bg-green-100 text-green-700";
+    } else if (lowerStatus === "running") {
+      return "bg-blue-100 text-blue-700 font-bold animate-pulse";
     } else if (lowerStatus === "completed") {
       return "bg-blue-100 text-blue-700";
     } else if (lowerStatus === "cancelled") {
@@ -27,14 +34,25 @@ const BookingCard = ({ booking }) => {
   const rentalType = booking.driver_id ? "With Driver" : "Self-drive";
   const isOverdue = (booking.status === 'Requested' || booking.status === 'Confirmed') && moment().isAfter(startDate);
 
+  const handleNavigateDetail = () => {
+    if (role?.userrole === "driver") {
+      navigate(`/dashboard/driver/trips/${booking.booking_id}`, { state: { booking } });
+    } else {
+      navigate(`/dashboard/user/bookings/${booking.booking_id}`, { state: { booking } });
+    }
+  };
+
   return (
     <div className="bg-white border border-gray-200 rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow">
       {/* Image Section */}
-      <div className="flex justify-center items-center">
+      <div className="flex justify-center items-center h-48 bg-gray-50">
         <img
-          src={booking.car_image || booking.images}
+          src={booking.images || booking.car_image}
           alt={`${booking.brand} ${booking.model}`}
-          className=" w-[300px]"
+          className="max-w-full max-h-full object-contain"
+          onError={(e) => {
+            e.target.src = "https://via.placeholder.com/300x200?text=Vehicle+Image";
+          }}
         />
       </div>
 
@@ -52,10 +70,6 @@ const BookingCard = ({ booking }) => {
 
         {/* Details */}
         <div className="space-y-3 mb-4 text-sm">
-          <div className="flex justify-between">
-            <span className="text-gray-600">Car:</span>
-            <span className="font-semibold text-gray-800">{booking.brand} {booking.model} {booking.model}</span>
-          </div>
           <div className="flex justify-between">
             <span className="text-gray-600">From:</span>
             <span className="font-semibold text-gray-800">
@@ -76,9 +90,9 @@ const BookingCard = ({ booking }) => {
             <span className="text-gray-600">Rental Type:</span>
             <span className="font-semibold text-gray-800">{rentalType}</span>
           </div>
-          <div className="flex justify-between">
+          <div className="flex justify-between items-center">
             <span className="text-gray-600">Status:</span>
-            <span className={`px-3 py-1 rounded text-xs font-semibold ${getStatusBadge(isOverdue ? "Overdue" : booking.status)}`}>
+            <span className={`px-3 py-1 rounded text-xs font-bold ${getStatusBadge(isOverdue ? "Overdue" : booking.status)}`}>
               {isOverdue ? "Overdue" : (booking.status || "Pending")}
             </span>
           </div>
@@ -90,16 +104,13 @@ const BookingCard = ({ booking }) => {
             <span className="text-gray-600 font-semibold">Total Cost:</span>
             <span className="text-lg font-bold text-orange-600">৳{booking.total_cost || "0"}</span>
           </div>
-          {booking.remaining_amount && booking.remaining_amount > 0 && (
-            <div className="text-sm text-gray-600 mt-2">Remaining: <span className="font-bold text-red-600">৳{booking.remaining_amount}</span></div>
-          )}
         </div>
 
         {/* Button */}
         <Button
           variant="contained"
           fullWidth
-          onClick={() => navigate(`/dashboard/user/bookings/${booking.booking_id}`, { state: { booking } })}
+          onClick={handleNavigateDetail}
           sx={{
             background: "#f58300",
             py: 1,
@@ -111,7 +122,7 @@ const BookingCard = ({ booking }) => {
             }
           }}
         >
-          Details
+          View Trip Details
         </Button>
       </div>
     </div>

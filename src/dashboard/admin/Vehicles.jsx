@@ -1,8 +1,9 @@
+import { Link } from 'react-router-dom';
 import useAxiosPublic from '../../hooks/useAxiosPublic';
 import { useQuery } from '@tanstack/react-query';
 import PropTypes from 'prop-types';
-import { FirstPage, KeyboardArrowLeft, KeyboardArrowRight, LastPage } from '@mui/icons-material';
-import { Box, IconButton, Paper, styled, Table, TableBody, TableCell, tableCellClasses, TableContainer, TableFooter, TableHead, TablePagination, TableRow } from '@mui/material';
+import { Box, IconButton, Paper, styled, Table, TableBody, TableCell, tableCellClasses, TableContainer, TableFooter, TableHead, TablePagination, TableRow, Chip } from '@mui/material';
+import { FirstPage, KeyboardArrowLeft, KeyboardArrowRight, LastPage, Info } from '@mui/icons-material';
 import { useTheme } from '@emotion/react';
 import { useState } from 'react';
 
@@ -116,15 +117,13 @@ const Vehicles = () => {
                               <Table sx={{ minWidth: 500 }} aria-label="custom pagination table">
                                    <TableHead>
                                         <TableRow>
-                                             <StyledTableCell >Brand</StyledTableCell>
-                                             <StyledTableCell >Model</StyledTableCell>
-                                             <StyledTableCell >Seats</StyledTableCell>
-                                             <StyledTableCell >Fuel</StyledTableCell>
-                                             <StyledTableCell >Build Year</StyledTableCell>
-                                             <StyledTableCell >Mileage</StyledTableCell>
-                                             <StyledTableCell >Price</StyledTableCell>
+                                             <StyledTableCell >Vehicle</StyledTableCell>
+                                             <StyledTableCell >Type</StyledTableCell>
                                              <StyledTableCell >Agency</StyledTableCell>
+                                             <StyledTableCell >Price</StyledTableCell>
+                                             <StyledTableCell >Status</StyledTableCell>
                                              <StyledTableCell >Verified</StyledTableCell>
+                                             <StyledTableCell >Action</StyledTableCell>
                                         </TableRow>
                                    </TableHead>
                                    <TableBody>
@@ -132,16 +131,32 @@ const Vehicles = () => {
                                              ? data.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                                              : data
                                         ).map((row) => (
-                                             <TableRow key={row.donor_id}>
-                                                  <StyledTableCell component="th" scope="row">{row.brand}</StyledTableCell>
-                                                  <StyledTableCell component="th" scope="row">{row.model}</StyledTableCell>
-                                                  <StyledTableCell component="th" scope="row">{row.seats}</StyledTableCell>
-                                                  <StyledTableCell>{row.fuel}</StyledTableCell>
-                                                  <StyledTableCell>{row.build_year}</StyledTableCell>
-                                                  <StyledTableCell>{row.mileage} km</StyledTableCell>
-                                                  <StyledTableCell>{row.rental_price}</StyledTableCell>
+                                             <TableRow key={row.car_id}>
+                                                  <StyledTableCell component="th" scope="row">
+                                                       <div className="font-bold">{row.brand} {row.model}</div>
+                                                       <div className="text-xs text-gray-500">Year: {row.build_year}</div>
+                                                  </StyledTableCell>
+                                                  <StyledTableCell>{row.car_type}</StyledTableCell>
                                                   <StyledTableCell>{row.agency_Name}</StyledTableCell>
-                                                  <StyledTableCell>{row.verified === 1 ? "Yes" : "No"}</StyledTableCell>
+                                                  <StyledTableCell>৳{row.rental_price}</StyledTableCell>
+                                                  <StyledTableCell>
+                                                       <Chip 
+                                                           label={row.status || 'Available'} 
+                                                           color={row.status === 'Available' ? 'success' : 'warning'} 
+                                                           size="small" 
+                                                       />
+                                                  </StyledTableCell>
+                                                  <StyledTableCell>{row.verified ? "Yes" : "No"}</StyledTableCell>
+                                                  <StyledTableCell>
+                                                       <IconButton 
+                                                           component={Link} 
+                                                           to={`/dashboard/admin/vehicles/${row.car_id}`}
+                                                           state={{ vehicle: row }}
+                                                           sx={{ color: '#F58300' }}
+                                                       >
+                                                           <Info />
+                                                       </IconButton>
+                                                  </StyledTableCell>
                                              </TableRow>
                                         ))}
                                         {emptyRows > 0 && (

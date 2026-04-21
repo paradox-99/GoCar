@@ -1,8 +1,9 @@
+import { Link } from 'react-router-dom';
 import useAxiosPublic from '../../hooks/useAxiosPublic';
 import { useQuery } from '@tanstack/react-query';
 import PropTypes from 'prop-types';
-import { FirstPage, KeyboardArrowLeft, KeyboardArrowRight, LastPage } from '@mui/icons-material';
-import { Box, IconButton, Paper, styled, Table, TableBody, TableCell, tableCellClasses, TableContainer, TableFooter, TableHead, TablePagination, TableRow } from '@mui/material';
+import { Box, IconButton, Paper, styled, Table, TableBody, TableCell, tableCellClasses, TableContainer, TableFooter, TableHead, TablePagination, TableRow, Chip } from '@mui/material';
+import { FirstPage, KeyboardArrowLeft, KeyboardArrowRight, LastPage, Info } from '@mui/icons-material';
 import { useTheme } from '@emotion/react';
 import { useState } from 'react';
 import moment from 'moment';
@@ -119,12 +120,10 @@ const Users = () => {
                                         <TableRow>
                                              <StyledTableCell >Name</StyledTableCell>
                                              <StyledTableCell >Email</StyledTableCell>
-                                             <StyledTableCell >phone</StyledTableCell>
-                                             <StyledTableCell >DOB</StyledTableCell>
-                                             <StyledTableCell >Age</StyledTableCell>
-                                             <StyledTableCell >Address</StyledTableCell>
-                                             <StyledTableCell >Account Status</StyledTableCell>
+                                             <StyledTableCell >Phone</StyledTableCell>
+                                             <StyledTableCell >Status</StyledTableCell>
                                              <StyledTableCell >Verified</StyledTableCell>
+                                             <StyledTableCell >Action</StyledTableCell>
                                         </TableRow>
                                    </TableHead>
                                    <TableBody>
@@ -132,15 +131,28 @@ const Users = () => {
                                              ? data.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                                              : data
                                         ).map((row) => (
-                                             <TableRow key={row.donor_id}>
+                                             <TableRow key={row.user_id}>
                                                   <StyledTableCell component="th" scope="row">{row.name}</StyledTableCell>
-                                                  <StyledTableCell component="th" scope="row">{row.email}</StyledTableCell>
-                                                  <StyledTableCell component="th" scope="row">{row.phone}</StyledTableCell>
-                                                  <StyledTableCell>{row.dob.split('T')[0]}</StyledTableCell>
-                                                  <StyledTableCell>{moment().diff(moment(row.dob), 'years')}</StyledTableCell>
-                                                  <StyledTableCell>{row.area}</StyledTableCell>
-                                                  <StyledTableCell>{row.accountStatus}</StyledTableCell>
-                                                  <StyledTableCell>{row.verified === 1 ? "Yes" : "No"}</StyledTableCell>
+                                                  <StyledTableCell>{row.email}</StyledTableCell>
+                                                  <StyledTableCell>{row.phone}</StyledTableCell>
+                                                  <StyledTableCell>
+                                                       <Chip 
+                                                           label={row.accountstatus || 'Active'} 
+                                                           color={row.accountstatus === 'active' ? 'success' : 'error'} 
+                                                           size="small" 
+                                                       />
+                                                  </StyledTableCell>
+                                                  <StyledTableCell>{row.verified ? "Yes" : "No"}</StyledTableCell>
+                                                  <StyledTableCell>
+                                                       <IconButton 
+                                                           component={Link} 
+                                                           to={`/dashboard/admin/users/${row.user_id}`}
+                                                           state={{ user: row }}
+                                                           sx={{ color: '#F58300' }}
+                                                       >
+                                                           <Info />
+                                                       </IconButton>
+                                                  </StyledTableCell>
                                              </TableRow>
                                         ))}
                                         {emptyRows > 0 && (
