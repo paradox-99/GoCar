@@ -38,6 +38,12 @@ import DriverTrips from "../dashboard/driver/DriverTrips";
 import DriverTripDetail from "../dashboard/driver/DriverTripDetail";
 import DriverPickup from "../dashboard/driver/DriverPickup";
 import DriverReturn from "../dashboard/driver/DriverReturn";
+import MyReviews from "../dashboard/user/MyReviews";
+import ReportDamage from "../dashboard/user/ReportDamage";
+import DamageHistory from "../dashboard/user/DamageHistory";
+import AgencyDamageReports from "../dashboard/agency/AgencyDamageReports";
+import AgencyReviews from "../dashboard/agency/AgencyReviews";
+import DriverReviews from "../dashboard/driver/DriverReviews";
 
 export const DashboardRoutes = [
      {
@@ -92,7 +98,7 @@ export const DashboardRoutes = [
                },
                {
                     path: '/dashboard/my-damage-reports',
-                    element: <RoleRoute allowedRoles={['user']}><UserDamageReports /></RoleRoute>
+                    element: <RoleRoute allowedRoles={['user']}><DamageHistory /></RoleRoute>
                },
                {
                     path: '/dashboard/my-bookings/:id',
@@ -109,6 +115,14 @@ export const DashboardRoutes = [
                {
                     path: '/dashboard/agency/drivers',
                     element: <RoleRoute allowedRoles={['agency']}><AgencyDrivers /></RoleRoute>
+               },
+               {
+                    path: '/dashboard/agency/damage-reports',
+                    element: <RoleRoute allowedRoles={['agency']}><AgencyDamageReports /></RoleRoute>
+               },
+               {
+                    path: '/dashboard/agency/reviews',
+                    element: <RoleRoute allowedRoles={['agency']}><AgencyReviews /></RoleRoute>
                },
 
                // driver routes
@@ -135,6 +149,10 @@ export const DashboardRoutes = [
                {
                     path: '/dashboard/driver/trips/:id/return',
                     element: <RoleRoute allowedRoles={['driver']}><DriverReturn /></RoleRoute>
+               },
+               {
+                    path: '/dashboard/driver/reviews',
+                    element: <RoleRoute allowedRoles={['driver']}><DriverReviews /></RoleRoute>
                },
 
 
@@ -200,6 +218,10 @@ export const DashboardRoutes = [
                     element: <RoleRoute allowedRoles={['agency']}><Notifications /></RoleRoute>
                },
                {
+                    path: '/dashboard/notifications',
+                    element: <Notifications />
+               },
+               {
                     path: '/dashboard/user/return-damage',
                     element: <RoleRoute allowedRoles={['user']}><TripOps /></RoleRoute>
                },
@@ -213,7 +235,15 @@ export const DashboardRoutes = [
                },
                {
                     path: '/dashboard/report-damage',
-                    element: <PrivateRoute><DamageReportForm /></PrivateRoute>
+                    element: <RoleRoute allowedRoles={['user']}><ReportDamage /></RoleRoute>
+               },
+               {
+                    path: '/dashboard/user/my-reviews',
+                    element: <RoleRoute allowedRoles={['user']}><MyReviews /></RoleRoute>
+               },
+               {
+                    path: '/dashboard/user/damage-history',
+                    element: <RoleRoute allowedRoles={['user']}><DamageHistory /></RoleRoute>
                }
 
           ]

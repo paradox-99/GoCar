@@ -12,10 +12,9 @@ import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import { useEffect, useState } from "react";
-import { LuSearch, LuMessageSquareText } from 'react-icons/lu';
 import useAuth from '../hooks/useAuth';
 import useRole from '../hooks/useRole';
-import { IoNotifications } from "react-icons/io5";
+import NotificationMenu from './NotificationMenu';
 
 const pages = [
     { title: 'Home', url: '/' },
@@ -29,24 +28,26 @@ const pages = [
 const userDropdown = [
     { title: 'Profile', url: '/dashboard/myprofile' },
     { title: 'Dashboard', url: '/dashboard' },
+    { title: 'My Reviews', url: '/dashboard/user/my-reviews' },
+    { title: 'Damage History', url: '/dashboard/user/damage-history' },
 ];
 
 const adminDropDown = [
     { title: 'Profile', url: '/dashboard/admin-profile' },
     { title: 'Dashboard', url: '/dashboard/admin' },
-    // { title: 'Notifications', url: '/dashboard/notificationsAdmin' },
 ]
 
 const agencyDropDown = [
     { title: 'Profile', url: '/dashboard/agency/profile' },
     { title: 'Dashboard', url: '/dashboard/agency' },
-    // { title: 'Notifications', url: '/dashboard/notificationsAgency' }
+    { title: 'Vehicle Damage', url: '/dashboard/agency/damage-reports' },
+    { title: 'Reviews', url: '/dashboard/agency/reviews' },
 ]
 
 const driverDropDown = [
     { title: 'Profile', url: '/dashboard/driver-profile' },
     { title: 'Dashboard', url: '/dashboard/driver' },
-    { title: 'Notifications', url: '/dashboard/notificationsDriver' },
+    { title: 'My Reviews', url: '/dashboard/driver/reviews' },
 ]
 
 const Navbar = () => {
@@ -213,10 +214,11 @@ const Navbar = () => {
                             </Box>
                             {
                                 user &&
-                                <Box sx={{ flexGrow: 0, color: "black", ml: 2 }}>
+                                <Box sx={{ flexGrow: 0, color: "black", ml: 2, display: "flex", alignItems: "center", gap: 2 }}>
+                                    <NotificationMenu color="black" />
                                     <Tooltip title="Menu">
                                         <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                                            <Avatar alt="Remy Sharp" src={data?.photo} />
+                                            <Avatar alt={user?.displayName || "User"} src={data?.photo} />
                                         </IconButton>
                                     </Tooltip>
                                     <Menu

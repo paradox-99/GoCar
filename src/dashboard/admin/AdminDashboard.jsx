@@ -3,6 +3,7 @@ import useAxiosPublic from '../../hooks/useAxiosPublic';
 import { Box, Typography, Grid, Paper, CircularProgress } from '@mui/material';
 import { People, Business, DirectionsCar, EventNote, MonetizationOn } from '@mui/icons-material';
 import { FaUserTie } from 'react-icons/fa';
+import NotificationMenu from '../../components/NotificationMenu';
 
 const AdminDashboard = () => {
     const axiosPublic = useAxiosPublic();
@@ -28,7 +29,10 @@ const AdminDashboard = () => {
 
     return (
         <div className="p-8 bg-gray-50 min-h-screen">
-            <Typography variant="h4" fontWeight="bold" className="mb-8 font-outfit">Platform Overview</Typography>
+             <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 8 }}>
+                <Typography variant="h4" fontWeight="bold" className="font-outfit">Platform Overview</Typography>
+                <NotificationMenu color="primary" />
+            </Box>
             
             <Grid container spacing={4}>
                 {statCards.map((card, index) => (

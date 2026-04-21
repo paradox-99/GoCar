@@ -12,6 +12,7 @@ import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import HistoryIcon from '@mui/icons-material/History';
 import { useNavigate, Link } from 'react-router-dom';
 import Loader from '../../components/Loader';
+import NotificationMenu from '../../components/NotificationMenu';
 import moment from 'moment';
 import { useState } from 'react';
 
@@ -329,9 +330,12 @@ const DashBoard = () => {
               alt={data?.name}
               sx={{ width: 100, height: 100, border: '4px solid #f58300' }}
             />
-            <div>
+            <div className="flex-grow">
               <h1 className="text-5xl font-bold text-gray-800">Welcome back, {data?.name}! 👋</h1>
               <p className="text-gray-600 mt-2">Here&apos;s your driving journey overview</p>
+            </div>
+            <div className="flex items-center gap-2">
+               <NotificationMenu color="primary" />
             </div>
           </div>
         </div>
