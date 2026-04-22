@@ -5,6 +5,7 @@ import { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import useAxiosPublic from "../../hooks/useAxiosPublic";
 import DriverCart from "./DriverCart";
+import DriverDetailsModal from "./DriverDetailsModal";
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment'
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
@@ -69,9 +70,15 @@ const Booking = () => {
 
      const [fromTs, setFromTs] = useState(bookingDate?.fromTs || "");
      const [untilTs, setUntilTs] = useState(bookingDate?.untilTs || "");
+     const [isAvailable, setIsAvailable] = useState(null);
+     const [checkingAvailability, setCheckingAvailability] = useState(false);
+     const [hasChangedDates, setHasChangedDates] = useState(false);
+     const [nextAvailableDate, setNextAvailableDate] = useState(null);
      const currentTime = moment();
      const [open, setOpen] = useState(false);
      const [open2, setOpen2] = useState(false);
+     const [detailsModalOpen, setDetailsModalOpen] = useState(false);
+     const [detailsDriver, setDetailsDriver] = useState(null);
      const [diff, setDiff] = useState();
      const [bookingPurpose, setBookingPurpose] = useState("");
      const [estimatedDestination, setEstimatedDestination] = useState("");
@@ -88,11 +95,15 @@ const Booking = () => {
      const getFromDateAndTime = (e) => {
           const fromDateTime = moment(e);
           setFromTs(fromDateTime.format());
+          setHasChangedDates(true);
+          setIsAvailable(null);
      }
 
      const getUntilDateAndTime = (e) => {
           const untilDateTime = moment(e);
           setUntilTs(untilDateTime.format());
+          setHasChangedDates(true);
+          setIsAvailable(null);
 
           const fromDateTime = moment(fromTs);
           const toDateTime = moment(untilDateTime);
@@ -107,15 +118,53 @@ const Booking = () => {
           setDiff(diffHours);
      }
 
+     const handleCheckAvailability = async () => {
+          if (!fromTs || !untilTs) {
+               toast.error("Please select pick-up and drop-off date & time.");
+               return;
+          }
+
+          setCheckingAvailability(true);
+          try {
+               const response = await axiosPublic.post('bookingRoutes/checkAvailability', {
+                    vehicle_id: carInfo.car_id || carInfo.bike_id,
+                    vehicle_type: carInfo.car_id ? 'Car' : 'Bike',
+                    start_ts: fromTs,
+                    end_ts: untilTs
+               });
+
+               if (response.data.available) {
+                    setIsAvailable(true);
+                    setHasChangedDates(false);
+                    toast.success("Vehicle is available!");
+               } else {
+                    setIsAvailable(false);
+                    setNextAvailableDate(response.data.nextAvailable);
+                    toast.error(response.data.message || "Vehicle is not available for this period");
+               }
+          } catch (error) {
+               toast.error("Error checking availability");
+          } finally {
+               setCheckingAvailability(false);
+          }
+     }
+
      const handleChange = (event, newValue) => {
           setValue(newValue);
      };
 
      const selectDriver = async () => {
-          const searchParams = { lat: bookingDate?.lat, lon: bookingDate?.lon };
+          const searchParams = {};
+          if (!bookingDate?.lat || !bookingDate?.lon) {
+               searchParams.lat = data?.latitude;
+               searchParams.lon = data?.longitude;
+          } else {
+               searchParams.lat = bookingDate?.lat;
+               searchParams.lon = bookingDate?.lon;
+          }
 
-          const drivers = await axiosPublic.get(`driverRoutes/driverList`, { params: searchParams });
-          setDriverData(drivers.data);
+          const { data: drivers } = await axiosPublic.get(`driverRoutes/driverList`, { params: searchParams });
+          setDriverData(drivers);
      }
 
 
@@ -142,6 +191,11 @@ const Booking = () => {
 
      const handleClose2 = () => {
           setOpen2(false);
+     };
+
+     const handleViewDetails = (driver) => {
+          setDetailsDriver(driver);
+          setDetailsModalOpen(true);
      };
 
      const fromDatetime = new Date(moment(fromTs).format('YYYY-MM-DDTHH:mm:ss'));
@@ -314,7 +368,7 @@ const Booking = () => {
                                                   </div>
                                                   <div>
                                                        <p className="text-gray-600 text-sm">Address</p>
-                                                       <p className="text-lg font-semibold text-gray-800">{data?.display_name}</p>
+                                                       <p className="text-lg font-semibold text-gray-800">{data?.agency_address}</p>
                                                   </div>
                                              </div>
                                         </CustomTabPanel>
@@ -325,10 +379,30 @@ const Booking = () => {
                                                        {
                                                             selectedDriver ?
                                                                  <div className="space-y-3">
-                                                                      <div className="bg-green-50 p-4 rounded-lg border border-green-200 mb-4">
-                                                                           <p className="text-gray-600 text-sm mb-1">Driver Selected</p>
-                                                                           <p className="text-xl font-bold text-green-700">{selectedDriver?.name}</p>
-                                                                      </div>
+                                                                       <div className="bg-green-50 p-4 rounded-lg border border-green-200 mb-4 flex justify-between items-center">
+                                                                            <div>
+                                                                                 <p className="text-gray-600 text-sm mb-1">Driver Selected</p>
+                                                                                 <p className="text-xl font-bold text-green-700">{selectedDriver?.name}</p>
+                                                                            </div>
+                                                                            <div className="flex gap-2">
+                                                                                 <Button
+                                                                                      onClick={handleClickOpen}
+                                                                                      variant="outlined"
+                                                                                      size="small"
+                                                                                      sx={{ borderColor: '#f58300', color: '#f58300', '&:hover': { borderColor: '#e07b00', bgcolor: '#fff9f2' } }}
+                                                                                 >
+                                                                                      Change Driver
+                                                                                 </Button>
+                                                                                 <Button
+                                                                                      onClick={() => setSelectedDriver(null)}
+                                                                                      variant="outlined"
+                                                                                      size="small"
+                                                                                      color="error"
+                                                                                 >
+                                                                                      Cancel Driver
+                                                                                 </Button>
+                                                                            </div>
+                                                                       </div>
                                                                       <div className="border-b pb-3">
                                                                            <p className="text-gray-600 text-sm">Phone</p>
                                                                            <p className="text-lg font-semibold text-gray-800">{selectedDriver.phone}</p>
@@ -403,6 +477,35 @@ const Booking = () => {
                                                        />
                                                   </DemoContainer>
                                              </LocalizationProvider>
+                                             
+                                             {(hasChangedDates || isAvailable === false) && (
+                                                  <Button
+                                                       variant="outlined"
+                                                       fullWidth
+                                                       onClick={handleCheckAvailability}
+                                                       disabled={checkingAvailability}
+                                                       sx={{ mt: 1, borderColor: '#f58300', color: '#f58300', '&:hover': { borderColor: '#e07b00', bgcolor: '#fff9f2' } }}
+                                                  >
+                                                       {checkingAvailability ? "Checking..." : "Check Availability"}
+                                                  </Button>
+                                             )}
+
+                                             {isAvailable === true && !hasChangedDates && (
+                                                  <p className="text-green-600 text-sm font-medium flex items-center gap-1 mt-1">
+                                                       ✓ Available for selected period
+                                                  </p>
+                                             )}
+
+                                             {isAvailable === false && (
+                                                  <div className="bg-red-50 p-3 rounded-lg border border-red-100 mt-2">
+                                                       <p className="text-red-600 text-sm font-bold">Vehicle is already booked.</p>
+                                                       {nextAvailableDate && (
+                                                            <p className="text-gray-700 text-xs mt-1">
+                                                                 Available from: <span className="font-semibold text-gray-900">{moment(nextAvailableDate).format('MMM Do, h:mm a')}</span>
+                                                            </p>
+                                                       )}
+                                                  </div>
+                                             )}
                                         </div>
 
                                         <Divider sx={{ my: 2 }} />
@@ -452,6 +555,7 @@ const Booking = () => {
                                              onClick={handleClickOpen2}
                                              variant="contained"
                                              fullWidth
+                                             disabled={!fromTs || !untilTs || isNaN(final_total) || final_total <= 0 || isAvailable === false || hasChangedDates}
                                              sx={{
                                                   background: '#f58300',
                                                   py: 1.5,
@@ -461,6 +565,10 @@ const Booking = () => {
                                                   mt: 2,
                                                   '&:hover': {
                                                        background: '#e07b00'
+                                                  },
+                                                  '&.Mui-disabled': {
+                                                       background: '#e5e7eb',
+                                                       color: '#9ca3af'
                                                   }
                                              }}
                                         >
@@ -471,95 +579,107 @@ const Booking = () => {
                          </div>
                     </div>
                </div>
-               <BootstrapDialog
-                    onClose={handleClose}
-                    aria-labelledby="customized-dialog-title"
-                    open={open}
-                    fullWidth
-                    maxWidth="1150px"
-                    sx={{ padding: 3 }}
-               >
-                    <div className="pb-0">
-                         <div className="p-6 bg-gray-50 border-b">
-                              <h1 className="text-2xl font-bold text-gray-800">Available Drivers</h1>
-                         </div>
-                         <div className="flex flex-wrap p-6 gap-6 justify-center min-h-[400px] bg-white ">
-                              {
-                                   driverData?.map(driver => <DriverCart
-                                        key={driver._id}
-                                        driver={driver}
-                                        setSelectedDriver={setSelectedDriver}
-                                        handleClose={handleClose}
-                                   >
-                                   </DriverCart>)
-                              }
-                         </div>
-                    </div>
-               </BootstrapDialog>
-               <BootstrapDialog
-                    onClose={handleClose2}
-                    aria-labelledby="customized-dialog-title"
-                    open={open2}
-                    fullWidth
-                    maxWidth="sm"
-               >
-                    <div className="p-6">
-                         <div className="mb-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
-                              <p className="text-gray-600 text-sm mb-3 font-semibold">Booking Purpose</p>
-                              <input
-                                   type="text"
-                                   placeholder="Enter booking purpose (e.g., Business, Tourist, Medical)"
-                                   value={bookingPurpose}
-                                   onChange={(e) => setBookingPurpose(e.target.value)}
-                                   className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 mb-3"
-                              />
-                              <input
-                                   type="text"
-                                   placeholder="Estimated destination or route"
-                                   value={estimatedDestination}
-                                   onChange={(e) => setEstimatedDestination(e.target.value)}
-                                   className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
-                              />
-                         </div>
 
-                         <div className="flex gap-3">
-                              <Button
-                                   onClick={handleClose2}
-                                   variant="outlined"
-                                   fullWidth
-                                   sx={{
-                                        borderColor: '#ddd',
-                                        color: '#666',
-                                        py: 1,
-                                        fontWeight: 600,
-                                        fontSize: 14
-                                   }}
-                              >
-                                   Cancel
-                              </Button>
-                              <Button
-                                   onClick={handleBooking}
-                                   variant="contained"
-                                   fullWidth
-                                   sx={{
-                                        background: '#f58300',
-                                        color: "white",
-                                        py: 1,
-                                        fontWeight: 600,
-                                        fontSize: 18,
-                                        '&:hover': {
-                                             background: '#e07b00'
-                                        },
-                                        textTransform: 'none'
-                                   }}
-                              >
-                                  Send Request
-                              </Button>
-                         </div>
-                    </div>
-               </BootstrapDialog>
+<BootstrapDialog
+     onClose={handleClose}
+     aria-labelledby="customized-dialog-title"
+     open={open}
+     fullWidth
+     maxWidth="1150px"
+     sx={{ padding: 3 }}
+>
+     <div className="pb-0">
+          <div className="p-6 bg-gray-50 border-b">
+               <h1 className="text-2xl font-bold text-gray-800">Available Drivers</h1>
           </div>
-     );
+          <div className="flex flex-wrap p-6 gap-6 justify-center min-h-[400px] bg-white ">
+               {
+                    driverData?.map(driver => <DriverCart
+                         key={driver._id || driver.driver_id}
+                         driver={driver}
+                         setSelectedDriver={setSelectedDriver}
+                         handleClose={handleClose}
+                         handleViewDetails={handleViewDetails}
+                    >
+                    </DriverCart>)
+               }
+          </div>
+     </div>
+</BootstrapDialog>
+<BootstrapDialog
+     onClose={handleClose2}
+     aria-labelledby="customized-dialog-title"
+     open={open2}
+     fullWidth
+     maxWidth="sm"
+>
+     <div className="p-6">
+          <div className="mb-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+               <p className="text-gray-600 text-sm mb-3 font-semibold">Booking Purpose</p>
+               <input
+                    type="text"
+                    placeholder="Enter booking purpose (e.g., Business, Tourist, Medical)"
+                    value={bookingPurpose}
+                    onChange={(e) => setBookingPurpose(e.target.value)}
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 mb-3"
+               />
+               <input
+                    type="text"
+                    placeholder="Estimated destination or route"
+                    value={estimatedDestination}
+                    onChange={(e) => setEstimatedDestination(e.target.value)}
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
+               />
+          </div>
+
+          <div className="flex gap-3">
+               <Button
+                    onClick={handleClose2}
+                    variant="outlined"
+                    fullWidth
+                    sx={{
+                         borderColor: '#ddd',
+                         color: '#666',
+                         py: 1,
+                         fontWeight: 600,
+                         fontSize: 14
+                    }}
+               >
+                    Cancel
+               </Button>
+               <Button
+                    onClick={handleBooking}
+                    variant="contained"
+                    fullWidth
+                    sx={{
+                         background: '#f58300',
+                         color: "white",
+                         py: 1,
+                         fontWeight: 600,
+                         fontSize: 18,
+                         '&:hover': {
+                              background: '#e07b00'
+                         },
+                         textTransform: 'none'
+                    }}
+               >
+                   Send Request
+               </Button>
+          </div>
+     </div>
+</BootstrapDialog>
+
+<DriverDetailsModal 
+     open={detailsModalOpen} 
+     onClose={() => setDetailsModalOpen(false)} 
+     driver={detailsDriver} 
+     onSelect={(driver) => {
+          setSelectedDriver(driver);
+          handleClose();
+     }}
+/>
+</div>
+);
 };
 
 export default Booking;
