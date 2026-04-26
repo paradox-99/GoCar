@@ -35,7 +35,7 @@ const DriverDetailsModal = ({ driver, open, onClose, onSelect }) => {
                     </IconButton>
 
                     {/* Cover & Avatar */}
-                    <div className="h-32 bg-gradient-to-r from-orange-400 to-orange-600 rounded-t-lg"></div>
+                    <div className="h-32 bg-gradient-to-r from-orange-400 to-orange-600 rounded-t"></div>
                     <div className="px-6 relative">
                          <img 
                               src={driver.photo} 

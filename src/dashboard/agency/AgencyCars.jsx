@@ -67,9 +67,9 @@ const AgencyCars = () => {
                     <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
                         {paginated.map(car => (
                             <Cart
-                                key={car.car_id}
+                                key={car.vehicle_id}
                                 car={car}
-                                to={`/dashboard/agency/vehicles/${car.car_id}`}
+                                to={`/dashboard/agency/vehicles/${car.vehicle_id}`}
                                 state={{ car }}
                             />
                         ))}

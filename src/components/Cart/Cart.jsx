@@ -5,6 +5,8 @@ import { FaStar, FaCheckCircle } from "react-icons/fa";
 import { PiSeatFill } from "react-icons/pi";
 import { TbManualGearbox } from "react-icons/tb";
 
+import { HiCog6Tooth } from "react-icons/hi2";
+
 const Cart = ({ car, carBookingInfo, to, state }) => {
     const available = car?.status === "Available";
     const image = Array.isArray(car?.images) ? car.images[0] : car?.images;
@@ -54,14 +56,23 @@ const Cart = ({ car, carBookingInfo, to, state }) => {
                         <BsFuelPumpFill className="text-primary text-xs" />
                         {car?.fuel}
                     </span>
-                    <span className="flex items-center gap-1.5">
-                        <PiSeatFill className="text-primary text-xs" />
-                        {car?.seats} seats
-                    </span>
-                    <span className="flex items-center gap-1.5">
-                        <TbManualGearbox className="text-primary text-xs" />
-                        {car?.transmission_type}
-                    </span>
+                    {car?.vehicle_type === 'bike' ? (
+                        <span className="flex items-center gap-1.5">
+                            <HiCog6Tooth className="text-primary text-xs" />
+                            {car?.engine_capacity} cc
+                        </span>
+                    ) : (
+                        <>
+                            <span className="flex items-center gap-1.5">
+                                <PiSeatFill className="text-primary text-xs" />
+                                {car?.seats} seats
+                            </span>
+                            <span className="flex items-center gap-1.5">
+                                <TbManualGearbox className="text-primary text-xs" />
+                                {car?.transmission_type}
+                            </span>
+                        </>
+                    )}
                     <span className="flex items-center gap-1">
                         <FaStar className="text-yellow-400 text-xs" />
                         <span className="text-gray-600">{parseFloat(car?.rating || 0).toFixed(1)}</span>
