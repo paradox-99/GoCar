@@ -31,14 +31,29 @@ const ActiveBookings = () => {
     const [filter, setFilter] = useState('All');
     const [searchQuery, setSearchQuery] = useState('');
 
-    const { data, isLoading } = useQuery({
-        queryKey: ['bookings', user?.email],
+    // Step 1: Get the agency profile to retrieve agency_id
+    const { data: agencyProfile, isLoading: profileLoading } = useQuery({
+        queryKey: ['agencyProfile', user?.email],
         queryFn: async () => {
-            const response = await axiosPublic.get(`agencyRoutes/getAgencyBookingsByEmail/${user?.email}`, { withCredentials: true });
+            const response = await axiosPublic.get(`agencyRoutes/getAgencyProfile/${user?.email}`, { withCredentials: true });
             return response.data;
         },
         enabled: !!user?.email
     });
+
+    const agencyId = agencyProfile?.agency_id;
+
+    // Step 2: Fetch bookings by agency_id (dependent on Step 1)
+    const { data, isLoading: bookingsLoading } = useQuery({
+        queryKey: ['bookings', agencyId],
+        queryFn: async () => {
+            const response = await axiosPublic.get(`agencyRoutes/getBookingsByAgencyId/${agencyId}`, { withCredentials: true });
+            return response.data;
+        },
+        enabled: !!agencyId
+    });
+
+    const isLoading = profileLoading || bookingsLoading;
 
     const statusMap = {
         'Requested': 'Requested',

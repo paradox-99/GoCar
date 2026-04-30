@@ -12,7 +12,7 @@ const BookingSuccess = () => {
      };
 
      const handleViewBookings = () => {
-          navigate("/dashboard/user-bookings");
+          navigate("/dashboard/user/bookings");
      };
 
      return (

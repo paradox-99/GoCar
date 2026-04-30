@@ -65,6 +65,9 @@ const Booking = () => {
      const [selectedDriver, setSelectedDriver] = useState();
      const { userInfo } = useDesignation();
 
+     console.log(userInfo[0]);
+     
+
      const carInfo = bookingData.car;
      const bookingDate = bookingData?.carBookingInfo;
 
@@ -238,6 +241,8 @@ const Booking = () => {
           }
 
           const data = { vehicle_type, driver_cost, start_ts, end_ts, total_cost, total_rent_hours, user_id, vehicle_id, booking_purpose, estimated_destination, driver_id };
+
+          console.log(data);
 
           try {
                const response = await axiosPublic.post('bookingRoutes/createBooking', data);

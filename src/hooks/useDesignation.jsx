@@ -7,14 +7,15 @@ const useDesignation = () => {
     const { user, loader } = useAuth();
     const axiosPublic = useAxiosPublic();
 
-    const { data: userInfo= '', refetch  } = useQuery({
+    const { data: userInfo= [], refetch  } = useQuery({
         queryKey: [user?.email, 'userInfo'],
         enabled: !loader && !!user?.email,
         queryFn: async () => {
             const { data } = await axiosPublic.get(`/userRoute/getUserInfo/${user?.email}`);
-            return data;
+            console.log("From useDesignation", data[0]);
+            return data[0];
         }
-    })
+    }) 
     
     return {userInfo, refetch};
 };
