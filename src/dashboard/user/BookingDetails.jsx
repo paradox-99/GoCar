@@ -8,7 +8,6 @@ import toast from 'react-hot-toast';
 const BookingDetails = () => {
      const location = useLocation();
      const navigate = useNavigate();
-     const axios = useAxiosPublic();
      const bookingData = location.state?.booking;
      
      const [openDialog, setOpenDialog] = useState(false);
@@ -99,15 +98,47 @@ const BookingDetails = () => {
                          <h1 className="text-3xl font-bold mb-2">Booking Details</h1>
                          <p className="text-blue-100">Booking ID: {bookingData.booking_id || bookingData._id || 'N/A'}</p>
                     </div>
-                    {canCancel && (
-                         <button
-                              onClick={handleCancelClick}
-                              disabled={isLoading}
-                              className="bg-red-500 hover:bg-red-600 disabled:bg-red-300 text-white font-semibold px-6 py-2 rounded-lg transition-colors"
-                         >
-                              {isLoading ? 'Cancelling...' : 'Cancel Booking'}
-                         </button>
-                    )}
+                    <div className="flex gap-3">
+                         {bookingData.status === 'Confirmed' && !bookingData.initial_payment && (
+                              <button
+                                   onClick={async () => {
+                                        setIsLoading(true);
+                                        try {
+                                             const paymentData = {
+                                                  booking_id: bookingData.booking_id,
+                                                  amount: bookingData.total_cost * 0.5,
+                                                  name: bookingData.user_name,
+                                                  email: bookingData.user_email,
+                                                  phone: bookingData.user_phone,
+                                                  address: bookingData.user_address || 'Not Provided'
+                                             };
+                                             const response = await axiosPublic.post('paymentRoutes/existing-payment', paymentData);
+                                             if (response.data?.url) {
+                                                  window.location.replace(response.data.url);
+                                             }
+                                        } catch (err) {
+                                             console.error("Payment Error:", err);
+                                             toast.error("Failed to initiate payment");
+                                        } finally {
+                                             setIsLoading(false);
+                                        }
+                                   }}
+                                   disabled={isLoading}
+                                   className="bg-green-500 hover:bg-green-600 disabled:bg-green-300 text-white font-semibold px-6 py-2 rounded-lg transition-colors shadow-lg"
+                              >
+                                   {isLoading ? 'Processing...' : `Pay Initial 50% (৳${bookingData.total_cost * 0.5})`}
+                              </button>
+                         )}
+                         {canCancel && (
+                              <button
+                                   onClick={handleCancelClick}
+                                   disabled={isLoading}
+                                   className="bg-red-500 hover:bg-red-600 disabled:bg-red-300 text-white font-semibold px-6 py-2 rounded-lg transition-colors"
+                              >
+                                   {isLoading ? 'Processing...' : 'Cancel Booking'}
+                              </button>
+                         )}
+                    </div>
                </div>
 
                <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
