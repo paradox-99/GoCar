@@ -233,10 +233,9 @@ const Agencies = () => {
                     <InputLabel>Status</InputLabel>
                     <Select value={statusFilter} label="Status" onChange={(e) => setStatusFilter(e.target.value)}>
                         <MenuItem value="All">All Status</MenuItem>
-                        <MenuItem value="Pending">Pending</MenuItem>
                         <MenuItem value="Active">Active</MenuItem>
-                        <MenuItem value="Suspend">Suspended</MenuItem>
-                        <MenuItem value="Rejected">Rejected</MenuItem>
+                        <MenuItem value="Inactive">Inactive</MenuItem>
+                        <MenuItem value="Suspended">Suspended</MenuItem>
                     </Select>
                 </FormControl>
 
@@ -465,10 +464,9 @@ const Agencies = () => {
                                 label="Agency Status"
                                 onChange={(e) => setVerifyAgency({...verifyAgency, status: e.target.value})}
                             >
-                                <MenuItem value="Pending">Pending</MenuItem>
                                 <MenuItem value="Active">Active</MenuItem>
+                                <MenuItem value="Inactive">Inactive</MenuItem>
                                 <MenuItem value="Suspend">Suspended</MenuItem>
-                                <MenuItem value="Rejected">Rejected</MenuItem>
                             </Select>
                         </FormControl>
                         

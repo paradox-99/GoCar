@@ -169,7 +169,7 @@ const Users = () => {
     };
 
     const handleQuickSuspend = (user) => {
-        const newStatus = user.accountstatus === 'suspended' ? 'active' : 'suspended';
+        const newStatus = user.accountstatus === 'Suspended' ? 'Active' : 'Suspended';
         updateMutation.mutate({ user_id: user.user_id, accountstatus: newStatus, userrole: user.userrole, verified: user.verified });
     };
 
@@ -194,7 +194,7 @@ const Users = () => {
                         <MenuItem value="All">All Status</MenuItem>
                         <MenuItem value="Active">Active</MenuItem>
                         <MenuItem value="Suspended">Suspended</MenuItem>
-                        <MenuItem value="Banned">Banned</MenuItem>
+                        <MenuItem value="Inactive">Inactive</MenuItem>
                     </Select>
                 </FormControl>
 
@@ -266,7 +266,7 @@ const Users = () => {
                                         <Tooltip title="Edit Account">
                                             <IconButton size="small" onClick={() => setEditUser({...row})} sx={{ color: '#3b82f6' }}><Edit /></IconButton>
                                         </Tooltip>
-                                        <Tooltip title={row.accountstatus === 'suspended' ? "Unsuspend" : "Suspend Account"}>
+                                        <Tooltip title={row.accountstatus === 'Suspended' ? "Active" : "Suspend Account"}>
                                             <IconButton size="small" onClick={() => setConfirmBan(row)} sx={{ color: '#ef4444' }}><Block /></IconButton>
                                         </Tooltip>
                                     </Box>
@@ -381,9 +381,9 @@ const Users = () => {
                                 label="Account Status"
                                 onChange={(e) => setEditUser({...editUser, accountstatus: e.target.value})}
                             >
-                                <MenuItem value="active">Active</MenuItem>
-                                <MenuItem value="suspended">Suspended</MenuItem>
-                                <MenuItem value="banned">Banned</MenuItem>
+                                <MenuItem value="Active">Active</MenuItem>
+                                <MenuItem value="Inactive">Inactive</MenuItem>
+                                <MenuItem value="Suspended">Suspended</MenuItem>
                             </Select>
                         </FormControl>
                         <FormControl fullWidth>
@@ -421,7 +421,7 @@ const Users = () => {
                 <DialogTitle>Confirm Status Change</DialogTitle>
                 <DialogContent>
                     <Typography>
-                        Are you sure you want to {confirmBan?.accountstatus === 'suspended' ? 'unsuspend' : 'suspend'} <strong>{confirmBan?.name}</strong>?
+                        Are you sure you want to {confirmBan?.accountstatus === 'Suspended' ? 'Active' : 'Suspend'} <strong>{confirmBan?.name}</strong>?
                     </Typography>
                 </DialogContent>
                 <DialogActions>
