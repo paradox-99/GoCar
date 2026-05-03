@@ -8,11 +8,11 @@ import {
     Select, FormControl, InputLabel, Button, Tooltip, 
     Dialog, DialogTitle, DialogContent, DialogActions, 
     Tabs, Tab, Avatar, Typography, Divider, Grid,
-    Switch, FormControlLabel, Alert, Collapse
+    Switch, FormControlLabel, Alert, AlertTitle, Collapse, Card, CardContent
 } from '@mui/material';
 import { 
     FirstPage, KeyboardArrowLeft, KeyboardArrowRight, LastPage, 
-    Info, Edit, Block, Search, FileDownload, CheckCircle, 
+    Info, Edit, Block, Search, Download, CheckCircle, 
     Cancel, AccountCircle, DirectionsCar, Assessment, VpnKey,
     VerifiedUser, Shield, GppMaybe, Star, TwoWheeler, Business,
     Person, RateReview, Warning, Close
@@ -73,8 +73,7 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
         backgroundColor: "#F97316",
         color: theme.palette.common.white,
         fontSize: 15,
-        fontWeight: 600,
-        textTransform: 'uppercase'
+        fontWeight: 'bold',
     },
     [`&.${tableCellClasses.body}`]: {
         fontSize: 14,
@@ -89,19 +88,20 @@ const StatusBadge = ({ status }) => {
     if (lowerStatus === 'active') color = "success";
     else if (lowerStatus === 'pending') color = "warning";
     else if (lowerStatus === 'suspend' || lowerStatus === 'suspended') {
-        color = "warning";
+        color = "error";
         label = "Suspended";
     }
     else if (lowerStatus === 'rejected') color = "error";
+    else if (lowerStatus === 'inactive') color = "default";
     
-    return <Chip label={label} color={color} size="small" sx={{ fontWeight: 600, textTransform: 'capitalize' }} />;
+    return <Chip label={label} color={color} size="small" sx={{ fontWeight: 500, textTransform: 'capitalize' }} />;
 };
 
 const Agencies = () => {
     const axiosPublic = useAxiosPublic();
     const queryClient = useQueryClient();
     const [page, setPage] = useState(0);
-    const [rowsPerPage, setRowsPerPage] = useState(8);
+    const [rowsPerPage, setRowsPerPage] = useState(10);
     const [search, setSearch] = useState('');
     const [statusFilter, setStatusFilter] = useState('All');
     const [verifiedFilter, setVerifiedFilter] = useState('All');
@@ -170,6 +170,21 @@ const Agencies = () => {
         return data.agencies.filter(a => moment(a.tradelicenseexpire).isBefore(moment())).length;
     }, [data]);
 
+    const activeAgencies = useMemo(() => {
+        if (!data?.agencies) return 0;
+        return data.agencies.filter(a => a.status?.toLowerCase() === 'active').length;
+    }, [data]);
+
+    const suspendedAgencies = useMemo(() => {
+        if (!data?.agencies) return 0;
+        return data.agencies.filter(a => a.status?.toLowerCase() === 'suspend' || a.status?.toLowerCase() === 'suspended').length;
+    }, [data]);
+
+    const unverifiedAgencies = useMemo(() => {
+        if (!data?.agencies) return 0;
+        return data.agencies.filter(a => !a.verified).length;
+    }, [data]);
+
     const handleChangePage = (event, newPage) => setPage(newPage);
     const handleChangeRowsPerPage = (event) => {
         setRowsPerPage(parseInt(event.target.value, 10));
@@ -182,7 +197,7 @@ const Agencies = () => {
         const csvRows = [
             headers.join(','),
             ...data.agencies.map(a => [
-                a.agency_name, a.email, a.phone_number, a.owner_name, a.city, a.status, a.verified ? 'Yes' : 'No', a.tradelicenseexpire, moment(a.created_at).format('YYYY-MM-DD')
+                `"${a.agency_name}"`, `"${a.email}"`, `"${a.phone_number}"`, `"${a.owner_name}"`, `"${a.city}"`, `"${a.status}"`, `"${a.verified ? 'Yes' : 'No'}"`, `"${a.tradelicenseexpire}"`, `"${moment(a.created_at).format('YYYY-MM-DD')}"`
             ].join(','))
         ];
         const blob = new Blob([csvRows.join('\n')], { type: 'text/csv' });
@@ -197,35 +212,72 @@ const Agencies = () => {
         if (!date) return {};
         const expiry = moment(date);
         const today = moment();
-        if (expiry.isBefore(today)) return { color: '#ef4444', fontWeight: 600 };
-        if (expiry.isBefore(today.clone().add(30, 'days'))) return { color: '#f59e0b', fontWeight: 600 };
+        if (expiry.isBefore(today)) return { color: '#ef4444', fontWeight: 'bold' };
+        if (expiry.isBefore(today.clone().add(30, 'days'))) return { color: '#f59e0b', fontWeight: 'bold' };
         return {};
     };
 
     return (
-        <Box sx={{ p: 3 }}>
-            <Typography variant="h4" sx={{ mb: 4, fontWeight: 700, color: '#333' }}>Registered Agencies</Typography>
+        <Box sx={{ p: 6, maxWidth: '1536px', mx: 'auto', fontFamily: 'sans-serif', color: '#1f2937' }}>
+            <Typography variant="h4" sx={{ mb: 4, fontWeight: 'bold', color: '#1f2937' }}>Registered Agencies</Typography>
 
             {expiredCount > 0 && (
                 <Collapse in={showAlert}>
                     <Alert 
                         severity="error" 
-                        sx={{ mb: 3, borderRadius: '12px' }}
+                        sx={{ mb: 3, borderRadius: 2, border: '1px solid #fecaca', backgroundColor: '#fef2f2' }}
                         action={<IconButton size="small" onClick={() => setShowAlert(false)}><Close fontSize="inherit"/></IconButton>}
                     >
-                        {expiredCount} agencies have expired trade licenses. Please review and update their status.
+                        <AlertTitle sx={{ fontWeight: 'bold' }}>Action Required</AlertTitle>
+                        {expiredCount} agencies on this page have expired trade licenses. Please review and update their status.
                     </Alert>
                 </Collapse>
             )}
 
+            {/* Stats Summary Cards */}
+            <Grid container spacing={3} sx={{ mb: 4 }}>
+                <Grid item xs={12} sm={6} md={3}>
+                    <Card sx={{ borderLeft: 4, borderColor: '#3b82f6', boxShadow: 1 }}>
+                        <CardContent sx={{ py: 2, '&:last-child': { pb: 2 } }}>
+                            <Typography color="textSecondary" variant="caption" fontWeight="bold" textTransform="uppercase">Total Agencies</Typography>
+                            <Typography variant="h5" fontWeight="bold">{data?.totalCount || 0}</Typography>
+                        </CardContent>
+                    </Card>
+                </Grid>
+                <Grid item xs={12} sm={6} md={3}>
+                    <Card sx={{ borderLeft: 4, borderColor: '#10b981', boxShadow: 1 }}>
+                        <CardContent sx={{ py: 2, '&:last-child': { pb: 2 } }}>
+                            <Typography color="textSecondary" variant="caption" fontWeight="bold" textTransform="uppercase">Active (This Page)</Typography>
+                            <Typography variant="h5" fontWeight="bold">{activeAgencies}</Typography>
+                        </CardContent>
+                    </Card>
+                </Grid>
+                <Grid item xs={12} sm={6} md={3}>
+                    <Card sx={{ borderLeft: 4, borderColor: '#f59e0b', boxShadow: 1, cursor: 'pointer', transition: 'all 0.2s', '&:hover':{ bgcolor: '#fffbeb' } }} onClick={() => setVerifiedFilter('No')}>
+                        <CardContent sx={{ py: 2, '&:last-child': { pb: 2 } }}>
+                            <Typography color="textSecondary" variant="caption" fontWeight="bold" textTransform="uppercase">Unverified (This Page)</Typography>
+                            <Typography variant="h5" fontWeight="bold">{unverifiedAgencies}</Typography>
+                        </CardContent>
+                    </Card>
+                </Grid>
+                <Grid item xs={12} sm={6} md={3}>
+                    <Card sx={{ borderLeft: 4, borderColor: '#ef4444', boxShadow: 1, cursor: 'pointer', transition: 'all 0.2s', '&:hover':{ bgcolor: '#fef2f2' } }} onClick={() => setStatusFilter('Suspended')}>
+                        <CardContent sx={{ py: 2, '&:last-child': { pb: 2 } }}>
+                            <Typography color="textSecondary" variant="caption" fontWeight="bold" textTransform="uppercase">Suspended (This Page)</Typography>
+                            <Typography variant="h5" fontWeight="bold" color="error">{suspendedAgencies}</Typography>
+                        </CardContent>
+                    </Card>
+                </Grid>
+            </Grid>
+
             {/* Top Bar / Filters */}
-            <Paper sx={{ p: 3, mb: 3, borderRadius: '12px', display: 'flex', flexWrap: 'wrap', gap: 2, alignItems: 'center', boxShadow: '0 4px 20px rgba(0,0,0,0.05)' }}>
+            <Paper sx={{ p: 3, mb: 4, borderRadius: 2, display: 'flex', flexWrap: 'wrap', gap: 2, alignItems: 'center', boxShadow: '0 1px 3px rgba(0,0,0,0.1)' }}>
                 <TextField
                     size="small"
                     placeholder="Search agency name, email, phone..."
                     value={search}
                     onChange={(e) => setSearch(e.target.value)}
-                    InputProps={{ startAdornment: <Search sx={{ color: 'gray', mr: 1 }} /> }}
+                    InputProps={{ startAdornment: <Search sx={{ color: 'action.active', mr: 1 }} /> }}
                     sx={{ flexGrow: 1, minWidth: '250px' }}
                 />
                 
@@ -235,7 +287,7 @@ const Agencies = () => {
                         <MenuItem value="All">All Status</MenuItem>
                         <MenuItem value="Active">Active</MenuItem>
                         <MenuItem value="Inactive">Inactive</MenuItem>
-                        <MenuItem value="Suspended">Suspended</MenuItem>
+                        <MenuItem value="Suspend">Suspended</MenuItem>
                     </Select>
                 </FormControl>
 
@@ -257,83 +309,96 @@ const Agencies = () => {
                 </FormControl>
 
                 <Button 
-                    variant="contained" 
-                    startIcon={<FileDownload />} 
+                    variant="outlined" 
+                    startIcon={<Download />} 
                     onClick={handleExportCSV}
-                    sx={{ bgcolor: '#F97316', '&:hover': { bgcolor: '#ea580c' }, textTransform: 'none', px: 3, borderRadius: '8px' }}
+                    sx={{ color: '#F97316', borderColor: '#F97316', '&:hover': { bgcolor: '#fff7ed', borderColor: '#F97316' } }}
                 >
                     Export CSV
                 </Button>
             </Paper>
 
             {/* Table */}
-            <TableContainer component={Paper} sx={{ borderRadius: '12px', boxShadow: '0 4px 25px rgba(0,0,0,0.06)', overflow: 'hidden' }}>
-                <Table>
+            <TableContainer component={Paper} sx={{ borderRadius: 2, boxShadow: '0 1px 3px rgba(0,0,0,0.1)', overflow: 'hidden' }}>
+                <Table sx={{ minWidth: 1000 }}>
                     <TableHead>
-                        <TableRow>
-                            <StyledTableCell>Agency Name</StyledTableCell>
-                            <StyledTableCell>Owner</StyledTableCell>
-                            <StyledTableCell>Email/Phone</StyledTableCell>
-                            <StyledTableCell>Fleet</StyledTableCell>
-                            <StyledTableCell>Rating</StyledTableCell>
-                            <StyledTableCell>Licensed Until</StyledTableCell>
-                            <StyledTableCell>Status</StyledTableCell>
-                            <StyledTableCell align="right">Actions</StyledTableCell>
+                        <TableRow sx={{ bgcolor: '#F97316' }}>
+                            <StyledTableCell sx={{ color: 'white' }}>Agency Profile</StyledTableCell>
+                            <StyledTableCell sx={{ color: 'white' }}>Contact</StyledTableCell>
+                            <StyledTableCell sx={{ color: 'white' }}>Fleet</StyledTableCell>
+                            <StyledTableCell sx={{ color: 'white' }}>Rating</StyledTableCell>
+                            <StyledTableCell sx={{ color: 'white' }}>Licensed Until</StyledTableCell>
+                            <StyledTableCell sx={{ color: 'white' }}>Status</StyledTableCell>
+                            <StyledTableCell sx={{ color: 'white' }} align="center">Actions</StyledTableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
                         {isLoading ? (
-                            <TableRow><TableCell colSpan={8} align="center" sx={{ py: 10 }}>Loading agencies...</TableCell></TableRow>
+                            <TableRow><TableCell colSpan={7} align="center" sx={{ py: 10 }}>Loading agencies...</TableCell></TableRow>
                         ) : data?.agencies.map((row) => (
-                            <TableRow key={row.agency_id} hover>
-                                <StyledTableCell sx={{ fontWeight: 600 }}>
-                                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                                        {row.agency_name}
-                                        {row.verified && <Tooltip title="Verified Agency"><VerifiedUser sx={{ fontSize: 16, color: '#F97316' }} /></Tooltip>}
+                            <TableRow key={row.agency_id} hover sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
+                                <TableCell>
+                                    <Box display="flex" alignItems="center" gap={2}>
+                                        <Avatar sx={{ width: 40, height: 40, bgcolor: '#f1f5f9', color: '#F97316', fontWeight: 'bold' }}>
+                                            {row.agency_name?.charAt(0).toUpperCase()}
+                                        </Avatar>
+                                        <Box>
+                                            <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+                                                <Typography variant="body2" fontWeight="bold" color="textPrimary">{row.agency_name}</Typography>
+                                                {row.verified && <Tooltip title="Verified Agency"><VerifiedUser sx={{ fontSize: 16, color: '#10b981' }} /></Tooltip>}
+                                            </Box>
+                                            <Typography variant="caption" color="textSecondary">{row.owner_name}</Typography>
+                                        </Box>
                                     </Box>
-                                </StyledTableCell>
-                                <StyledTableCell>{row.owner_name}</StyledTableCell>
-                                <StyledTableCell>
+                                </TableCell>
+                                <TableCell>
                                     <Typography variant="body2">{row.email}</Typography>
                                     <Typography variant="caption" color="textSecondary">{row.phone_number}</Typography>
-                                </StyledTableCell>
-                                <StyledTableCell>
+                                </TableCell>
+                                <TableCell>
                                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                                         <Tooltip title="Cars"><Chip icon={<DirectionsCar sx={{ fontSize: '14px !important' }}/>} label={row.cars || 0} size="small" variant="outlined" /></Tooltip>
                                         <Tooltip title="Bikes"><Chip icon={<TwoWheeler sx={{ fontSize: '14px !important' }}/>} label={row.bikes || 0} size="small" variant="outlined" /></Tooltip>
                                     </Box>
-                                </StyledTableCell>
-                                <StyledTableCell>
+                                </TableCell>
+                                <TableCell>
                                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-                                        <Star sx={{ fontSize: 16, color: '#faaf00' }} />
-                                        <Typography variant="body2" sx={{ fontWeight: 600 }}>{row.rating || '0.0'}</Typography>
+                                        <Star sx={{ fontSize: 16, color: '#f59e0b' }} />
+                                        <Typography variant="body2" sx={{ fontWeight: 'bold' }}>{row.rating || '0.0'}</Typography>
                                     </Box>
-                                </StyledTableCell>
-                                <StyledTableCell sx={getExpiryStyle(row.tradelicenseexpire)}>
+                                </TableCell>
+                                <TableCell sx={getExpiryStyle(row.tradelicenseexpire)}>
                                     {row.tradelicenseexpire ? moment(row.tradelicenseexpire).format('MMM DD, YYYY') : 'N/A'}
-                                </StyledTableCell>
-                                <StyledTableCell><StatusBadge status={row.status} /></StyledTableCell>
-                                <StyledTableCell align="right">
-                                    <Box sx={{ display: 'flex', justifyContent: 'flex-end', gap: 0.5 }}>
+                                </TableCell>
+                                <TableCell><StatusBadge status={row.status} /></TableCell>
+                                <TableCell align="center">
+                                    <Box sx={{ display: 'flex', justifyContent: 'center', gap: 1 }}>
                                         <Tooltip title="Agency Details">
-                                            <IconButton size="small" onClick={() => setDetailAgency(row)} sx={{ color: '#F97316' }}><Info /></IconButton>
+                                            <IconButton size="small" onClick={() => setDetailAgency(row)} sx={{ color: '#3b82f6' }}><Info fontSize="small" /></IconButton>
                                         </Tooltip>
                                         <Tooltip title="Verify & Update">
-                                            <IconButton size="small" onClick={() => setVerifyAgency({...row})} sx={{ color: '#3b82f6' }}><Shield /></IconButton>
+                                            <IconButton size="small" onClick={() => setVerifyAgency({...row})} sx={{ color: '#F97316' }}><Shield fontSize="small" /></IconButton>
                                         </Tooltip>
                                         <Tooltip title="Suspend Agency">
-                                            <IconButton size="small" onClick={() => setSuspendAgency(row)} sx={{ color: '#ef4444' }}><Block /></IconButton>
+                                            <IconButton size="small" onClick={() => setSuspendAgency(row)} sx={{ color: '#ef4444' }}><Block fontSize="small" /></IconButton>
                                         </Tooltip>
                                     </Box>
-                                </StyledTableCell>
+                                </TableCell>
                             </TableRow>
                         ))}
+                        {!isLoading && (!data?.agencies || data.agencies.length === 0) && (
+                            <TableRow>
+                                <TableCell colSpan={7} align="center" sx={{ py: 8 }}>
+                                    <Typography color="textSecondary">No agencies match your current filters.</Typography>
+                                </TableCell>
+                            </TableRow>
+                        )}
                     </TableBody>
                     <TableFooter>
                         <TableRow>
                             <TablePagination
-                                rowsPerPageOptions={[8, 25, 50]}
-                                colSpan={8}
+                                rowsPerPageOptions={[10, 25, 50]}
+                                colSpan={7}
                                 count={data?.totalCount || 0}
                                 rowsPerPage={rowsPerPage}
                                 page={page}
@@ -348,26 +413,34 @@ const Agencies = () => {
 
             {/* Agency Detail Modal */}
             <Dialog open={!!detailAgency} onClose={() => setDetailAgency(null)} maxWidth="md" fullWidth>
-                <DialogTitle sx={{ bgcolor: '#F97316', color: 'white', display: 'flex', alignItems: 'center', gap: 1.5 }}>
-                    <Business /> Agency Comprehensive Profile
+                <DialogTitle sx={{ backgroundColor: '#F97316', color: 'white', display: 'flex', alignItems: 'center', gap: 2 }}>
+                    <Avatar sx={{ width: 50, height: 50, bgcolor: 'white', color: '#F97316', fontWeight: 'bold' }}>
+                        {detailAgency?.agency_name?.charAt(0).toUpperCase()}
+                    </Avatar>
+                    <Box>
+                        <Typography variant="h6" fontWeight="bold">{detailAgency?.agency_name}</Typography>
+                        <Typography variant="caption">{detailAgency?.agency_id}</Typography>
+                    </Box>
                 </DialogTitle>
-                <DialogContent sx={{ p: 0 }}>
-                    <Tabs value={tabValue} onChange={(e, v) => setTabValue(v)} textColor="primary" indicatorColor="primary" variant="fullWidth">
-                        <Tab label="Overview" icon={<Business />} iconPosition="start" />
-                        <Tab label="Documents" icon={<VpnKey />} iconPosition="start" />
-                        <Tab label="Fleet" icon={<DirectionsCar />} iconPosition="start" />
-                        <Tab label="Owner" icon={<Person />} iconPosition="start" />
-                        <Tab label="Reviews" icon={<RateReview />} iconPosition="start" />
-                    </Tabs>
-                    <Box sx={{ p: 3, minHeight: '300px' }}>
+                <DialogContent sx={{ mt: 2, p: 0 }}>
+                    <Box sx={{ borderBottom: 1, borderColor: 'divider', px: 2 }}>
+                        <Tabs value={tabValue} onChange={(e, v) => setTabValue(v)} variant="scrollable" scrollButtons="auto" TabIndicatorProps={{ style: { backgroundColor: '#F97316' } }}>
+                            <Tab label="Overview" icon={<Business />} iconPosition="start" />
+                            <Tab label="Documents" icon={<VpnKey />} iconPosition="start" />
+                            <Tab label="Fleet" icon={<DirectionsCar />} iconPosition="start" />
+                            <Tab label="Owner" icon={<Person />} iconPosition="start" />
+                            <Tab label="Reviews" icon={<RateReview />} iconPosition="start" />
+                        </Tabs>
+                    </Box>
+                    <Box sx={{ p: 3, minHeight: 400 }}>
                         {detailQuery.isLoading ? (
-                            <Typography align="center">Loading details...</Typography>
+                            <Typography align="center" sx={{ mt: 5 }}>Loading details...</Typography>
                         ) : detailQuery.data && (
                             <>
                                 {tabValue === 0 && (
                                     <Grid container spacing={3}>
                                         <Grid item xs={12} md={6}>
-                                            <Typography variant="h6" color="primary" gutterBottom>{detailQuery.data.overview.agency_name}</Typography>
+                                            <Typography variant="h6" color="#F97316" gutterBottom>{detailQuery.data.overview.agency_name}</Typography>
                                             <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
                                                 <Typography variant="body2"><strong>Email:</strong> {detailQuery.data.overview.email}</Typography>
                                                 <Typography variant="body2"><strong>Phone:</strong> {detailQuery.data.overview.phone_number}</Typography>
@@ -376,70 +449,100 @@ const Agencies = () => {
                                             </Box>
                                         </Grid>
                                         <Grid item xs={12} md={6}>
-                                            <Box sx={{ p: 2, bgcolor: '#f8fafc', borderRadius: '12px' }}>
-                                                <Typography variant="subtitle2" gutterBottom>Statistics</Typography>
+                                            <Box sx={{ p: 2, bgcolor: '#f8fafc', borderRadius: 2, border: '1px solid #e2e8f0' }}>
+                                                <Typography variant="subtitle2" gutterBottom fontWeight="bold">Statistics</Typography>
                                                 <Grid container spacing={2}>
-                                                    <Grid item xs={6}><Typography variant="caption">Rating</Typography><Typography variant="h6">⭐ {detailQuery.data.overview.rating}</Typography></Grid>
-                                                    <Grid item xs={6}><Typography variant="caption">Reviews</Typography><Typography variant="h6">{detailQuery.data.overview.review_count}</Typography></Grid>
-                                                    <Grid item xs={6}><Typography variant="caption">Total Cars</Typography><Typography variant="h6">{detailQuery.data.overview.car_count}</Typography></Grid>
-                                                    <Grid item xs={6}><Typography variant="caption">Total Bikes</Typography><Typography variant="h6">{detailQuery.data.overview.bike_count}</Typography></Grid>
+                                                    <Grid item xs={6}><Typography variant="caption" color="textSecondary">Rating</Typography><Typography variant="h6">⭐ {detailQuery.data.overview.rating}</Typography></Grid>
+                                                    <Grid item xs={6}><Typography variant="caption" color="textSecondary">Reviews</Typography><Typography variant="h6">{detailQuery.data.overview.review_count}</Typography></Grid>
+                                                    <Grid item xs={6}><Typography variant="caption" color="textSecondary">Total Cars</Typography><Typography variant="h6">{detailQuery.data.overview.car_count}</Typography></Grid>
+                                                    <Grid item xs={6}><Typography variant="caption" color="textSecondary">Total Bikes</Typography><Typography variant="h6">{detailQuery.data.overview.bike_count}</Typography></Grid>
                                                 </Grid>
                                             </Box>
                                         </Grid>
                                     </Grid>
                                 )}
                                 {tabValue === 1 && (
-                                    <Grid container spacing={2}>
-                                        <Grid item xs={6}><Typography variant="caption">License Number</Typography><Typography variant="body1">{detailQuery.data.overview.license}</Typography></Grid>
-                                        <Grid item xs={6}><Typography variant="caption">TIN</Typography><Typography variant="body1">{detailQuery.data.overview.tin}</Typography></Grid>
-                                        <Grid item xs={6}><Typography variant="caption">Insurance Number</Typography><Typography variant="body1">{detailQuery.data.overview.insurancenumber || 'N/A'}</Typography></Grid>
-                                        <Grid item xs={6}>
-                                            <Typography variant="caption">Trade License Expiry</Typography>
-                                            <Typography variant="body1" sx={getExpiryStyle(detailQuery.data.overview.tradelicenseexpire)}>
-                                                {moment(detailQuery.data.overview.tradelicenseexpire).format('LL')}
-                                            </Typography>
+                                    <Grid container spacing={3}>
+                                        <Grid item xs={12} md={6}>
+                                            <Card variant="outlined">
+                                                <CardContent>
+                                                    <Typography variant="caption" color="textSecondary">License Number</Typography>
+                                                    <Typography variant="h6">{detailQuery.data.overview.license || 'N/A'}</Typography>
+                                                </CardContent>
+                                            </Card>
+                                        </Grid>
+                                        <Grid item xs={12} md={6}>
+                                            <Card variant="outlined">
+                                                <CardContent>
+                                                    <Typography variant="caption" color="textSecondary">TIN</Typography>
+                                                    <Typography variant="h6">{detailQuery.data.overview.tin || 'N/A'}</Typography>
+                                                </CardContent>
+                                            </Card>
+                                        </Grid>
+                                        <Grid item xs={12} md={6}>
+                                            <Card variant="outlined">
+                                                <CardContent>
+                                                    <Typography variant="caption" color="textSecondary">Insurance Number</Typography>
+                                                    <Typography variant="h6">{detailQuery.data.overview.insurancenumber || 'N/A'}</Typography>
+                                                </CardContent>
+                                            </Card>
+                                        </Grid>
+                                        <Grid item xs={12} md={6}>
+                                            <Card variant="outlined" sx={{ borderColor: moment(detailQuery.data.overview.tradelicenseexpire).isBefore(moment()) ? '#fecaca' : '#e2e8f0', bgcolor: moment(detailQuery.data.overview.tradelicenseexpire).isBefore(moment()) ? '#fef2f2' : 'white' }}>
+                                                <CardContent>
+                                                    <Typography variant="caption" color="textSecondary">Trade License Expiry</Typography>
+                                                    <Typography variant="h6" sx={getExpiryStyle(detailQuery.data.overview.tradelicenseexpire)}>
+                                                        {detailQuery.data.overview.tradelicenseexpire ? moment(detailQuery.data.overview.tradelicenseexpire).format('LL') : 'N/A'}
+                                                    </Typography>
+                                                </CardContent>
+                                            </Card>
                                         </Grid>
                                         <Grid item xs={12}><Divider sx={{ my: 1 }} /></Grid>
-                                        <Grid item xs={6}><Typography variant="caption">Verified Status</Typography><Box>{detailQuery.data.overview.verified ? <Chip icon={<VerifiedUser/>} label="Verified" color="success" size="small"/> : <Chip icon={<GppMaybe/>} label="Unverified" color="warning" size="small"/>}</Box></Grid>
-                                        <Grid item xs={6}><Typography variant="caption">Current Status</Typography><Box><StatusBadge status={detailQuery.data.overview.status}/></Box></Grid>
+                                        <Grid item xs={6}><Typography variant="caption" color="textSecondary">Verified Status</Typography><Box mt={0.5}>{detailQuery.data.overview.verified ? <Chip icon={<VerifiedUser/>} label="Verified" color="success" /> : <Chip icon={<GppMaybe/>} label="Unverified" color="warning" />}</Box></Grid>
+                                        <Grid item xs={6}><Typography variant="caption" color="textSecondary">Current Status</Typography><Box mt={0.5}><StatusBadge status={detailQuery.data.overview.status}/></Box></Grid>
                                     </Grid>
                                 )}
                                 {tabValue === 2 && (
-                                    <Table size="small">
-                                        <TableHead><TableRow><TableCell>Vehicle</TableCell><TableCell>Type</TableCell><TableCell>Status</TableCell></TableRow></TableHead>
-                                        <TableBody>
-                                            {detailQuery.data.fleet.map(v => (
-                                                <TableRow key={v.id}>
-                                                    <TableCell>{v.brand} {v.model}</TableCell>
-                                                    <TableCell sx={{ textTransform: 'capitalize' }}>{v.type}</TableCell>
-                                                    <TableCell><Chip label={v.status} size="small" variant="outlined"/></TableCell>
-                                                </TableRow>
-                                            ))}
-                                        </TableBody>
-                                    </Table>
+                                    <TableContainer sx={{ maxHeight: 300 }}>
+                                        <Table stickyHeader size="small">
+                                            <TableHead><TableRow><TableCell>Vehicle</TableCell><TableCell>Type</TableCell><TableCell>Status</TableCell></TableRow></TableHead>
+                                            <TableBody>
+                                                {detailQuery.data.fleet.map(v => (
+                                                    <TableRow key={v.id}>
+                                                        <TableCell>{v.brand} {v.model}</TableCell>
+                                                        <TableCell sx={{ textTransform: 'capitalize' }}>{v.type}</TableCell>
+                                                        <TableCell><Chip label={v.status} size="small" variant="outlined"/></TableCell>
+                                                    </TableRow>
+                                                ))}
+                                                {detailQuery.data.fleet.length === 0 && (
+                                                    <TableRow><TableCell colSpan={3} align="center" sx={{ py: 3 }}><Typography color="textSecondary">No vehicles found.</Typography></TableCell></TableRow>
+                                                )}
+                                            </TableBody>
+                                        </Table>
+                                    </TableContainer>
                                 )}
                                 {tabValue === 3 && (
-                                    <Box sx={{ display: 'flex', gap: 3, alignItems: 'center' }}>
-                                        <Avatar sx={{ width: 80, height: 80, bgcolor: '#F97316' }}>{detailQuery.data.overview.owner_name?.charAt(0)}</Avatar>
+                                    <Box sx={{ display: 'flex', gap: 3, alignItems: 'center', p: 2, border: '1px solid #e2e8f0', borderRadius: 2 }}>
+                                        <Avatar sx={{ width: 100, height: 100, bgcolor: '#F97316', fontSize: 40, boxShadow: 2 }}>{detailQuery.data.overview.owner_name?.charAt(0)}</Avatar>
                                         <Box>
-                                            <Typography variant="h6">{detailQuery.data.overview.owner_name}</Typography>
-                                            <Typography variant="body2" color="textSecondary">{detailQuery.data.overview.owner_email}</Typography>
-                                            <Typography variant="body2" color="textSecondary">{detailQuery.data.overview.owner_phone}</Typography>
-                                            <Typography variant="body2" color="textSecondary">NID: {detailQuery.data.overview.owner_nid}</Typography>
+                                            <Typography variant="h5" fontWeight="bold">{detailQuery.data.overview.owner_name}</Typography>
+                                            <Typography variant="body1" color="textSecondary" sx={{ mt: 1 }}>Email: {detailQuery.data.overview.owner_email}</Typography>
+                                            <Typography variant="body1" color="textSecondary">Phone: {detailQuery.data.overview.owner_phone}</Typography>
+                                            <Typography variant="body1" color="textSecondary">NID: {detailQuery.data.overview.owner_nid}</Typography>
                                         </Box>
                                     </Box>
                                 )}
                                 {tabValue === 4 && (
                                     <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-                                        {detailQuery.data.reviews.length === 0 ? <Typography align="center" color="textSecondary">No reviews yet</Typography> : 
+                                        {detailQuery.data.reviews.length === 0 ? <Typography align="center" color="textSecondary" sx={{ mt: 3 }}>No reviews yet</Typography> : 
                                             detailQuery.data.reviews.map((r, i) => (
-                                                <Box key={i} sx={{ p: 2, border: '1px solid #e2e8f0', borderRadius: '8px' }}>
+                                                <Box key={i} sx={{ p: 2, border: '1px solid #e2e8f0', borderRadius: 2, bgcolor: '#f8fafc' }}>
                                                     <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
-                                                        <Typography variant="subtitle2">{r.user_name}</Typography>
+                                                        <Typography variant="subtitle1" fontWeight="bold">{r.user_name}</Typography>
                                                         <Typography variant="caption" color="textSecondary">{moment(r.date).format('LL')}</Typography>
                                                     </Box>
-                                                    <Box sx={{ display: 'flex', mb: 1 }}>{[...Array(5)].map((_, idx) => <Star key={idx} sx={{ fontSize: 14, color: idx < r.rating ? '#faaf00' : '#cbd5e1' }} />)}</Box>
-                                                    <Typography variant="body2">{r.review}</Typography>
+                                                    <Box sx={{ display: 'flex', mb: 1 }}>{[...Array(5)].map((_, idx) => <Star key={idx} sx={{ fontSize: 16, color: idx < r.rating ? '#faaf00' : '#cbd5e1' }} />)}</Box>
+                                                    <Typography variant="body2" color="textPrimary">{r.review}</Typography>
                                                 </Box>
                                             ))
                                         }
@@ -449,15 +552,17 @@ const Agencies = () => {
                         )}
                     </Box>
                 </DialogContent>
-                <DialogActions><Button onClick={() => setDetailAgency(null)}>Close</Button></DialogActions>
+                <DialogActions sx={{ p: 2 }}><Button onClick={() => setDetailAgency(null)} color="inherit">Close</Button></DialogActions>
             </Dialog>
 
             {/* Verify/Approve Modal */}
-            <Dialog open={!!verifyAgency} onClose={() => setVerifyAgency(null)}>
-                <DialogTitle>Verification & Status Update: {verifyAgency?.agency_name}</DialogTitle>
-                <DialogContent sx={{ minWidth: 400, pt: 2 }}>
+            <Dialog open={!!verifyAgency} onClose={() => setVerifyAgency(null)} maxWidth="sm" fullWidth>
+                <DialogTitle sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                    <Shield color="primary" /> Manage Agency: {verifyAgency?.agency_name}
+                </DialogTitle>
+                <DialogContent dividers>
                     <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3, pt: 1 }}>
-                        <FormControl fullWidth>
+                        <FormControl fullWidth size="small">
                             <InputLabel>Agency Status</InputLabel>
                             <Select 
                                 value={verifyAgency?.status || ''} 
@@ -471,14 +576,15 @@ const Agencies = () => {
                         </FormControl>
                         
                         <FormControlLabel
-                            control={<Switch checked={!!verifyAgency?.verified} onChange={(e) => setVerifyAgency({...verifyAgency, verified: e.target.checked})} />}
-                            label="Mark as Verified Agency"
+                            control={<Switch checked={!!verifyAgency?.verified} onChange={(e) => setVerifyAgency({...verifyAgency, verified: e.target.checked})} color="success" />}
+                            label="Verified Agency"
                         />
 
                         <TextField
                             label="Expiration Date"
                             type="date"
                             fullWidth
+                            size="small"
                             InputLabelProps={{ shrink: true }}
                             value={verifyAgency?.expire_date ? moment(verifyAgency.expire_date).format('YYYY-MM-DD') : ''}
                             onChange={(e) => setVerifyAgency({...verifyAgency, expire_date: e.target.value})}
@@ -493,8 +599,8 @@ const Agencies = () => {
                         />
                     </Box>
                 </DialogContent>
-                <DialogActions>
-                    <Button onClick={() => setVerifyAgency(null)}>Cancel</Button>
+                <DialogActions sx={{ p: 2 }}>
+                    <Button onClick={() => setVerifyAgency(null)} color="inherit">Cancel</Button>
                     <Button 
                         variant="contained" 
                         onClick={() => updateMutation.mutate(verifyAgency)}
@@ -506,11 +612,11 @@ const Agencies = () => {
             </Dialog>
 
             {/* Suspend Confirmation Dialog */}
-            <Dialog open={!!suspendAgency} onClose={() => { setSuspendAgency(null); setSuspendReason(''); }}>
+            <Dialog open={!!suspendAgency} onClose={() => { setSuspendAgency(null); setSuspendReason(''); }} maxWidth="sm" fullWidth>
                 <DialogTitle sx={{ color: '#ef4444', display: 'flex', alignItems: 'center', gap: 1 }}>
                     <Warning /> Confirm Agency Suspension
                 </DialogTitle>
-                <DialogContent>
+                <DialogContent dividers>
                     <Typography sx={{ mb: 2 }}>
                         Are you sure you want to suspend <strong>{suspendAgency?.agency_name}</strong>? 
                         This will prevent the agency from accepting new bookings and listing vehicles.
@@ -527,8 +633,8 @@ const Agencies = () => {
                         helperText="A reason is required for suspension"
                     />
                 </DialogContent>
-                <DialogActions>
-                    <Button onClick={() => { setSuspendAgency(null); setSuspendReason(''); }}>Cancel</Button>
+                <DialogActions sx={{ p: 2 }}>
+                    <Button onClick={() => { setSuspendAgency(null); setSuspendReason(''); }} color="inherit">Cancel</Button>
                     <Button 
                         variant="contained" 
                         color="error"
