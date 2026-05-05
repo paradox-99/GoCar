@@ -44,6 +44,7 @@ import DamageHistory from "../dashboard/user/DamageHistory";
 import AgencyDamageReports from "../dashboard/agency/AgencyDamageReports";
 import AgencyReviews from "../dashboard/agency/AgencyReviews";
 import DriverReviews from "../dashboard/driver/DriverReviews";
+import Payments from "../dashboard/admin/Payments";
 
 export const DashboardRoutes = [
      {
@@ -202,8 +203,8 @@ export const DashboardRoutes = [
                     element: <RoleRoute allowedRoles={['admin']}><Bookings></Bookings></RoleRoute>
                },
                {
-                    path: '/dashboard/admin/payment-history',
-                    element: <RoleRoute allowedRoles={['admin']}><PaymentHistory></PaymentHistory></RoleRoute>
+                    path: '/dashboard/admin/payments',
+                    element: <RoleRoute allowedRoles={['admin']}><Payments></Payments></RoleRoute>
                },
                {
                     path: '/dashboard/notificationsDriver',

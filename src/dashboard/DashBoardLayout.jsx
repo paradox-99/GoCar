@@ -155,11 +155,11 @@ const DashBoardLayout = () => {
                     </ListNav>
                </ListItem>
                <ListItem disablePadding>
-                    <ListNav onClick={() => handleNavigation('/dashboard/admin/payment-history')} className={isActive('/dashboard/admin/payment-history') ? 'active' : ''}>
+                    <ListNav onClick={() => handleNavigation('/dashboard/admin/payments')} className={isActive('/dashboard/admin/payments') ? 'active' : ''}>
                          <ListItemIcon style={{ fontSize: 20 }}>
                               <HiCurrencyBangladeshi className='text-white' />
                          </ListItemIcon>
-                         <ListItemText primary="Payment History" />
+                         <ListItemText primary="Payments" />
                     </ListNav>
                </ListItem>
           </List>
