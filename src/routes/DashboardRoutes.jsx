@@ -17,7 +17,6 @@ import BookingDetails from "../dashboard/user/BookingDetails";
 import Users from "../dashboard/admin/Users";
 import Vehicles from "../dashboard/admin/Vehicles";
 import Bookings from "../dashboard/admin/Bookings";
-import PaymentHistory from "../dashboard/admin/PaymentHistory";
 import OwnerProfile from "../dashboard/agency/OwnerProfile";
 import AgencyCars from "../dashboard/agency/AgencyCars";
 import AgencyCarDetails from "../dashboard/agency/AgencyCarDetails";
@@ -45,6 +44,15 @@ import AgencyDamageReports from "../dashboard/agency/AgencyDamageReports";
 import AgencyReviews from "../dashboard/agency/AgencyReviews";
 import DriverReviews from "../dashboard/driver/DriverReviews";
 import Payments from "../dashboard/admin/Payments";
+import AdminReviews from "../dashboard/admin/AdminReviews";
+import AdminDamageReports from "../dashboard/admin/AdminDamageReports";
+import AdminNotifications from "../dashboard/admin/AdminNotifications";
+import AdminAddress from "../dashboard/admin/AdminAddress";
+import LicenseApprovals from "../dashboard/admin/LicenseApprovals";
+import VerificationQueue from "../dashboard/admin/VerificationQueue";
+import ReportsAnalytics from "../dashboard/admin/ReportsAnalytics";
+import AdminSettings from "../dashboard/admin/AdminSettings";
+
 
 export const DashboardRoutes = [
      {
@@ -205,6 +213,38 @@ export const DashboardRoutes = [
                {
                     path: '/dashboard/admin/payments',
                     element: <RoleRoute allowedRoles={['admin']}><Payments></Payments></RoleRoute>
+               },
+               {
+                    path: '/dashboard/admin/reviews',
+                    element: <RoleRoute allowedRoles={['admin']}><AdminReviews /></RoleRoute>
+               },
+               {
+                    path: '/dashboard/admin/damage-reports',
+                    element: <RoleRoute allowedRoles={['admin']}><AdminDamageReports /></RoleRoute>
+               },
+               {
+                    path: '/dashboard/admin/notifications',
+                    element: <RoleRoute allowedRoles={['admin']}><AdminNotifications /></RoleRoute>
+               },
+               {
+                    path: '/dashboard/admin/address',
+                    element: <RoleRoute allowedRoles={['admin']}><AdminAddress /></RoleRoute>
+               },
+               {
+                    path: '/dashboard/admin/license-approvals',
+                    element: <RoleRoute allowedRoles={['admin']}><LicenseApprovals /></RoleRoute>
+               },
+               {
+                    path: '/dashboard/admin/verification-queue',
+                    element: <RoleRoute allowedRoles={['admin']}><VerificationQueue /></RoleRoute>
+               },
+               {
+                    path: '/dashboard/admin/reports',
+                    element: <RoleRoute allowedRoles={['admin']}><ReportsAnalytics /></RoleRoute>
+               },
+               {
+                    path: '/dashboard/admin/settings',
+                    element: <RoleRoute allowedRoles={['admin']}><AdminSettings /></RoleRoute>
                },
                {
                     path: '/dashboard/notificationsDriver',

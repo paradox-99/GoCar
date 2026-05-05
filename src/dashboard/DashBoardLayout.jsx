@@ -13,12 +13,13 @@ import { HiMenu } from "react-icons/hi";
 import useRole from '../hooks/useRole';
 import { FaListAlt } from "react-icons/fa";
 import { FaCartShopping } from "react-icons/fa6";
-import { IoCarSport } from "react-icons/io5";
+import { IoCarSport, IoNotificationsOutline, IoSettingsOutline } from "react-icons/io5";
 import addCar from "../assets/icons/add_car.png";
-import { FaRegCalendarCheck } from "react-icons/fa";
+import { FaRegCalendarCheck, FaMapMarkerAlt, FaIdCard } from "react-icons/fa";
 import { LuCalendarClock } from "react-icons/lu";
 import { BsShop } from "react-icons/bs";
 import { HiCurrencyBangladeshi } from "react-icons/hi";
+import { MdVerifiedUser, MdAnalytics } from "react-icons/md";
 
 const DashBoardLayout = () => {
 
@@ -154,14 +155,78 @@ const DashBoardLayout = () => {
                          <ListItemText primary="Bookings" />
                     </ListNav>
                </ListItem>
-               <ListItem disablePadding>
-                    <ListNav onClick={() => handleNavigation('/dashboard/admin/payments')} className={isActive('/dashboard/admin/payments') ? 'active' : ''}>
-                         <ListItemIcon style={{ fontSize: 20 }}>
-                              <HiCurrencyBangladeshi className='text-white' />
-                         </ListItemIcon>
-                         <ListItemText primary="Payments" />
-                    </ListNav>
-               </ListItem>
+                <ListItem disablePadding>
+                     <ListNav onClick={() => handleNavigation('/dashboard/admin/payments')} className={isActive('/dashboard/admin/payments') ? 'active' : ''}>
+                          <ListItemIcon style={{ fontSize: 20 }}>
+                               <HiCurrencyBangladeshi className='text-white' />
+                          </ListItemIcon>
+                          <ListItemText primary="Payments" />
+                     </ListNav>
+                </ListItem>
+                <ListItem disablePadding>
+                     <ListNav onClick={() => handleNavigation('/dashboard/admin/reviews')} className={isActive('/dashboard/admin/reviews') ? 'active' : ''}>
+                          <ListItemIcon style={{ fontSize: 20 }}>
+                               <ReviewsOutlined className='text-white' />
+                          </ListItemIcon>
+                          <ListItemText primary="Reviews & Ratings" />
+                     </ListNav>
+                </ListItem>
+                <ListItem disablePadding>
+                     <ListNav onClick={() => handleNavigation('/dashboard/admin/damage-reports')} className={isActive('/dashboard/admin/damage-reports') ? 'active' : ''}>
+                          <ListItemIcon style={{ fontSize: 20 }}>
+                               <ReportOutlined className='text-white' />
+                          </ListItemIcon>
+                          <ListItemText primary="Damage Reports" />
+                     </ListNav>
+                </ListItem>
+                <ListItem disablePadding>
+                     <ListNav onClick={() => handleNavigation('/dashboard/admin/notifications')} className={isActive('/dashboard/admin/notifications') ? 'active' : ''}>
+                          <ListItemIcon style={{ fontSize: 20 }}>
+                               <IoNotificationsOutline className='text-white' />
+                          </ListItemIcon>
+                          <ListItemText primary="Notifications" />
+                     </ListNav>
+                </ListItem>
+                <ListItem disablePadding>
+                     <ListNav onClick={() => handleNavigation('/dashboard/admin/address')} className={isActive('/dashboard/admin/address') ? 'active' : ''}>
+                          <ListItemIcon style={{ fontSize: 20 }}>
+                               <FaMapMarkerAlt className='text-white' />
+                          </ListItemIcon>
+                          <ListItemText primary="Address" />
+                     </ListNav>
+                </ListItem>
+                <ListItem disablePadding>
+                     <ListNav onClick={() => handleNavigation('/dashboard/admin/license-approvals')} className={isActive('/dashboard/admin/license-approvals') ? 'active' : ''}>
+                          <ListItemIcon style={{ fontSize: 20 }}>
+                               <FaIdCard className='text-white' />
+                          </ListItemIcon>
+                          <ListItemText primary="License Approvals" />
+                     </ListNav>
+                </ListItem>
+                <ListItem disablePadding>
+                     <ListNav onClick={() => handleNavigation('/dashboard/admin/verification-queue')} className={isActive('/dashboard/admin/verification-queue') ? 'active' : ''}>
+                          <ListItemIcon style={{ fontSize: 20 }}>
+                               <MdVerifiedUser className='text-white' />
+                          </ListItemIcon>
+                          <ListItemText primary="Verification Queue" />
+                     </ListNav>
+                </ListItem>
+                <ListItem disablePadding>
+                     <ListNav onClick={() => handleNavigation('/dashboard/admin/reports')} className={isActive('/dashboard/admin/reports') ? 'active' : ''}>
+                          <ListItemIcon style={{ fontSize: 20 }}>
+                               <MdAnalytics className='text-white' />
+                          </ListItemIcon>
+                          <ListItemText primary="Reports & Analytics" />
+                     </ListNav>
+                </ListItem>
+                <ListItem disablePadding>
+                     <ListNav onClick={() => handleNavigation('/dashboard/admin/settings')} className={isActive('/dashboard/admin/settings') ? 'active' : ''}>
+                          <ListItemIcon style={{ fontSize: 20 }}>
+                               <IoSettingsOutline className='text-white' />
+                          </ListItemIcon>
+                          <ListItemText primary="Settings" />
+                     </ListNav>
+                </ListItem>
           </List>
      )
 
@@ -256,86 +321,18 @@ const DashBoardLayout = () => {
      )
 
      const DrawerList = (
-          <Box sx={{ width: '100%', maxWidth: 360, bgcolor: '#FE654F' }}>
+          <Box sx={{ width: '100%', maxWidth: 360, bgcolor: '#313131', height: '100%', color: 'white' }}>
                <div className="flex justify-center flex-col items-center my-10">
                     <figure>
-                         <img src="/favicon.png" alt="" />
+                         <img src="/logo.gif" alt="" className='w-20' />
                     </figure>
-                    <h1 className="text-2xl md:text-3xl font-bold mt-5">NexGenNexus</h1>
+                    <h1 className="text-white text-4xl font-bold mt-5 text-center">go<span className="text-primary">Car</span></h1>
                </div>
                <nav aria-label="main mailbox folders">
-                    <List>
-                         {designation === 'user' && <>
-                              <ListItem disablePadding>
-                                   <ListItemButton href="/dashboard/myprofile">
-                                        <ListItemIcon style={{ fontSize: 20 }}>
-                                             <CgProfile />
-                                        </ListItemIcon>
-                                        <ListItemText primary="My Profile" />
-                                   </ListItemButton>
-                              </ListItem>
-                              <ListItem disablePadding>
-                                   <ListItemButton href="/dashboard/addProducts">
-                                        <ListItemIcon style={{ fontSize: 20 }}>
-                                             <Add />
-                                        </ListItemIcon>
-                                        <ListItemText primary="Add Products" />
-                                   </ListItemButton>
-                              </ListItem>
-                              <ListItem disablePadding>
-                                   <ListItemButton href="/dashboard/myProducts">
-                                        <ListItemIcon style={{ fontSize: 20 }}>
-                                             <SiBmcsoftware />
-                                        </ListItemIcon>
-                                        <ListItemText primary="My Products" />
-                                   </ListItemButton>
-                              </ListItem>
-                         </>}
-                         {designation === 'moderator' && <>
-                              <ListItem disablePadding>
-                                   <ListItemButton href="/dashboard/productsReview">
-                                        <ListItemIcon style={{ fontSize: 20 }}>
-                                             <ReviewsOutlined />
-                                        </ListItemIcon>
-                                        <ListItemText primary="Review Products" />
-                                   </ListItemButton>
-                              </ListItem>
-                              <ListItem disablePadding>
-                                   <ListItemButton href="/dashboard/reportedContents">
-                                        <ListItemIcon style={{ fontSize: 20 }}>
-                                             <ReportOutlined />
-                                        </ListItemIcon>
-                                        <ListItemText primary="Reported Products" />
-                                   </ListItemButton>
-                              </ListItem>
-                         </>}
-                         {designation === 'admin' && <>
-                              <ListItem disablePadding>
-                                   <ListItemButton href="/dashboard/adminDashboard">
-                                        <ListItemIcon style={{ fontSize: 20 }}>
-                                             <TbLayoutDashboardFilled />
-                                        </ListItemIcon>
-                                        <ListItemText primary="Dashboard" />
-                                   </ListItemButton>
-                              </ListItem>
-                              <ListItem disablePadding>
-                                   <ListItemButton href="/dashboard/manageUsers">
-                                        <ListItemIcon style={{ fontSize: 20 }}>
-                                             <FaUsersGear />
-                                        </ListItemIcon>
-                                        <ListItemText primary="Manage Users" />
-                                   </ListItemButton>
-                              </ListItem>
-                              <ListItem disablePadding>
-                                   <ListItemButton href="/dashboard/manageCoupons">
-                                        <ListItemIcon style={{ fontSize: 20 }}>
-                                             <BiSolidCoupon />
-                                        </ListItemIcon>
-                                        <ListItemText primary="Manage Coupons" />
-                                   </ListItemButton>
-                              </ListItem>
-                         </>}
-                    </List>
+                    {designation === 'user' && userRoutes}
+                    {designation === 'admin' && adminRoutes}
+                    {designation === 'agency' && agencyRoutes}
+                    {designation === 'driver' && driverRoutes}
                </nav>
                <Divider />
                <nav aria-label="secondary mailbox folders">
@@ -375,41 +372,48 @@ const DashBoardLayout = () => {
 
      return (
           <div className="flex relative">
-               <div className="w-[17%] fixed inset-y-0 left-0 z-40 bg-[#313131] lg:flex flex-col gap-10 hidden max-h-screen">
-                    <Box sx={{ width: '100%', maxWidth: 360, bgcolor: '#313131', color: 'white' }}>
-                         <div className="flex justify-center flex-col items-center my-6">
-                              <figure>
-                                   <img src="/logo.gif" alt="" className='w-20' />
-                              </figure>
-                              <h1 className="text-white text-4xl font-bold  text-center">go<span className="text-primary">Car</span></h1>
+               <div className="w-[17%] fixed inset-y-0 left-0 z-40 bg-[#313131] lg:flex flex-col hidden max-h-screen border-r border-[#444]">
+                    <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column', height: '100%', color: 'white', overflow: 'hidden' }}>
+                         {/* Scrollable Main Nav */}
+                         <div className="flex-1 overflow-y-auto custom-scrollbar">
+                              <div className="flex justify-center flex-col items-center my-6">
+                                   <figure>
+                                        <img src="/logo.gif" alt="" className='w-20' />
+                                   </figure>
+                                   <h1 className="text-white text-4xl font-bold  text-center">go<span className="text-primary">Car</span></h1>
+                              </div>
+                              <nav aria-label="main mailbox folders">
+                                   {designation === 'user' && userRoutes}
+                                   {designation === 'admin' && adminRoutes}
+                                   {designation === 'agency' && agencyRoutes}
+                                   {designation === 'driver' && driverRoutes}
+                              </nav>
                          </div>
-                         <nav aria-label="main mailbox folders">
-                              {designation === 'user' && userRoutes}
-                              {designation === 'admin' && adminRoutes}
-                              {designation === 'agency' && agencyRoutes}
-                              {designation === 'driver' && driverRoutes}
-                         </nav>
-                         <nav className="absolute bottom-0 w-full" aria-label="main mailbox folders">
-                              <List component="nav" aria-label="main mailbox folders">
-                                   <ListItem disablePadding>
-                                        <ListNav onClick={() => handleNavigation('/')} className={isActive('/') ? 'active' : ''}>
-                                             <ListItemIcon>
-                                                  <FaHome className='text-white' />
-                                             </ListItemIcon>
-                                             <ListItemText primary="Home" />
-                                        </ListNav>
-                                   </ListItem>
-                                   
-                                   <ListItem disablePadding>
-                                        <ListNav onClick={() => { logOut(); handleNavigation('/sign-in'); }}>
-                                             <ListItemIcon>
-                                                  <Logout className='text-white' />
-                                             </ListItemIcon>
-                                             <ListItemText primary="Sign out" />
-                                        </ListNav>
-                                   </ListItem>
-                              </List>
-                         </nav>
+
+                         {/* Fixed Bottom Nav */}
+                         <div className="border-t border-[#444] bg-[#313131]">
+                              <nav aria-label="main mailbox folders">
+                                   <List component="nav" aria-label="main mailbox folders">
+                                        <ListItem disablePadding>
+                                             <ListNav onClick={() => handleNavigation('/')} className={isActive('/') ? 'active' : ''}>
+                                                  <ListItemIcon>
+                                                       <FaHome className='text-white' />
+                                                  </ListItemIcon>
+                                                  <ListItemText primary="Home" />
+                                             </ListNav>
+                                        </ListItem>
+                                        
+                                        <ListItem disablePadding>
+                                             <ListNav onClick={() => { logOut(); handleNavigation('/sign-in'); }}>
+                                                  <ListItemIcon>
+                                                       <Logout className='text-white' />
+                                                  </ListItemIcon>
+                                                  <ListItemText primary="Sign out" />
+                                             </ListNav>
+                                        </ListItem>
+                                   </List>
+                              </nav>
+                         </div>
                     </Box>
                </div>
                <div className="flex flex-col lg:hidden font-poppins">
