@@ -18,9 +18,6 @@ const CarTypePage = () => {
           },
      })
 
-     console.log(data);
-     
-
      if (isPending) {
           return <div className="flex flex-col justify-center items-center gap-4 h-[80vh]">
                <Skeleton variant="rectangular" animation="wave" width={400} height={120}></Skeleton>

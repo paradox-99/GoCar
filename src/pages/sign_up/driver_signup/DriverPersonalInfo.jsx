@@ -120,7 +120,7 @@ const DriverPersonalInfo = () => {
                 toast.error("Invalid OTP. Please try again.");
             }
         } catch (error) {
-            console.log(error);
+            // console.log(error);
 
         }
     };
@@ -190,10 +190,9 @@ const DriverPersonalInfo = () => {
                                     onChange={(newValue) => {
                                         if (newValue) {
                                             const dateOnly = newValue.format("YYYY-MM-DD");
-                                            console.log(dateOnly); // e.g., "1998-05-20"
-                                            setBirthdatee(dateOnly); // store in state
+                                            setBirthdatee(dateOnly);
                                         } else {
-                                            setBirthdatee(""); // if cleared
+                                            setBirthdatee("");
                                         }
                                     }} />
                             </DemoContainer>

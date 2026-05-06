@@ -109,10 +109,9 @@ const Signup_part2 = () => {
                                     onChange={(newValue) => {
                                         if (newValue) {
                                             const dateOnly = newValue.format("YYYY-MM-DD");
-                                            console.log(dateOnly); // e.g., "1998-05-20"
-                                            setBirthdatee(dateOnly); // store in state
+                                            setBirthdatee(dateOnly); 
                                         } else {
-                                            setBirthdatee(""); // if cleared
+                                            setBirthdatee("");
                                         }
                                     }} />
                             </DemoContainer>

@@ -54,13 +54,9 @@ const Signup = () => {
             const password = data.password;
             const confirmPassword = data.confirmPassword;
 
-            console.log(password, confirmPassword);
-
-
             if (password === confirmPassword) {
                 handleCreateUser(email, password)
                     .then(async (res) => {
-                        // console.log(res);
                         const user = res.user;
                         await sendEmailVerification(user);
                         dispatch(setUserData(user));
@@ -86,9 +82,7 @@ const Signup = () => {
     const googleLogin = async () => {
         try {
             const result = await handleGoogleLogin();
-            // console.log(result);
             setUser(result.user);
-
             if (result.user.metadata.lastLoginAt - result.user.metadata.createdAt > 5000) {
                 toast.success("Log in successful.")
                 navigate('/');

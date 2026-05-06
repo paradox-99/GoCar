@@ -58,7 +58,6 @@ const DriverPhotoUpload = () => {
           e.preventDefault();
           setLoading(true);
           const { url } = await imageUpload(image);
-          console.log(url);
           if(url !== null){
                toast.success("Image uploaded successfully");
                dispatch(setProfilePicture(url));

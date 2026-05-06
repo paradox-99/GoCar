@@ -52,7 +52,6 @@ const Signin = () => {
             
             if (result.user.email) {
                 const userInfo = { email: result.user.email };
-                console.log(userInfo);
                 await axiosPublic.post('/authorization/jwt', userInfo, { withCredentials: true });
             }
             setUser(result.user);
@@ -68,7 +67,6 @@ const Signin = () => {
     const googleLogin = async () => {
         try {
             const result = await handleGoogleLogin();
-            // console.log(result);
             setUser(result.user);
 
             if (result.user.metadata.lastLoginAt - result.user.metadata.createdAt > 5000) {

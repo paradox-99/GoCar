@@ -107,7 +107,6 @@ const AgencyCarDetails = () => {
         }
         setPriceLoading(true);
         try {
-            console.log(`Updating price for car ${car.car_id}: ${parsed}`);
             await axiosPublic.patch(`carRoutes/updateCarInfo/${car.car_id}`, { rental_price: parsed });
             setCar(prev => ({ ...prev, rental_price: parsed }));
             toast.success("Price updated successfully.");

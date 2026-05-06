@@ -12,7 +12,6 @@ const useDesignation = () => {
         enabled: !loader && !!user?.email,
         queryFn: async () => {
             const { data } = await axiosPublic.get(`/userRoute/getUserInfo/${user?.email}`);
-            console.log("From useDesignation", data[0]);
             return data[0];
         }
     }) 

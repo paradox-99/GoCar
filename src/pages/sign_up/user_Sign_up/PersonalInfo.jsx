@@ -54,7 +54,6 @@ const PersonalInfo = () => {
 
           try {
                const result = await axios.post(`https://bulksmsbd.net/api/smsapi?api_key=${import.meta.env.VITE_sms_api_key}&type=text&number=${phone}&senderid=${import.meta.env.VITE_sms_sender_id}&message=${message}`);
-               console.log(result);
           } catch (err) {
                console.error(err);
           }
@@ -72,7 +71,7 @@ const PersonalInfo = () => {
                     toast.error("Invalid OTP. Please try again.");
                }
           } catch (error) {
-               console.log(error);
+               // console.log(error);
 
           }
      };

@@ -13,13 +13,10 @@ const BrandPage = () => {
      const { data, error, isPending } = useQuery({
           queryKey: ['brand'],
           queryFn: async () => {
-               console.log("request sent....");
                const response = await axiosPublic.get(`/carRoutes/carByBrand/${brandName}`);
                return response.data;
           },
      })
-
-     console.log(data);
      
      if (isPending) {
           return <div className="flex flex-col justify-center items-center gap-4 h-[80vh]">

@@ -28,9 +28,7 @@ const ReviewInfo = () => {
                profilePicture,
                birthdate: moment(birthdate).format('YYYY-MM-DD'),
           }
-          console.log(userData);
           
-
           const {data} = await axiosPublic.post('userRoute/createUser', userData);
           toast.success(data.message); 
           

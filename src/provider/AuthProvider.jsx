@@ -51,9 +51,7 @@ const AuthProvider = ({children}) => {
             setStatus(false);
             
             if(!user){
-                axiosPublic.post('authorization/logout', {}, { withCredentials: true })
-                .then(() => console.log("Logged out"))
-                .catch(err => console.error("Logout error:", err));
+                axiosPublic.post('authorization/logout', {}, { withCredentials: true });
             }
         });
 

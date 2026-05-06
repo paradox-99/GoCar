@@ -93,8 +93,6 @@ const OwnerProfile = () => {
           const changedFields = {};
           Object.keys(currentData).forEach(key => {
                if (currentData[key] !== originalData[key]) {
-                    console.log("changed");
-
                     changedFields[key] = currentData[key];
                }
           });
@@ -106,14 +104,11 @@ const OwnerProfile = () => {
                const changedFields = getChangedFields(ownerData, originalOwnerData);
 
                if (Object.keys(changedFields).length === 0) {
-                    console.log('No changes to save');
                     setEditingOwner(false);
                     return;
                }
 
                // Add API call to save only changed owner data
-               console.log('Saving changed owner data:', changedFields);
-               // Example API call:
                const response = await axiosPublic.patch(`agencyRoutes/updateOwnerInfo/${data?.owner_id}`, changedFields);
 
                if (response.data.success) {
@@ -134,13 +129,11 @@ const OwnerProfile = () => {
                const changedFields = getChangedFields(agencyData, originalAgencyData);
 
                if (Object.keys(changedFields).length === 0) {
-                    console.log('No changes to save');
                     setEditingAgency(false);
                     return;
                }
 
                // Add API call to save only changed agency data
-               console.log('Saving changed agency data:', changedFields);
                // Example API call:
                const response = await axiosPublic.patch(`/agencyRoutes/updateAgencyInfo/${data?.agency_id}`, changedFields);
 
@@ -188,7 +181,6 @@ const OwnerProfile = () => {
                });
 
                if (Object.keys(changedAddressFields).length === 0) {
-                    console.log('No address changes to save');
                     setEditingOwnerAddress(false);
                     return;
                }
@@ -237,7 +229,6 @@ const OwnerProfile = () => {
                });
 
                if (Object.keys(changedAddressFields).length === 0) {
-                    console.log('No address changes to save');
                     setEditingAgencyAddress(false);
                     return;
                }
