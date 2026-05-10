@@ -38,8 +38,6 @@ const adminDropDown = [
 const agencyDropDown = [
     { title: 'Profile', url: '/dashboard/agency/profile' },
     { title: 'Dashboard', url: '/dashboard/agency' },
-    { title: 'Vehicle Damage', url: '/dashboard/agency/damage-reports' },
-    { title: 'Reviews', url: '/dashboard/agency/reviews' },
 ]
 
 const driverDropDown = [

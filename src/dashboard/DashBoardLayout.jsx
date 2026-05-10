@@ -285,6 +285,22 @@ const DashBoardLayout = () => {
                          <ListItemText primary="Drivers" />
                     </ListNav>
                </ListItem>
+               <ListItem disablePadding>
+                    <ListNav onClick={() => handleNavigation('/dashboard/agency/damage-reports')} className={isActive('/dashboard/agency/damage-reports') ? 'active' : ''}>
+                         <ListItemIcon style={{ fontSize: 20 }}>
+                              <ReportOutlined className='text-white'/>
+                         </ListItemIcon>
+                         <ListItemText primary="Damage Reports" />
+                    </ListNav>
+               </ListItem>
+               <ListItem disablePadding>
+                    <ListNav onClick={() => handleNavigation('/dashboard/agency/reviews')} className={isActive('/dashboard/agency/reviews') ? 'active' : ''}>
+                         <ListItemIcon style={{ fontSize: 20 }}>
+                              <ReviewsOutlined className='text-white'/>
+                         </ListItemIcon>
+                         <ListItemText primary="Reviews & Ratings" />
+                    </ListNav>
+               </ListItem>
           </List>
      )
 

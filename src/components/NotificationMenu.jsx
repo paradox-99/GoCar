@@ -67,7 +67,7 @@ const NotificationMenu = ({ color = "inherit" }) => {
                 size="large"
                 aria-label={`show ${unreadCount} new notifications`}
                 color={color}
-                sx={{ p: 1 }}
+                sx={{ p: 1, borderRadius: 0, width: 50, height: 55 }}
             >
                 <Badge badgeContent={unreadCount} color="error">
                     <IoNotificationsOutline size={26} />
