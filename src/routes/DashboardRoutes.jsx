@@ -59,15 +59,15 @@ export const DashboardRoutes = [
           element: <PrivateRoute><DashBoardLayout /></PrivateRoute>,
           children: [
                {
-                    path: '/dashboard',
+                    path: '/dashboard/user',
                     element: <RoleRoute allowedRoles={['user']}><DashBoard></DashBoard></RoleRoute>
                },
                {
-                    path: '/dashboard/myprofile',
+                    path: '/dashboard/user/myprofile',
                     element: <RoleRoute allowedRoles={['user']}><MyProfile></MyProfile></RoleRoute>
                },
                {
-                    path: '/dashboard/my-cart',
+                    path: '/dashboard/user/my-cart',
                     element: <RoleRoute allowedRoles={['user']}><FavouriteCars /></RoleRoute>
                },
                {
@@ -78,6 +78,39 @@ export const DashboardRoutes = [
                     path: '/dashboard/user/bookings/:id',
                     element: <RoleRoute allowedRoles={['user']}><BookingDetails></BookingDetails></RoleRoute>
                },
+               {
+                    path: '/dashboard/user/my-bookings',
+                    element: <RoleRoute allowedRoles={['user']}><UserBookings /></RoleRoute>
+               },
+               {
+                    path: '/dashboard/user/my-damage-reports',
+                    element: <RoleRoute allowedRoles={['user']}><DamageHistory /></RoleRoute>
+               },
+               {
+                    path: '/dashboard/user/my-bookings/:id',
+                    element: <RoleRoute allowedRoles={['user', 'agency', 'driver']}><BookingDetails /></RoleRoute>
+               },
+               {
+                    path: '/dashboard/user/return-damage',
+                    element: <RoleRoute allowedRoles={['user']}><TripOps /></RoleRoute>
+               },
+               {
+                    path: '/dashboard/user/reviews/new',
+                    element: <RoleRoute allowedRoles={['user']}><SubmitReview /></RoleRoute>
+               },
+               {
+                    path: '/dashboard/report-damage',
+                    element: <RoleRoute allowedRoles={['user']}><ReportDamage /></RoleRoute>
+               },
+               {
+                    path: '/dashboard/user/my-reviews',
+                    element: <RoleRoute allowedRoles={['user']}><MyReviews /></RoleRoute>
+               },
+               {
+                    path: '/dashboard/user/damage-history',
+                    element: <RoleRoute allowedRoles={['user']}><DamageHistory /></RoleRoute>
+               },
+               
 
                // agency routes
                {
@@ -99,18 +132,6 @@ export const DashboardRoutes = [
                {
                     path: '/dashboard/agency/add-cars',
                     element: <RoleRoute allowedRoles={['agency']}><AddCars /></RoleRoute>
-               },
-               {
-                    path: '/dashboard/my-bookings',
-                    element: <RoleRoute allowedRoles={['user']}><UserBookings /></RoleRoute>
-               },
-               {
-                    path: '/dashboard/my-damage-reports',
-                    element: <RoleRoute allowedRoles={['user']}><DamageHistory /></RoleRoute>
-               },
-               {
-                    path: '/dashboard/my-bookings/:id',
-                    element: <RoleRoute allowedRoles={['user', 'agency', 'driver']}><BookingDetails /></RoleRoute>
                },
                {
                     path: '/dashboard/agency/bookings',
@@ -258,30 +279,9 @@ export const DashboardRoutes = [
                     element: <Notifications />
                },
                {
-                    path: '/dashboard/user/return-damage',
-                    element: <RoleRoute allowedRoles={['user']}><TripOps /></RoleRoute>
-               },
-               {
-                    path: '/dashboard/user/reviews/new',
-                    element: <RoleRoute allowedRoles={['user']}><SubmitReview /></RoleRoute>
-               },
-               {
                     path: '/dashboard/chat',
                     element: <RoleRoute allowedRoles={['user', 'agency', 'driver']}><ChatBox /></RoleRoute>
-               },
-               {
-                    path: '/dashboard/report-damage',
-                    element: <RoleRoute allowedRoles={['user']}><ReportDamage /></RoleRoute>
-               },
-               {
-                    path: '/dashboard/user/my-reviews',
-                    element: <RoleRoute allowedRoles={['user']}><MyReviews /></RoleRoute>
-               },
-               {
-                    path: '/dashboard/user/damage-history',
-                    element: <RoleRoute allowedRoles={['user']}><DamageHistory /></RoleRoute>
                }
-
           ]
      }
 ]

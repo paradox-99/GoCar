@@ -52,7 +52,7 @@ const DashBoardLayout = () => {
      const userRoutes = (
           <List component="nav" aria-label="main mailbox folders">
                <ListItem disablePadding>
-                    <ListNav onClick={() => handleNavigation('/dashboard')} className={isActive('/dashboard') ? 'active' : ''}>
+                    <ListNav onClick={() => handleNavigation('/dashboard/user')} className={isActive('/dashboard') ? 'active' : ''}>
                          <ListItemIcon style={{ fontSize: 20 }}>
                               <TbLayoutDashboardFilled color='white' />
                          </ListItemIcon>
@@ -60,7 +60,7 @@ const DashBoardLayout = () => {
                     </ListNav>
                </ListItem>
                <ListItem disablePadding>
-                    <ListNav onClick={() => handleNavigation('/dashboard/myprofile')} className={isActive('/dashboard/myprofile') ? 'active' : ''}>
+                    <ListNav onClick={() => handleNavigation('/dashboard/user/myprofile')} className={isActive('/dashboard/myprofile') ? 'active' : ''}>
                          <ListItemIcon style={{ fontSize: 20 }}>
                               <FaUser color='white' />
                          </ListItemIcon>
@@ -68,7 +68,7 @@ const DashBoardLayout = () => {
                     </ListNav>
                </ListItem>
                <ListItem disablePadding>
-                    <ListNav onClick={() => handleNavigation('/dashboard/my-bookings')} className={isActive('/dashboard/my-bookings') ? 'active' : ''}>
+                    <ListNav onClick={() => handleNavigation('/dashboard/user/my-bookings')} className={isActive('/dashboard/my-bookings') ? 'active' : ''}>
                          <ListItemIcon style={{ fontSize: 20 }}>
                               <FaListAlt color='white' />
                          </ListItemIcon>
@@ -76,7 +76,7 @@ const DashBoardLayout = () => {
                     </ListNav>
                </ListItem>
                <ListItem disablePadding>
-                    <ListNav onClick={() => handleNavigation('/dashboard/my-damage-reports')} className={isActive('/dashboard/my-damage-reports') ? 'active' : ''}>
+                    <ListNav onClick={() => handleNavigation('/dashboard/user/my-damage-reports')} className={isActive('/dashboard/my-damage-reports') ? 'active' : ''}>
                          <ListItemIcon style={{ fontSize: 20 }}>
                               <ReportOutlined className='text-white'/>
                          </ListItemIcon>
@@ -84,11 +84,27 @@ const DashBoardLayout = () => {
                     </ListNav>
                </ListItem>
                <ListItem disablePadding>
-                    <ListNav onClick={() => handleNavigation('/dashboard/my-cart')} className={isActive('/dashboard/my-cart') ? 'active' : ''}>
+                    <ListNav onClick={() => handleNavigation('/dashboard/user/my-cart')} className={isActive('/dashboard/my-cart') ? 'active' : ''}>
                          <ListItemIcon style={{ fontSize: 20 }}>
                               <FaCartShopping className='text-white' />
                          </ListItemIcon>
                          <ListItemText primary="Favourite List" />
+                    </ListNav>
+               </ListItem>
+               <ListItem disablePadding>
+                    <ListNav onClick={() => handleNavigation('/dashboard/user/my-reviews')} className={isActive('/dashboard/user/my-reviews') ? 'active' : ''}>
+                         <ListItemIcon style={{ fontSize: 20 }}>
+                              <ReviewsOutlined className='text-white' />
+                         </ListItemIcon>
+                         <ListItemText primary="My Reviews" />
+                    </ListNav>
+               </ListItem>
+               <ListItem disablePadding>
+                    <ListNav onClick={() => handleNavigation('/dashboard/user/damage-history')} className={isActive('/dashboard/user/damage-history') ? 'active' : ''}>
+                         <ListItemIcon style={{ fontSize: 20 }}>
+                              <ReportOutlined className='text-white' />
+                         </ListItemIcon>
+                         <ListItemText primary="Damage History" />
                     </ListNav>
                </ListItem>
           </List>

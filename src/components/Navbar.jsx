@@ -28,8 +28,6 @@ const pages = [
 const userDropdown = [
     { title: 'Profile', url: '/dashboard/myprofile' },
     { title: 'Dashboard', url: '/dashboard' },
-    { title: 'My Reviews', url: '/dashboard/user/my-reviews' },
-    { title: 'Damage History', url: '/dashboard/user/damage-history' },
 ];
 
 const adminDropDown = [
