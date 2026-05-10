@@ -1,27 +1,15 @@
-import React, { useState, useMemo, useRef } from 'react';
-import {
-    Box, Typography, Paper, Grid, Card, CardContent, Button, Stack,
-    IconButton, Divider, MenuItem, Select, FormControl,
-    TextField, Chip, useTheme, Avatar, Switch, FormControlLabel,
-    InputAdornment, Tooltip, Badge, Table, TableBody, TableCell,
-    TableContainer, TableHead, TableRow, TablePagination, Alert,
-    Dialog, DialogTitle, DialogContent, DialogActions, LinearProgress,
-    Fade, Tab, Tabs, List, ListItem, ListItemIcon, ListItemText, ListItemButton
+import { useState, useMemo, useRef } from 'react';
+import {  Box, Typography, Paper, Grid, Card, CardContent, Button, Stack,
+    IconButton, MenuItem, Select, FormControl, TextField, Chip, useTheme, Avatar, Switch, FormControlLabel, InputAdornment, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, LinearProgress, Fade, List, ListItem, ListItemIcon, ListItemText, ListItemButton
 } from '@mui/material';
-import {
-    Person, Security, Notifications, History, Group, Settings as SettingsIcon,
-    CameraAlt, Edit, Lock, Visibility, VisibilityOff, VerifiedUser,
-    CheckCircle, Cancel as CancelIcon, Map, Info, Warning,
-    DeleteForever, PowerSettingsNew, Search, FilterList,
-    Download, Laptop, Smartphone, Tablet, MoreVert,
-    Check, Close, Mail, Phone, CalendarToday, Fingerprint,
-    Public, Verified, ErrorOutline, LockOutlined, AccessTime
+import { Person, Security, Notifications, History, Group, Settings as SettingsIcon,CameraAlt, Lock, Visibility, VisibilityOff, VerifiedUser, CheckCircle, Cancel as CancelIcon, Map, DeleteForever, Search, FilterList, Download, Laptop, Smartphone, Tablet, MoreVert, Check, Close, CalendarToday, Public, Verified, LockOutlined, AccessTime, DirectionsCar, MonetizationOn
 } from '@mui/icons-material';
 import moment from 'moment';
 import useAxiosPublic from '../../hooks/useAxiosPublic';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import toast from 'react-hot-toast';
 import useAuth from '../../hooks/useAuth';
+import axios from 'axios';
 
 // --- Helper Components ---
 const SectionHeader = ({ title, subtitle }) => (
@@ -52,6 +40,11 @@ const AdminSettings = () => {
     const [activeSection, setActiveSection] = useState('profile');
     const [isEditMode, setIsEditMode] = useState(false);
     
+    // --- Photo Management State ---
+    const [photoFile, setPhotoFile] = useState(null);
+    const [photoPreview, setPhotoPreview] = useState('');
+    const fileInputRef = useRef(null);
+
     // --- Data Fetching ---
     const { data: profileData, isLoading: profileLoading } = useQuery({
         queryKey: ['admin-profile', authUser?.email],
@@ -66,6 +59,21 @@ const AdminSettings = () => {
         queryFn: async () => {
             const res = await axiosPublic.get('/admin-settings/platform');
             return res.data;
+        }
+    });
+
+    const profileUpdateMutation = useMutation({
+        mutationFn: async (updatedData) => {
+            const res = await axiosPublic.put('/admin-settings/profile', updatedData);
+            return res.data;
+        },
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['admin-profile'] });
+            toast.success('✅ Profile updated successfully');
+            setPhotoFile(null);
+        },
+        onError: (err) => {
+            toast.error(err.response?.data?.message || 'Failed to update profile');
         }
     });
 
@@ -94,7 +102,15 @@ const AdminSettings = () => {
             <Box maxWidth="1400px" mx="auto">
                 
                 {/* 1. Header Banner */}
-                <ProfileHeader profile={profileData} isLoading={profileLoading} />
+                <ProfileHeader 
+                    profile={profileData} 
+                    isLoading={profileLoading} 
+                    photoFile={photoFile}
+                    setPhotoFile={setPhotoFile}
+                    photoPreview={photoPreview}
+                    setPhotoPreview={setPhotoPreview}
+                    fileInputRef={fileInputRef}
+                />
 
                 <Grid container spacing={4} sx={{ mt: 2 }}>
                     {/* 2. Sidebar Navigation */}
@@ -146,7 +162,17 @@ const AdminSettings = () => {
                     <Grid item xs={12} md={9}>
                         <Fade in={true} timeout={500}>
                             <Box>
-                                {activeSection === 'profile' && <MyProfileSection data={profileData} />}
+                                {activeSection === 'profile' && (
+                                    <MyProfileSection 
+                                        data={profileData} 
+                                        mutation={profileUpdateMutation}
+                                        photoFile={photoFile}
+                                        setPhotoFile={setPhotoFile}
+                                        photoPreview={photoPreview}
+                                        setPhotoPreview={setPhotoPreview}
+                                        fileInputRef={fileInputRef}
+                                    />
+                                )}
                                 {activeSection === 'security' && <SecuritySection />}
                                 {activeSection === 'notifications' && <NotificationSection data={profileData} />}
                                 {activeSection === 'activity' && <ActivityLogSection />}
@@ -163,9 +189,21 @@ const AdminSettings = () => {
 
 // --- SUB-COMPONENTS ---
 
-const ProfileHeader = ({ profile, isLoading }) => {
+const ProfileHeader = ({ profile, isLoading, setPhotoFile, photoPreview, setPhotoPreview, fileInputRef }) => {
     if (isLoading) return <LinearProgress color="warning" sx={{ borderRadius: 2 }} />;
     
+    const handlePhotoChange = (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            setPhotoFile(file);
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                setPhotoPreview(reader.result);
+            };
+            reader.readAsDataURL(file);
+        }
+    };
+
     return (
         <Paper sx={{ 
             borderRadius: 6, 
@@ -180,11 +218,19 @@ const ProfileHeader = ({ profile, isLoading }) => {
                 <Grid item>
                     <Box position="relative">
                         <Avatar 
-                            src={profile?.photo} 
+                            src={photoPreview || profile?.photo} 
                             sx={{ width: 100, height: 100, border: '4px solid #fff', boxShadow: '0 10px 15px -3px rgb(0 0 0 / 0.1)' }} 
+                        />
+                        <input
+                            type="file"
+                            ref={fileInputRef}
+                            hidden
+                            accept="image/*"
+                            onChange={handlePhotoChange}
                         />
                         <IconButton 
                             size="small"
+                            onClick={() => fileInputRef.current.click()}
                             sx={{ 
                                 position: 'absolute', bottom: 0, right: 0, 
                                 bgcolor: '#F97316', color: '#fff',
@@ -235,7 +281,7 @@ const ProfileHeader = ({ profile, isLoading }) => {
     );
 };
 
-const MyProfileSection = ({ data }) => {
+const MyProfileSection = ({ data, mutation, photoFile }) => {
     const theme = useTheme();
     const [formData, setFormData] = useState(data || {});
     const [isDirty, setIsDirty] = useState(false);
@@ -246,8 +292,58 @@ const MyProfileSection = ({ data }) => {
         return moment().diff(moment(data.dob), 'years');
     }, [data?.dob]);
 
-    const handleSave = () => {
-        toast.success('✅ Profile updated successfully');
+    const handleInputChange = (e) => {
+        const { name, value } = e.target;
+        setFormData(prev => ({ ...prev, [name]: value }));
+        setIsDirty(true);
+    };
+
+    const handleAddressChange = (e) => {
+        const { name, value } = e.target;
+        setFormData(prev => ({
+            ...prev,
+            address: { ...prev.address, [name]: value }
+        }));
+        setIsDirty(true);
+    };
+
+    const handleSave = async () => {
+        let finalPhotoUrl = data.photo;
+
+        if (photoFile) {
+            const toastId = toast.loading('Uploading photo...');
+            try {
+                const imgbbKey = import.meta.env.VITE_imgbb_api_key;
+                const imgFormData = new FormData();
+                imgFormData.append('image', photoFile);
+                const res = await axios.post(`https://api.imgbb.com/1/upload?key=${imgbbKey}`, imgFormData);
+                finalPhotoUrl = res.data.data.display_url;
+                toast.success('Photo uploaded!', { id: toastId });
+            } catch (err) {
+                toast.error('Photo upload failed', { id: toastId });
+                return;
+            }
+        }
+
+        const updateData = {
+            name: formData.name,
+            phone: formData.phone,
+            gender: formData.gender,
+            dob: formData.dob,
+            nid: formData.nid,
+            photo: finalPhotoUrl,
+            address_id: data.address_id,
+            address: {
+                city: formData.city || data.city,
+                area: formData.area || data.area,
+                postcode: formData.postcode || data.postcode,
+                display_name: formData.address_display_name || data.address_display_name,
+                latitude: data.latitude,
+                longitude: data.longitude
+            }
+        };
+
+        mutation.mutate(updateData);
         setIsDirty(false);
     };
 
@@ -260,8 +356,9 @@ const MyProfileSection = ({ data }) => {
                     <Grid item xs={12} md={6}>
                         <TextField 
                             fullWidth label="Full Name" 
-                            defaultValue={data?.name} 
-                            onChange={() => setIsDirty(true)}
+                            name="name"
+                            value={formData.name || ''} 
+                            onChange={handleInputChange}
                             InputProps={{ sx: { borderRadius: 3 } }}
                         />
                     </Grid>
@@ -290,13 +387,20 @@ const MyProfileSection = ({ data }) => {
                     <Grid item xs={12} md={6}>
                         <TextField 
                             fullWidth label="Phone Number" 
-                            defaultValue={data?.phone}
+                            name="phone"
+                            value={formData.phone || ''}
+                            onChange={handleInputChange}
                             InputProps={{ sx: { borderRadius: 3 } }}
                         />
                     </Grid>
                     <Grid item xs={12} md={6}>
                         <FormControl fullWidth>
-                            <Select defaultValue={data?.gender || 'Prefer not to say'} sx={{ borderRadius: 3 }}>
+                            <Select 
+                                name="gender"
+                                value={formData.gender || 'Prefer not to say'} 
+                                onChange={handleInputChange}
+                                sx={{ borderRadius: 3 }}
+                            >
                                 <MenuItem value="Male">Male</MenuItem>
                                 <MenuItem value="Female">Female</MenuItem>
                                 <MenuItem value="Other">Other</MenuItem>
@@ -309,7 +413,9 @@ const MyProfileSection = ({ data }) => {
                             <TextField 
                                 fullWidth label="Date of Birth" 
                                 type="date" 
-                                defaultValue={data?.dob ? moment(data.dob).format('YYYY-MM-DD') : ''}
+                                name="dob"
+                                value={formData.dob ? moment(formData.dob).format('YYYY-MM-DD') : ''}
+                                onChange={handleInputChange}
                                 InputProps={{ sx: { borderRadius: 3 } }}
                                 InputLabelProps={{ shrink: true }}
                             />
@@ -320,7 +426,9 @@ const MyProfileSection = ({ data }) => {
                         <TextField 
                             fullWidth label="NID Number" 
                             type={showNid ? 'text' : 'password'}
-                            defaultValue={data?.nid}
+                            name="nid"
+                            value={formData.nid || ''}
+                            onChange={handleInputChange}
                             InputProps={{ 
                                 sx: { borderRadius: 3 },
                                 endAdornment: (
@@ -341,13 +449,20 @@ const MyProfileSection = ({ data }) => {
                     <Grid item xs={12} md={6}>
                         <TextField 
                             fullWidth label="Display Name" 
-                            defaultValue={data?.address_display_name}
+                            name="address_display_name"
+                            value={formData.address_display_name || ''}
+                            onChange={handleInputChange}
                             InputProps={{ sx: { borderRadius: 3 } }}
                         />
                     </Grid>
                     <Grid item xs={12} md={6}>
                         <FormControl fullWidth>
-                            <Select defaultValue={data?.city || 'Dhaka'} sx={{ borderRadius: 3 }}>
+                            <Select 
+                                name="city"
+                                value={formData.city || 'Dhaka'} 
+                                onChange={handleInputChange}
+                                sx={{ borderRadius: 3 }}
+                            >
                                 <MenuItem value="Dhaka">Dhaka</MenuItem>
                                 <MenuItem value="Chittagong">Chittagong</MenuItem>
                                 <MenuItem value="Sylhet">Sylhet</MenuItem>
@@ -356,10 +471,10 @@ const MyProfileSection = ({ data }) => {
                         </FormControl>
                     </Grid>
                     <Grid item xs={12} md={6}>
-                        <TextField fullWidth label="Area" defaultValue={data?.area} InputProps={{ sx: { borderRadius: 3 } }} />
+                        <TextField fullWidth label="Area" name="area" value={formData.area || ''} onChange={handleInputChange} InputProps={{ sx: { borderRadius: 3 } }} />
                     </Grid>
                     <Grid item xs={12} md={6}>
-                        <TextField fullWidth label="Postcode" defaultValue={data?.postcode} InputProps={{ sx: { borderRadius: 3 } }} />
+                        <TextField fullWidth label="Postcode" name="postcode" value={formData.postcode || ''} onChange={handleInputChange} InputProps={{ sx: { borderRadius: 3 } }} />
                     </Grid>
                     <Grid item xs={12}>
                         <Box display="flex" alignItems="center" gap={2} p={2} bgcolor="#f8fafc" borderRadius={3} border="1px dashed #cbd5e1">

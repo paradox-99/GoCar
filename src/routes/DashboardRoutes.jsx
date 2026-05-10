@@ -2,7 +2,6 @@ import DashBoardLayout from "../dashboard/DashBoardLayout";
 import DashBoard from "../dashboard/user/DashBoard";
 import MyProfile from "../dashboard/user/MyProfile";
 import AdminDashboard from "../dashboard/admin/AdminDashboard";
-import AdminProfile from "../dashboard/admin/AdminProfile";
 import AdminUserDetail from "../dashboard/admin/AdminUserDetail";
 import AdminVehicleDetail from "../dashboard/admin/AdminVehicleDetail";
 import Agencies from "../dashboard/admin/Agencies";

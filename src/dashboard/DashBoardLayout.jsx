@@ -1,12 +1,9 @@
 import { useState } from 'react';
 import useAuth from '../hooks/useAuth';
 import { Box, Button, Divider, Drawer, List, ListItem, ListItemButton, ListItemIcon, ListItemText, styled } from '@mui/material';
-import { Add, Logout, ReportOutlined, ReviewsOutlined } from '@mui/icons-material';
+import { Logout, ReportOutlined, ReviewsOutlined } from '@mui/icons-material';
 import { SiBmcsoftware } from "react-icons/si";
-import { FaUsersGear } from "react-icons/fa6";
-import { BiSolidCoupon } from "react-icons/bi";
 import { TbLayoutDashboardFilled } from "react-icons/tb";
-import { CgProfile } from "react-icons/cg";
 import { FaHome, FaUser, FaUsers, FaUserTie } from "react-icons/fa";
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { HiMenu } from "react-icons/hi";
