@@ -171,10 +171,6 @@ export const DashboardRoutes = [
                     element: <RoleRoute allowedRoles={['admin']}><AdminDashboard></AdminDashboard></RoleRoute>
                },
                {
-                    path: '/dashboard/admin-profile',
-                    element: <RoleRoute allowedRoles={['admin']}><AdminProfile></AdminProfile></RoleRoute>
-               },
-               {
                     path: '/dashboard/admin/users',
                     element: <RoleRoute allowedRoles={['admin']}><Users /></RoleRoute>
                },

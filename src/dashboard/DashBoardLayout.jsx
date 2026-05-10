@@ -108,14 +108,6 @@ const DashBoardLayout = () => {
                     </ListNav>
                </ListItem>
                <ListItem disablePadding>
-                    <ListNav onClick={() => handleNavigation('/dashboard/admin-profile')} className={isActive('/dashboard/admin-profile') ? 'active' : ''}>
-                         <ListItemIcon style={{ fontSize: 20 }}>
-                              <FaUser color='white' />
-                         </ListItemIcon>
-                         <ListItemText primary="Profile" />
-                    </ListNav>
-               </ListItem>
-               <ListItem disablePadding>
                     <ListNav onClick={() => handleNavigation('/dashboard/admin/users')} className={isActive('/dashboard/admin/users') ? 'active' : ''}>
                          <ListItemIcon style={{ fontSize: 20 }}>
                          <FaUsers className='text-white' />
