@@ -38,7 +38,7 @@ import {
 import { motion, AnimatePresence } from 'framer-motion';
 import toast from 'react-hot-toast';
 import auth from '../../firebase/firebase.config';
-import { createUserWithEmailAndPassword } from 'firebase/auth';
+import { createUserJWithEmailAndPassword } from 'firebase/auth';
 import emailjs from '@emailjs/browser';
 import { format, differenceInDays, parseISO, isValid } from 'date-fns';
 
