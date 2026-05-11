@@ -1,14 +1,9 @@
 /* eslint-disable react/prop-types */
-import { useState, useMemo, useCallback, useRef } from 'react';
+import { useState, useMemo, useCallback } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { format, differenceInDays, parseISO, isValid } from 'date-fns';
 import { motion, AnimatePresence } from 'framer-motion';
-import {
-    AlertTriangle, Search, ChevronDown, ChevronUp, ChevronRight, ChevronLeft,
-    Car, Eye, Edit2, DollarSign, ArrowRight, Download, Calendar, Copy, Check,
-    X, Clock, CheckCircle, AlertCircle, Wrench, Camera, FileText, User,
-    CreditCard, RefreshCw, Layers, Filter
-} from 'lucide-react';
+import { AlertTriangle, Search, ChevronDown, ChevronUp, ChevronRight, ChevronLeft,Car, Eye, Edit2, DollarSign, ArrowRight, Download, Calendar, Copy, Check,X, CheckCircle, Wrench, Camera, FileText, RefreshCw, Layers } from 'lucide-react';
 import useAuth from '../../hooks/useAuth';
 import useAxiosPublic from '../../hooks/useAxiosPublic';
 import toast from 'react-hot-toast';
@@ -16,7 +11,7 @@ import toast from 'react-hot-toast';
 // ─── Constants ────────────────────────────────────────────────────────────────
 
 const STATUS_UI = { 'Pending': 'Open', 'On-Review': 'Under Review', 'Resolved': 'Resolved' };
-const STATUS_DB = { 'Open': 'Pending', 'Under Review': 'On-Review', 'Resolved': 'Resolved' };
+// const STATUS_DB = { 'Open': 'Pending', 'Under Review': 'On-Review', 'Resolved': 'Resolved' };
 const SEV_UI = { 'Low': 'Minor', 'Medium': 'Moderate', 'High': 'Severe' };
 
 const SEV_STYLE = {
@@ -218,7 +213,7 @@ const PhotoGallery = ({ photos }) => {
 
 // ─── Damage Detail Modal ──────────────────────────────────────────────────────
 
-const DamageDetailModal = ({ damageId, agencyProfile, onClose, onRefresh }) => {
+const DamageDetailModal = ({ damageId, onClose, onRefresh }) => {
     const [activeTab, setActiveTab] = useState('overview');
     const [editingCost, setEditingCost] = useState(false);
     const [costInput, setCostInput] = useState('');
