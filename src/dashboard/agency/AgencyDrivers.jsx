@@ -1,46 +1,17 @@
-import React, { useState, useMemo, useEffect } from 'react';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { useForm, useFieldArray } from 'react-hook-form';
+import { useState, useMemo, useEffect } from 'react';
+import PropTypes from 'prop-types';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { useForm } from 'react-hook-form';
 import useAxiosPublic from '../../hooks/useAxiosPublic';
 import useAuth from '../../hooks/useAuth';
 import Loader from '../../components/Loader';
-import { 
-    Users, 
-    UserCheck, 
-    UserPlus, 
-    Search, 
-    Filter, 
-    Star, 
-    MoreHorizontal, 
-    Mail, 
-    Phone, 
-    Briefcase, 
-    Calendar, 
-    CheckCircle2, 
-    AlertCircle, 
-    X, 
-    ChevronRight, 
-    ChevronLeft, 
-    Upload, 
-    Trash2, 
-    ShieldAlert, 
-    MapPin, 
-    Clock, 
-    History, 
-    FileText, 
-    CreditCard,
-    ExternalLink,
-    Copy,
-    Check,
-    LogOut,
-    Eye
-} from 'lucide-react';
+import { Users, UserCheck, UserPlus, Search,  Star, Mail, Phone, Briefcase, Calendar, CheckCircle2, X, ChevronRight, ChevronLeft, Upload,  ShieldAlert, MapPin, Clock, History, FileText,Copy,Check,Eye } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import toast from 'react-hot-toast';
 import auth from '../../firebase/firebase.config';
-import { createUserJWithEmailAndPassword } from 'firebase/auth';
+import { createUserWithEmailAndPassword } from 'firebase/auth';
 import emailjs from '@emailjs/browser';
-import { format, differenceInDays, parseISO, isValid } from 'date-fns';
+import { format, differenceInDays } from 'date-fns';
 
 // --- Helpers ---
 const generatePassword = () => {
@@ -148,17 +119,29 @@ const DriverCard = ({ driver, onViewDetails }) => {
     );
 };
 
+DriverCard.propTypes = {
+    driver: PropTypes.object.isRequired,
+    onViewDetails: PropTypes.func
+};
+
+StatChip.propTypes = {
+    label: PropTypes.string.isRequired,
+    value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+    type: PropTypes.string.isRequired,
+    suffix: PropTypes.string
+};
+
 const AddDriverModal = ({ isOpen, onClose, agencyId }) => {
     const [step, setStep] = useState(1);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [uploadedImageUrl, setUploadedImageUrl] = useState(null);
-    const [generatedPass, setGeneratedPass] = useState('');
+    const [, setGeneratedPass] = useState('');
     const [successData, setSuccessData] = useState(null);
     
     const axiosPublic = useAxiosPublic();
     const queryClient = useQueryClient();
     
-    const { register, handleSubmit, watch, setValue, trigger, formState: { errors }, reset } = useForm({
+    const { register, handleSubmit, watch, trigger, formState: { errors }, reset } = useForm({
         defaultValues: {
             name: '', email: '', phone: '', gender: 'Male', dob: '', nid: '',
             city: '', area: '', postcode: '',
@@ -218,7 +201,7 @@ const AddDriverModal = ({ isOpen, onClose, agencyId }) => {
             } else {
                 throw new Error('Upload failed');
             }
-        } catch (err) {
+        } catch {
             toast.error('Failed to upload photo', { id: 'img-upload' });
         }
     };
@@ -460,7 +443,7 @@ const AddDriverModal = ({ isOpen, onClose, agencyId }) => {
                                     <span className="text-sm font-medium">{formData.area}, {formData.city}, {formData.postcode}</span>
                                 </div>
                             </div>
-                            <p className="text-center text-xs text-gray-400 font-medium px-12">By clicking "Confirm & Add Driver", you will create a new login account for this driver. They will receive an email with their temporary credentials.</p>
+                            <p className="text-center text-xs text-gray-400 font-medium px-12">By clicking &quot;Confirm &amp; Add Driver&quot;, you will create a new login account for this driver. They will receive an email with their temporary credentials.</p>
                         </div>
                     )}
 
@@ -526,6 +509,12 @@ const AddDriverModal = ({ isOpen, onClose, agencyId }) => {
     );
 };
 
+AddDriverModal.propTypes = {
+    isOpen: PropTypes.bool.isRequired,
+    onClose: PropTypes.func.isRequired,
+    agencyId: PropTypes.string
+};
+
 const DriverDetailsModal = ({ driver, isOpen, onClose }) => {
     const [activeTab, setActiveTab] = useState('Profile');
     const axiosPublic = useAxiosPublic();
@@ -564,7 +553,7 @@ const DriverDetailsModal = ({ driver, isOpen, onClose }) => {
                 toast.success('Driver suspended successfully');
                 queryClient.invalidateQueries(['agency-drivers']);
                 onClose();
-            } catch (err) {
+            } catch {
                 toast.error('Failed to suspend driver');
             }
         }
@@ -577,7 +566,7 @@ const DriverDetailsModal = ({ driver, isOpen, onClose }) => {
                 toast.success('Driver removed from agency');
                 queryClient.invalidateQueries(['agency-drivers']);
                 onClose();
-            } catch (err) {
+            } catch {
                 toast.error('Failed to remove driver');
             }
         }
@@ -815,7 +804,7 @@ const DriverDetailsModal = ({ driver, isOpen, onClose }) => {
                                                             {[1,2,3,4,5].map(s => <Star key={s} size={12} fill={s <= review.rating ? "currentColor" : "none"} />)}
                                                         </div>
                                                     </div>
-                                                    <p className="text-sm text-gray-600 italic leading-relaxed">"{review.review}"</p>
+                                                    <p className="text-sm text-gray-600 italic leading-relaxed">{review.review}</p>
                                                 </div>
                                             ))}
                                         </div>
@@ -888,7 +877,7 @@ const DriverDetailsModal = ({ driver, isOpen, onClose }) => {
                                                             await axiosPublic.patch(`/driverRoutes/availability/${driver.driver_id}`, { availability: !driver.availability });
                                                             toast.success(`Driver is now ${!driver.availability ? 'Available' : 'Unavailable'}`);
                                                             queryClient.invalidateQueries(['agency-drivers']);
-                                                        } catch (err) { toast.error('Failed to update availability'); }
+                                                        } catch { toast.error('Failed to update availability'); }
                                                     }}
                                                     className="peer appearance-none w-full h-full bg-gray-200 rounded-full checked:bg-orange-600 transition-colors cursor-pointer outline-none"
                                                 />
@@ -929,12 +918,17 @@ const DriverDetailsModal = ({ driver, isOpen, onClose }) => {
     );
 };
 
+DriverDetailsModal.propTypes = {
+    driver: PropTypes.object.isRequired,
+    isOpen: PropTypes.bool.isRequired,
+    onClose: PropTypes.func.isRequired
+};
+
 // --- Main Page Component ---
 
 const AgencyDrivers = () => {
     const axiosPublic = useAxiosPublic();
     const { user } = useAuth();
-    const queryClient = useQueryClient();
 
     const [isAddModalOpen, setIsAddModalOpen] = useState(false);
     const [selectedDriver, setSelectedDriver] = useState(null);
@@ -1010,11 +1004,6 @@ const AgencyDrivers = () => {
 
     return (
         <div className="p-4 md:p-8 bg-gray-50 min-h-screen">
-            <Helmet>
-                <title>My Drivers | GoCar Agency Dashboard</title>
-                <meta name="description" content="Manage and monitor your agency's professional drivers on GoCar." />
-            </Helmet>
-
             {/* Header Section */}
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-10">
                 <div>
