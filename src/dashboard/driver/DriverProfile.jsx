@@ -1,19 +1,12 @@
 /* eslint-disable react/prop-types */
-import { useState, useEffect, useRef, useCallback } from 'react';
+import { useState, useRef } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import {
-    User, Mail, Phone, Calendar, CreditCard, MapPin, Shield, Star, Camera,
-    Edit3, Save, X, ChevronDown, ChevronUp, Eye, EyeOff, LogOut, AlertTriangle,
-    CheckCircle, Clock, ToggleLeft, ToggleRight, Lock, Upload, RefreshCw,
-    TrendingUp, TrendingDown, Car, DollarSign, Award, ChevronLeft, ChevronRight,
-    AlertCircle, Info, Trash2
-} from 'lucide-react';
+import { MapPin, Star, Camera,
+    Edit3, Save, X, ChevronDown, ChevronUp, Eye, EyeOff, LogOut, AlertTriangle, CheckCircle, Clock, Upload, RefreshCw, TrendingUp, TrendingDown, Car, DollarSign, ChevronLeft, ChevronRight, AlertCircle, Info, Trash2 } from 'lucide-react';
 import { format, formatDistanceToNow, differenceInDays, parseISO, isValid, differenceInYears } from 'date-fns';
 import { motion, AnimatePresence } from 'framer-motion';
-import {
-    updatePassword, reauthenticateWithCredential, EmailAuthProvider,
-    signOut, sendEmailVerification
-} from 'firebase/auth';
+import { updatePassword, reauthenticateWithCredential, EmailAuthProvider,
+    signOut, sendEmailVerification } from 'firebase/auth';
 import auth from '../../firebase/firebase.config';
 import toast from 'react-hot-toast';
 import useAuth from '../../hooks/useAuth';
@@ -839,7 +832,6 @@ const DriverProfile = () => {
     const { user, logOut } = useAuth();
     const axiosPublic = useAxiosPublic();
     const queryClient = useQueryClient();
-    const tabRefs = { license: useRef(null), security: useRef(null) };
 
     const [activeTab, setActiveTab] = useState(0);
     const [dismissed, setDismissed] = useState({});
@@ -885,11 +877,6 @@ const DriverProfile = () => {
             id: 'incomplete', type: 'orange', icon: Info,
             message: 'Your profile is incomplete. Complete your profile to improve your chances of getting bookings.',
             action: 'Complete Now', onAction: () => setCompletionOpen(true),
-        },
-        !localStorage.getItem('driver_pw_changed') && {
-            id: 'tempPw', type: 'blue', icon: Lock,
-            message: 'You are using a temporary password. Please change your password to secure your account.',
-            action: 'Change Now', onAction: () => setActiveTab(4),
         },
     ].filter(Boolean) : [];
 
@@ -1129,7 +1116,7 @@ const DriverProfile = () => {
                                     {availConfirm && (
                                         <motion.div initial={{ opacity: 0, y: -8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}
                                             className="mt-2 p-3 bg-gray-50 border border-gray-200 rounded-xl text-xs">
-                                            <p className="font-medium text-gray-700 mb-2">Mark yourself as unavailable? You won't receive new booking requests.</p>
+                                            <p className="font-medium text-gray-700 mb-2">Mark yourself as unavailable? You won `&apos;`t receive new booking requests.</p>
                                             <div className="flex gap-2">
                                                 <button onClick={confirmUnavailable} className="flex-1 py-1 bg-orange-500 text-white rounded-lg font-medium">Confirm</button>
                                                 <button onClick={() => setAvailConfirm(false)} className="flex-1 py-1 border border-gray-200 rounded-lg text-gray-600">Cancel</button>
