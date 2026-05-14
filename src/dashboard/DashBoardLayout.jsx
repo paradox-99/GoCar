@@ -315,7 +315,7 @@ const DashBoardLayout = () => {
                     </ListNav>
                </ListItem>
                <ListItem disablePadding>
-                    <ListNav onClick={() => handleNavigation('/dashboard/driver-profile')} className={isActive('/dashboard/driver-profile') ? 'active' : ''}>
+                    <ListNav onClick={() => handleNavigation('/dashboard/driver/profile')} className={isActive('/dashboard/driver/profile') ? 'active' : ''}>
                          <ListItemIcon style={{ fontSize: 20 }}>
                               <FaUser className='text-white w-5' />
                          </ListItemIcon>
@@ -331,11 +331,11 @@ const DashBoardLayout = () => {
                     </ListNav>
                </ListItem>
                <ListItem disablePadding>
-                    <ListNav onClick={() => handleNavigation('/dashboard/notificationsDriver')} className={isActive('/dashboard/notificationsDriver') ? 'active' : ''}>
+                    <ListNav onClick={() => handleNavigation('/dashboard/driver/reviews')} className={isActive('/dashboard/driver/reviews') ? 'active' : ''}>
                          <ListItemIcon style={{ fontSize: 20 }}>
                               <ReviewsOutlined className='text-white' />
                          </ListItemIcon>
-                         <ListItemText primary="Notifications" />
+                         <ListItemText primary="Reviews & Ratings" />
                     </ListNav>
                </ListItem>
           </List>

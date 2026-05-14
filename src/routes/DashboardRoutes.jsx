@@ -11,7 +11,6 @@ import AdminAgencyDetail from "../dashboard/admin/AdminAgencyDetail";
 import AgencyDashboard from "../dashboard/agency/AgencyDashboard";
 import FavouriteCars from "../dashboard/user/FavouriteCars";
 import UserBookings from "../dashboard/user/UserBookings";
-import UserDamageReports from "../dashboard/user/UserDamageReports";
 import BookingDetails from "../dashboard/user/BookingDetails";
 import Users from "../dashboard/admin/Users";
 import Vehicles from "../dashboard/admin/Vehicles";
@@ -29,7 +28,6 @@ import DriverDashboard from "../dashboard/driver/DriverDashboard";
 import DriverProfile from "../dashboard/driver/DriverProfile";
 import Notifications from "../dashboard/shared/Notifications";
 import TripOps from "../dashboard/shared/TripOps";
-import DamageReportForm from "../dashboard/shared/DamageReportForm";
 import SubmitReview from "../dashboard/shared/SubmitReview";
 import ChatBox from "../dashboard/shared/ChatBox";
 import DriverTrips from "../dashboard/driver/DriverTrips";
@@ -160,7 +158,7 @@ export const DashboardRoutes = [
                     element: <RoleRoute allowedRoles={['driver']}><DriverDashboard /></RoleRoute>
                },
                {
-                    path: '/dashboard/driver-profile',
+                    path: '/dashboard/driver/profile',
                     element: <RoleRoute allowedRoles={['driver']}><DriverProfile /></RoleRoute>
                },
                {

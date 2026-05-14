@@ -2,8 +2,8 @@
 import { useState, useRef } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { MapPin, Star, Camera,
-    Edit3, Save, X, ChevronDown, ChevronUp, Eye, EyeOff, LogOut, AlertTriangle, CheckCircle, Clock, Upload, RefreshCw, TrendingUp, TrendingDown, Car, DollarSign, ChevronLeft, ChevronRight, AlertCircle, Info, Trash2 } from 'lucide-react';
-import { format, formatDistanceToNow, differenceInDays, parseISO, isValid, differenceInYears } from 'date-fns';
+    Edit3, Save, X, ChevronDown, ChevronUp, Eye, EyeOff, LogOut, AlertTriangle, CheckCircle, Clock, Upload, RefreshCw, Car, DollarSign, AlertCircle, Info, Trash2 } from 'lucide-react';
+import { format, differenceInDays, parseISO, isValid, differenceInYears } from 'date-fns';
 import { motion, AnimatePresence } from 'framer-motion';
 import { updatePassword, reauthenticateWithCredential, EmailAuthProvider,
     signOut, sendEmailVerification } from 'firebase/auth';
@@ -489,146 +489,9 @@ const LicenseTab = ({ profile, driverId, onSaved }) => {
     );
 };
 
-// ─── Reviews Tab ──────────────────────────────────────────────────────────────
-
-const ReviewsTab = ({ profile, driverId }) => {
-    const axiosPublic = useAxiosPublic();
-    const [page, setPage] = useState(1);
-    const [ratingFilter, setRatingFilter] = useState('all');
-    const [sort, setSort] = useState('newest');
-
-    const { data, isLoading } = useQuery({
-        queryKey: ['driverReviews', driverId, page, ratingFilter, sort],
-        queryFn: async () => {
-            const r = await axiosPublic.get(
-                `/driverProfile/reviews/${driverId}?page=${page}&rating=${ratingFilter}&sort=${sort}`,
-                { withCredentials: true }
-            );
-            return r.data;
-        },
-        enabled: !!driverId,
-        keepPreviousData: true,
-    });
-
-    const rb = profile?.ratingBreakdown || {};
-    const trend = rb.thisMonthAvg && rb.prevMonthAvg
-        ? parseFloat((rb.thisMonthAvg - rb.prevMonthAvg).toFixed(2))
-        : null;
-
-    return (
-        <div className="space-y-5">
-            <div className="bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-200 rounded-2xl p-5">
-                <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center">
-                    <div className="text-center sm:text-left">
-                        <p className="text-5xl font-black text-amber-500">{rb.avg?.toFixed(2) || '—'}</p>
-                        <Stars rating={rb.avg || 0} size={18} />
-                        <p className="text-xs text-gray-500 mt-1">Based on {rb.total || 0} reviews</p>
-                        {trend !== null && (
-                            <div className={`flex items-center gap-1 text-xs font-semibold mt-1 ${trend >= 0 ? 'text-green-600' : 'text-red-500'}`}>
-                                {trend >= 0 ? <TrendingUp size={13} /> : <TrendingDown size={13} />}
-                                {trend >= 0 ? '+' : ''}{trend} vs last month
-                            </div>
-                        )}
-                    </div>
-                    <div className="flex-1 space-y-1.5 min-w-0">
-                        {[5,4,3,2,1].map(s => <RatingBar key={s} label={s} count={rb[`r${s}`] || 0} total={rb.total || 1} />)}
-                    </div>
-                </div>
-            </div>
-
-            <div className="flex flex-wrap gap-2 items-center">
-                <div className="flex gap-1">
-                    {['all','5','4','3','2','1'].map(r => (
-                        <button key={r} onClick={() => { setRatingFilter(r); setPage(1); }}
-                            className={`px-2.5 py-1 text-xs font-medium rounded-full border transition-colors ${
-                                ratingFilter === r
-                                    ? 'bg-orange-500 border-orange-500 text-white'
-                                    : 'border-gray-200 text-gray-600 hover:border-orange-300'
-                            }`}>
-                            {r === 'all' ? 'All' : `${r}★`}
-                        </button>
-                    ))}
-                </div>
-                <select className="ml-auto text-xs border border-gray-200 rounded-lg px-2 py-1.5 focus:outline-none focus:ring-1 focus:ring-orange-400"
-                    value={sort} onChange={e => { setSort(e.target.value); setPage(1); }}>
-                    <option value="newest">Newest First</option>
-                    <option value="oldest">Oldest First</option>
-                    <option value="highest">Highest Rating</option>
-                    <option value="lowest">Lowest Rating</option>
-                </select>
-            </div>
-
-            {isLoading ? (
-                <div className="space-y-3">
-                    {[1,2,3].map(i => <Skel key={i} className="h-24 rounded-xl" />)}
-                </div>
-            ) : !data?.reviews?.length ? (
-                <div className="text-center py-14 text-gray-400">
-                    <Star size={40} className="mx-auto mb-2 opacity-30" />
-                    <p className="text-sm font-medium">No reviews yet</p>
-                    <p className="text-xs mt-1">Complete trips to start receiving feedback from customers.</p>
-                </div>
-            ) : (
-                <div className="space-y-3">
-                    {data.reviews.map((rev, i) => (
-                        <div key={i} className={`border-l-4 rounded-xl p-4 bg-white border border-gray-100 shadow-sm ${
-                            rev.rating >= 4 ? 'border-l-green-400' : rev.rating === 3 ? 'border-l-amber-400' : 'border-l-red-400'
-                        }`}>
-                            <div className="flex items-start gap-3">
-                                <div className="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center text-xs font-bold text-gray-600 flex-shrink-0">
-                                    {(rev.reviewer_name || '?').charAt(0).toUpperCase()}
-                                </div>
-                                <div className="flex-1 min-w-0">
-                                    <div className="flex items-center justify-between gap-2">
-                                        <p className="text-sm font-semibold text-gray-800">
-                                            {rev.reviewer_name
-                                                ? rev.reviewer_name.split(' ')[0] + ' ' + (rev.reviewer_name.split(' ')[1]?.[0] || '') + '.'
-                                                : 'Anonymous'}
-                                        </p>
-                                        <Stars rating={rev.rating} size={13} />
-                                    </div>
-                                    <p className="text-xs text-gray-400 mt-0.5">
-                                        {fmtDate(rev.date)} · {isValid(parseISO(rev.date || '')) ? formatDistanceToNow(parseISO(rev.date), { addSuffix: true }) : ''}
-                                    </p>
-                                    <p className="text-sm text-gray-700 mt-2">
-                                        {rev.review || <span className="italic text-gray-400">Rating only — no written review</span>}
-                                    </p>
-                                    {rev.start_ts && (
-                                        <p className="text-xs text-gray-400 mt-2">
-                                            Trip: {fmtDate(rev.start_ts, 'MMM dd')} → {fmtDate(rev.end_ts, 'MMM dd, yyyy')}
-                                        </p>
-                                    )}
-                                </div>
-                            </div>
-                        </div>
-                    ))}
-                </div>
-            )}
-
-            {data && data.totalPages > 1 && (
-                <div className="flex items-center justify-between pt-2">
-                    <p className="text-xs text-gray-500">
-                        {((page-1)*10)+1}–{Math.min(page*10, data.total)} of {data.total} reviews
-                    </p>
-                    <div className="flex gap-2">
-                        <button onClick={() => setPage(p => p - 1)} disabled={page === 1}
-                            className="p-1.5 rounded-lg border border-gray-200 disabled:opacity-40 hover:bg-gray-50">
-                            <ChevronLeft size={14} />
-                        </button>
-                        <button onClick={() => setPage(p => p + 1)} disabled={page >= data.totalPages}
-                            className="p-1.5 rounded-lg border border-gray-200 disabled:opacity-40 hover:bg-gray-50">
-                            <ChevronRight size={14} />
-                        </button>
-                    </div>
-                </div>
-            )}
-        </div>
-    );
-};
-
 // ─── Security Tab ─────────────────────────────────────────────────────────────
 
-const SecurityTab = ({ profile, driverId, onDeactivate }) => {
+const SecurityTab = ({ driverId, onDeactivate }) => {
     const { user } = useAuth();
     const axiosPublic = useAxiosPublic();
 
@@ -942,10 +805,10 @@ const DriverProfile = () => {
         { label: 'Address added', done: !!profile.address_id, tab: 1 },
         { label: 'License details added', done: !!(profile.license_number && profile.expire_date), tab: 2 },
         { label: 'Valid license status', done: profile.license_status === 'Valid', tab: 2 },
-        { label: 'Password changed from temporary', done: !!localStorage.getItem('driver_pw_changed'), tab: 4 },
+        { label: 'Password changed from temporary', done: !!localStorage.getItem('driver_pw_changed'), tab: 3 },
     ] : [];
 
-    const TABS = ['Personal Info', 'Address', 'License & Professional', 'Reviews', 'Security'];
+    const TABS = ['Personal Info', 'Address', 'License & Professional', 'Security'];
 
     if (isLoading) return (
         <div className="min-h-screen bg-gray-50 p-4 sm:p-6">
@@ -1167,7 +1030,7 @@ const DriverProfile = () => {
                                 className="w-full flex items-center gap-2 px-3 py-2 border border-gray-200 rounded-xl text-sm text-gray-600 hover:bg-gray-50 transition-colors">
                                 <LogOut size={15} /> Logout
                             </button>
-                            <button onClick={() => setActiveTab(4)}
+                            <button onClick={() => setActiveTab(3)}
                                 className="w-full text-xs text-red-400 hover:text-red-600 text-left px-1 transition-colors flex items-center gap-1">
                                 <Trash2 size={11} /> Deactivate Account
                             </button>
@@ -1191,8 +1054,7 @@ const DriverProfile = () => {
                                         {activeTab === 0 && <PersonalTab profile={profile} driverId={profile?.driver_id} onSaved={refresh} />}
                                         {activeTab === 1 && <AddressTab profile={profile} driverId={profile?.driver_id} onSaved={refresh} />}
                                         {activeTab === 2 && <LicenseTab profile={profile} driverId={profile?.driver_id} onSaved={refresh} />}
-                                        {activeTab === 3 && <ReviewsTab profile={profile} driverId={profile?.driver_id} />}
-                                        {activeTab === 4 && <SecurityTab profile={profile} driverId={profile?.driver_id} onDeactivate={() => logOut()} />}
+                                        {activeTab === 3 && <SecurityTab profile={profile} driverId={profile?.driver_id} onDeactivate={() => logOut()} />}
                                     </motion.div>
                                 </AnimatePresence>
                             </div>
