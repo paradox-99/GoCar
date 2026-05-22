@@ -106,13 +106,14 @@ const BookingDetails = () => {
                                         try {
                                              const paymentData = {
                                                   booking_id: bookingData.booking_id,
-                                                  amount: bookingData.total_cost * 0.5,
+                                                  initial_cost: bookingData.total_cost * 0.5,
+                                                  payment_for: 'initial',
                                                   name: bookingData.user_name,
                                                   email: bookingData.user_email,
                                                   phone: bookingData.user_phone,
                                                   address: bookingData.user_address || 'Not Provided'
                                              };
-                                             const response = await axiosPublic.post('paymentRoutes/existing-payment', paymentData);
+                                             const response = await axiosPublic.post('paymentRoutes/payment', paymentData);
                                              if (response.data?.url) {
                                                   window.location.replace(response.data.url);
                                              }

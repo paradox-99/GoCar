@@ -206,7 +206,7 @@ const ProfileCompletionNudge = ({ profile, navigate }) => {
                     <p className="text-sm font-bold text-gray-800">Complete Your Profile</p>
                     <p className="text-xs text-gray-500">Improve your chances of getting more trips</p>
                 </div>
-                <button onClick={() => navigate('/dashboard/driver-profile')}
+                <button onClick={() => navigate('/dashboard/driver/profile')}
                     className="px-3 py-1.5 text-xs font-semibold bg-orange-500 text-white rounded-xl hover:bg-orange-600">
                     Complete Profile →
                 </button>
@@ -221,7 +221,7 @@ const ProfileCompletionNudge = ({ profile, navigate }) => {
             </div>
             <div className="flex flex-wrap gap-2">
                 {steps.map(s => (
-                    <button key={s.label} onClick={() => navigate('/dashboard/driver-profile')}
+                    <button key={s.label} onClick={() => navigate('/dashboard/driver/profile')}
                         className={`px-2.5 py-1 text-xs font-medium rounded-full border transition-colors ${
                             s.done ? 'bg-green-50 border-green-300 text-green-700' : 'bg-white border-gray-300 text-gray-500 hover:border-orange-400'
                         }`}>
@@ -1209,7 +1209,7 @@ const NewDriverEmptyState = ({ name, navigate }) => {
                 <h2 className="text-xl font-black text-gray-900">Welcome to GoCar, {name}!</h2>
                 <p className="text-gray-500 mt-2">Your agency will assign trips to you soon.</p>
                 <p className="text-gray-400 text-sm mt-1">While you wait, complete your profile to get started.</p>
-                <button onClick={() => navigate('/dashboard/driver-profile')}
+                <button onClick={() => navigate('/dashboard/driver/profile')}
                     className="mt-5 px-6 py-2.5 bg-orange-500 text-white font-bold rounded-xl hover:bg-orange-600">
                     Complete Profile →
                 </button>
@@ -1222,7 +1222,7 @@ const NewDriverEmptyState = ({ name, navigate }) => {
                 </div>
                 <div className="space-y-2">
                     {steps.map((s, i) => (
-                        <button key={i} onClick={() => navigate('/dashboard/driver-profile')}
+                        <button key={i} onClick={() => navigate('/dashboard/driver/profile')}
                             className={`w-full flex items-center gap-3 py-2 px-3 rounded-xl text-sm text-left transition-colors ${s.done ? 'bg-green-50' : 'bg-gray-50 hover:bg-orange-50'}`}>
                             <span className={`w-5 h-5 rounded-full flex items-center justify-center text-xs font-bold shrink-0 ${s.done ? 'bg-green-500 text-white' : 'bg-gray-200 text-gray-500'}`}>
                                 {s.done ? '✓' : i + 1}
@@ -1388,7 +1388,7 @@ const DriverDashboard = () => {
         licLive?.type === 'expired' && {
             id: 'licexp', type: 'red', icon: AlertCircle, noDismiss: true,
             message: `Your driver's license expired ${licLive.days} days ago. Update your license details to continue receiving trips.`,
-            action: 'Update Now', onAction: () => navigate('/dashboard/driver-profile'),
+            action: 'Update Now', onAction: () => navigate('/dashboard/driver/profile'),
         },
         banners?.missedPickup && {
             id: 'missed', type: 'red', icon: AlertTriangle,
@@ -1398,7 +1398,7 @@ const DriverDashboard = () => {
         licLive?.type === 'expiring' && {
             id: 'licwarn', type: 'amber', icon: Clock,
             message: `Your driver's license expires on ${fmtDate(profile?.expire_date)} (${licLive.days} days remaining). Update before expiry.`,
-            action: 'Update Now', onAction: () => navigate('/dashboard/driver-profile'),
+            action: 'Update Now', onAction: () => navigate('/dashboard/driver/profile'),
         },
         profile && !profile.verified && {
             id: 'unverified', type: 'amber', icon: Shield,
@@ -1570,7 +1570,7 @@ const DriverDashboard = () => {
                         onClick={() => navigate('/dashboard/driver/trips')} />
                     <QuickActionBtn icon={User} label="My Profile"
                         badge={pct < 80 ? 1 : 0} badgeColor="bg-red-500"
-                        onClick={() => navigate('/dashboard/driver-profile')} />
+                        onClick={() => navigate('/dashboard/driver/profile')} />
                     <QuickActionBtn icon={Star} label="My Reviews"
                         badge={banners?.newReview ? 1 : 0} badgeColor="bg-amber-400"
                         onClick={() => navigate('/dashboard/driver/reviews')} />
@@ -1580,7 +1580,7 @@ const DriverDashboard = () => {
                         label="Availability"
                         onClick={() => setAvailModal(true)} />
                     <QuickActionBtn icon={Settings} label="Settings"
-                        onClick={() => navigate('/dashboard/driver-profile')} />
+                        onClick={() => navigate('/dashboard/driver/profile')} />
                 </div>
 
                 {/* Profile Completion Nudge */}

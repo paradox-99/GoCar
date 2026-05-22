@@ -1,5 +1,6 @@
 import { Button } from "@mui/material";
 import moment from "moment";
+import PropTypes from "prop-types";
 import { useNavigate } from "react-router-dom";
 import useRole from "../../hooks/useRole";
 import useAxiosPublic from "../../hooks/useAxiosPublic";
@@ -119,13 +120,14 @@ const BookingCard = ({ booking }) => {
                 try {
                   const paymentData = {
                     booking_id: booking.booking_id,
-                    amount: booking.total_cost * 0.5,
+                    initial_cost: booking.total_cost * 0.5,
+                    payment_for: 'initial',
                     name: booking.user_name,
                     email: booking.user_email,
                     phone: booking.user_phone,
                     address: booking.user_address || 'Not Provided'
                   };
-                  const response = await axiosPublic.post('/paymentRoutes/existing-payment', paymentData);
+                  const response = await axiosPublic.post('/paymentRoutes/payment', paymentData);
                   if (response.data?.url) {
                     window.location.replace(response.data.url);
                   }
@@ -169,6 +171,28 @@ const BookingCard = ({ booking }) => {
       </div>
     </div>
   );
+};
+
+BookingCard.propTypes = {
+  booking: PropTypes.shape({
+    booking_id: PropTypes.string,
+    start_ts: PropTypes.string,
+    end_ts: PropTypes.string,
+    driver_id: PropTypes.string,
+    status: PropTypes.string,
+    initial_payment: PropTypes.bool,
+    images: PropTypes.string,
+    car_image: PropTypes.string,
+    brand: PropTypes.string,
+    model: PropTypes.string,
+    agency_name: PropTypes.string,
+    total_rent_hours: PropTypes.number,
+    total_cost: PropTypes.number,
+    user_name: PropTypes.string,
+    user_email: PropTypes.string,
+    user_phone: PropTypes.string,
+    user_address: PropTypes.string,
+  }).isRequired,
 };
 
 export default BookingCard;

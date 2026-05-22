@@ -41,9 +41,8 @@ const agencyDropDown = [
 ]
 
 const driverDropDown = [
-    { title: 'Profile', url: '/dashboard/driver-profile' },
+    { title: 'Profile', url: '/dashboard/driver/profile' },
     { title: 'Dashboard', url: '/dashboard/driver' },
-    { title: 'My Reviews', url: '/dashboard/driver/reviews' },
 ]
 
 const Navbar = () => {

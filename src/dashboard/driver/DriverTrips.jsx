@@ -1049,7 +1049,7 @@ const DriverTrips = () => {
                             </p>
                             <div className="flex justify-center gap-3 mt-4">
                                 {totalTrips === 0 ? (
-                                    <button onClick={() => navigate('/dashboard/driver-profile')}
+                                    <button onClick={() => navigate('/dashboard/driver/profile')}
                                         className="px-4 py-2 bg-orange-500 text-white text-sm rounded-xl hover:bg-orange-600">
                                         Update Availability →
                                     </button>

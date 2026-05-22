@@ -14,7 +14,7 @@ const PaymentSuccess = () => {
           queryKey: ["payment-success"],
           queryFn: async () => {
                const response = await axiosPublic.get(`paymentRoutes/getPaymentInfo/${tran_id}`);
-               return response.data[0];
+               return response.data;
           }
      })
 
@@ -27,7 +27,8 @@ const PaymentSuccess = () => {
           </div>
      }
 
-     const dateTime = data?.tran_date.split(" ")
+     const gateway = data?.gateway;
+     const dateTime = gateway?.tran_date?.split(" ");
 
      return (
           <div className="pt-20">
@@ -38,14 +39,14 @@ const PaymentSuccess = () => {
                <div className="flex justify-center mt-10">
                     <div className="bg-background w-[65%] p-10 flex justify-between items-center text-[#757575]">
                          <div className="space-y-3">
-                              <h3 className="text-lg"><span className="font-bold">Paid amount:</span> ৳ {data?.amount}</h3>
-                              <h3 className="text-lg"><span className="font-bold">Bank transaction id:</span> {data?.bank_tran_id}</h3>
-                              <h3 className="text-lg"><span className="font-bold">Payment date:</span> {dateTime[0]}</h3>
+                              <h3 className="text-lg"><span className="font-bold">Paid amount:</span> ৳ {data?.invoice?.amount}</h3>
+                              <h3 className="text-lg"><span className="font-bold">Bank transaction id:</span> {gateway?.bank_tran_id}</h3>
+                              <h3 className="text-lg"><span className="font-bold">Payment date:</span> {dateTime?.[0]}</h3>
                          </div>
                          <div className="space-y-3">
-                              <h3 className="text-lg"><span className="font-bold">Payment method:</span> {data?.bank_gw}</h3>
-                              <h3 className="text-lg"><span className="font-bold">Transaction id:</span> {data?.tran_id}</h3>
-                              <h3 className="text-lg"><span className="font-bold">Payment time:</span> {dateTime[1]}</h3>
+                              <h3 className="text-lg"><span className="font-bold">Payment method:</span> {gateway?.bank_gw}</h3>
+                              <h3 className="text-lg"><span className="font-bold">Transaction id:</span> {gateway?.tran_id}</h3>
+                              <h3 className="text-lg"><span className="font-bold">Payment time:</span> {dateTime?.[1]}</h3>
                          </div>
                     </div>
                </div>
