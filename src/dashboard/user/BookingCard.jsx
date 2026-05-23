@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import useRole from "../../hooks/useRole";
 import useAxiosPublic from "../../hooks/useAxiosPublic";
 import PickupDetailsModal from "./PickupDetailsModal";
+import ReturnDetailsModal from "./ReturnDetailsModal";
 import { useQueryClient } from "@tanstack/react-query";
 
 const BookingCard = ({ booking }) => {
@@ -14,6 +15,7 @@ const BookingCard = ({ booking }) => {
   const axiosPublic = useAxiosPublic();
   const queryClient = useQueryClient();
   const [pickupModalOpen, setPickupModalOpen] = useState(false);
+  const [returnModalOpen, setReturnModalOpen] = useState(false);
 
   const getStatusBadge = (status) => {
     const lowerStatus = status?.toLowerCase() || "pending";
@@ -177,6 +179,50 @@ const BookingCard = ({ booking }) => {
             </Button>
           )}
 
+          {/* View Return Details: shown for Running bookings where agency has submitted return */}
+          {booking.status === 'Running' && booking.return_id && (
+            <Button
+              variant="contained"
+              fullWidth
+              onClick={(e) => {
+                e.stopPropagation();
+                setReturnModalOpen(true);
+              }}
+              sx={{
+                background: "#7c3aed",
+                py: 1,
+                fontWeight: 700,
+                fontSize: "14px",
+                textTransform: "none",
+                "&:hover": { background: "#6d28d9" }
+              }}
+            >
+              View Return Details
+            </Button>
+          )}
+
+          {/* Pay Final Fee: shown for Completed bookings where final payment is still pending */}
+          {booking.status === 'Completed' && !booking.final_payment && (
+            <Button
+              variant="contained"
+              fullWidth
+              onClick={(e) => {
+                e.stopPropagation();
+                setReturnModalOpen(true);
+              }}
+              sx={{
+                background: "#2563eb",
+                py: 1,
+                fontWeight: 700,
+                fontSize: "14px",
+                textTransform: "none",
+                "&:hover": { background: "#1d4ed8" }
+              }}
+            >
+              Pay Final Fee ৳{Math.round(booking.total_cost / 2) + (booking.late_fee || 0) + (booking.return_fuel_charge || 0) + (booking.cleaning_charge || 0)}
+            </Button>
+          )}
+
           <Button
             variant="contained"
             fullWidth
@@ -203,6 +249,18 @@ const BookingCard = ({ booking }) => {
           pickup={booking}
           bookingId={booking.booking_id}
           vehicleName={booking.brand && booking.model ? `${booking.brand} ${booking.model}` : null}
+          onConfirmed={() => {
+            queryClient.invalidateQueries(['userBookings']);
+          }}
+        />
+      )}
+
+      {/* Return Details Modal */}
+      {booking.return_id && (
+        <ReturnDetailsModal
+          open={returnModalOpen}
+          onClose={() => setReturnModalOpen(false)}
+          booking={booking}
           onConfirmed={() => {
             queryClient.invalidateQueries(['userBookings']);
           }}
@@ -239,6 +297,16 @@ BookingCard.propTypes = {
     pickup_fuel_charge: PropTypes.number,
     pickup_notes: PropTypes.string,
     pickup_confirmed: PropTypes.bool,
+    return_id: PropTypes.string,
+    return_time: PropTypes.string,
+    return_fuel_level: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+    return_odometer: PropTypes.number,
+    late_fee: PropTypes.number,
+    return_fuel_charge: PropTypes.number,
+    cleaning_charge: PropTypes.number,
+    return_notes: PropTypes.string,
+    return_confirmed: PropTypes.bool,
+    final_payment: PropTypes.bool,
   }).isRequired,
 };
 

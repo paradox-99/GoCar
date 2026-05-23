@@ -50,7 +50,7 @@ const PaymentSuccess = () => {
                          </div>
                     </div>
                </div>
-               <div className="flex justify-center gap-10 mt-10">
+               <div className="flex justify-center gap-10 my-10">
                     <Button variant="contained" href="/" sx={{background: '#f58300'}}>Home page</Button>
                     <Button variant="contained" href="/dashboard/user/bookings" sx={{background: '#f58300'}}>View Bookings</Button>
                </div>

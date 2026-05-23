@@ -36,7 +36,7 @@ const UserBookings = () => {
                } else if (activeTab === 'Upcoming') {
                     return startDate.isAfter(now) && (booking.status === 'Confirmed');
                } else if (activeTab === 'Current') {
-                    return now.isBetween(startDate, endDate) && (booking.status === 'Running');
+                    return booking.status === 'Running';
                } else if (activeTab === 'Past') {
                     return endDate.isBefore(now) || (booking.status === 'Completed') || (booking.status === 'Cancelled');
                } else if (activeTab === 'Overdue') {

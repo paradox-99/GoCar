@@ -29,9 +29,13 @@ import {
     LocalShipping,
     LocalGasStation,
     Speed,
-    HourglassBottom
+    HourglassBottom,
+    AssignmentReturn,
+    AttachMoney,
+    Notes
 } from '@mui/icons-material';
 import PickupFormModal from './PickupFormModal';
+import ReturnFormModal from './ReturnFormModal';
 
 const AgencyBookingDetail = () => {
     const { id } = useParams();
@@ -43,6 +47,7 @@ const AgencyBookingDetail = () => {
     const [loading, setLoading] = useState(!location.state?.booking);
     const [updating, setUpdating] = useState(false);
     const [pickupModalOpen, setPickupModalOpen] = useState(false);
+    const [returnModalOpen, setReturnModalOpen] = useState(false);
 
     useEffect(() => {
         if (!bookingData && id) {
@@ -108,6 +113,11 @@ const AgencyBookingDetail = () => {
         bookingData.initial_payment === true &&
         hoursToPickup <= 2 &&
         !bookingData.pickup_id;
+
+    const canInitiateReturn =
+        bookingData.status === 'Running' &&
+        bookingData.pickup_confirmed === true &&
+        !bookingData.return_id;
 
     const vehicleName = bookingData.brand && bookingData.model
         ? `${bookingData.brand} ${bookingData.model}`
@@ -179,6 +189,46 @@ const AgencyBookingDetail = () => {
                             <Chip
                                 icon={<CheckCircle />}
                                 label="Pickup Confirmed by Customer"
+                                color="success"
+                                variant="outlined"
+                                sx={{ fontWeight: 600, borderRadius: '10px', px: 1 }}
+                            />
+                        )}
+
+                        {/* Initiate Return button */}
+                        {canInitiateReturn && (
+                            <Button
+                                variant="contained"
+                                startIcon={<AssignmentReturn />}
+                                onClick={() => setReturnModalOpen(true)}
+                                disabled={updating}
+                                sx={{
+                                    borderRadius: '10px',
+                                    textTransform: 'none',
+                                    px: 3,
+                                    fontWeight: 700,
+                                    backgroundColor: '#7c3aed',
+                                    '&:hover': { backgroundColor: '#6d28d9' },
+                                    boxShadow: '0 4px 14px -4px rgba(124,58,237,0.5)'
+                                }}
+                            >
+                                Initiate Return
+                            </Button>
+                        )}
+
+                        {bookingData.return_id && !bookingData.return_confirmed && (
+                            <Chip
+                                icon={<HourglassBottom />}
+                                label="Return Submitted — Awaiting Customer"
+                                color="warning"
+                                variant="outlined"
+                                sx={{ fontWeight: 600, borderRadius: '10px', px: 1 }}
+                            />
+                        )}
+                        {bookingData.return_id && bookingData.return_confirmed && (
+                            <Chip
+                                icon={<CheckCircle />}
+                                label="Return Confirmed by Customer"
                                 color="success"
                                 variant="outlined"
                                 sx={{ fontWeight: 600, borderRadius: '10px', px: 1 }}
@@ -374,6 +424,91 @@ const AgencyBookingDetail = () => {
                             </Paper>
                         )}
 
+                        {/* Return Info Card — shown after return is submitted */}
+                        {bookingData.return_id && (
+                            <Paper elevation={0} className={`p-6 rounded-3xl mb-6 border ${
+                                bookingData.return_confirmed
+                                    ? 'border-green-200 bg-green-50/40'
+                                    : 'border-purple-200 bg-purple-50/40'
+                            }`}>
+                                <Typography variant="h6" fontWeight="bold" className="flex items-center gap-2 mb-5">
+                                    <Avatar sx={{
+                                        bgcolor: bookingData.return_confirmed ? '#16a34a' : '#7c3aed',
+                                        width: 32, height: 32
+                                    }}>
+                                        {bookingData.return_confirmed
+                                            ? <CheckCircle fontSize="small" />
+                                            : <AssignmentReturn fontSize="small" />
+                                        }
+                                    </Avatar>
+                                    Return Information
+                                    <Chip
+                                        label={bookingData.return_confirmed ? 'Customer Confirmed' : 'Awaiting Customer'}
+                                        size="small"
+                                        color={bookingData.return_confirmed ? 'success' : 'warning'}
+                                        sx={{ ml: 'auto', fontWeight: 700 }}
+                                    />
+                                </Typography>
+
+                                <Grid container spacing={2}>
+                                    <Grid item xs={6} sm={3}>
+                                        <div className="bg-white rounded-xl p-3 border border-gray-100 text-center">
+                                            <LocalGasStation sx={{ color: '#F58300', fontSize: 20 }} />
+                                            <p className="text-xs text-gray-400 uppercase font-bold mt-1">Fuel Level</p>
+                                            <p className="font-extrabold text-gray-800 text-lg">{bookingData.return_fuel_level}%</p>
+                                        </div>
+                                    </Grid>
+                                    <Grid item xs={6} sm={3}>
+                                        <div className="bg-white rounded-xl p-3 border border-gray-100 text-center">
+                                            <Speed sx={{ color: '#3b82f6', fontSize: 20 }} />
+                                            <p className="text-xs text-gray-400 uppercase font-bold mt-1">Odometer</p>
+                                            <p className="font-extrabold text-gray-800 text-lg">{bookingData.return_odometer?.toLocaleString()} km</p>
+                                        </div>
+                                    </Grid>
+                                    {(bookingData.late_fee || 0) > 0 && (
+                                        <Grid item xs={6} sm={3}>
+                                            <div className="bg-white rounded-xl p-3 border border-red-100 text-center">
+                                                <AttachMoney sx={{ color: '#ef4444', fontSize: 20 }} />
+                                                <p className="text-xs text-red-500 uppercase font-bold mt-1">Late Fee</p>
+                                                <p className="font-extrabold text-red-600 text-lg">৳{bookingData.late_fee}</p>
+                                            </div>
+                                        </Grid>
+                                    )}
+                                    {(bookingData.return_fuel_charge || 0) > 0 && (
+                                        <Grid item xs={6} sm={3}>
+                                            <div className="bg-white rounded-xl p-3 border border-amber-100 text-center">
+                                                <LocalGasStation sx={{ color: '#f59e0b', fontSize: 20 }} />
+                                                <p className="text-xs text-amber-600 uppercase font-bold mt-1">Fuel Charge</p>
+                                                <p className="font-extrabold text-amber-600 text-lg">৳{bookingData.return_fuel_charge}</p>
+                                            </div>
+                                        </Grid>
+                                    )}
+                                    {(bookingData.cleaning_charge || 0) > 0 && (
+                                        <Grid item xs={6} sm={3}>
+                                            <div className="bg-white rounded-xl p-3 border border-purple-100 text-center">
+                                                <AttachMoney sx={{ color: '#8b5cf6', fontSize: 20 }} />
+                                                <p className="text-xs text-purple-600 uppercase font-bold mt-1">Cleaning Fee</p>
+                                                <p className="font-extrabold text-purple-600 text-lg">৳{bookingData.cleaning_charge}</p>
+                                            </div>
+                                        </Grid>
+                                    )}
+                                </Grid>
+
+                                {bookingData.return_notes && (
+                                    <div className="mt-4 p-3 bg-white rounded-xl border border-gray-100">
+                                        <div className="flex items-center gap-2 text-gray-400 text-xs font-bold uppercase mb-1">
+                                            <Notes fontSize="small" /> Notes
+                                        </div>
+                                        <p className="text-sm text-gray-700 italic">&quot;{bookingData.return_notes}&quot;</p>
+                                    </div>
+                                )}
+
+                                <p className="text-xs text-gray-400 mt-3 text-right">
+                                    Submitted: {moment(bookingData.return_time).format('DD MMM YYYY, hh:mm A')}
+                                </p>
+                            </Paper>
+                        )}
+
                         {/* Vehicle Info Card */}
                         <Paper elevation={0} className="p-6 rounded-3xl border border-gray-100 mb-6">
                             <Typography variant="h6" fontWeight="bold" className="flex items-center gap-2 mb-6">
@@ -513,6 +648,22 @@ const AgencyBookingDetail = () => {
                         ...prev,
                         pickup_id: 'pending',
                         pickup_confirmed: false
+                    }));
+                    fetchBooking();
+                }}
+            />
+
+            {/* Return Form Modal */}
+            <ReturnFormModal
+                open={returnModalOpen}
+                onClose={() => setReturnModalOpen(false)}
+                bookingId={bookingData.booking_id}
+                vehicleName={vehicleName}
+                onSuccess={() => {
+                    setBookingData(prev => ({
+                        ...prev,
+                        return_id: 'pending',
+                        return_confirmed: false
                     }));
                     fetchBooking();
                 }}

@@ -146,6 +146,26 @@ const ActiveBookings = () => {
                                 sx={{ fontSize: '10px', height: '22px', fontWeight: 700 }}
                             />
                         )}
+                        {/* eslint-disable-next-line react/prop-types */}
+                        {booking.return_id && !booking.return_confirmed && (
+                            <Chip
+                                icon={<HourglassBottom sx={{ fontSize: '13px !important' }} />}
+                                label="Return Pending"
+                                size="small"
+                                color="warning"
+                                sx={{ fontSize: '10px', height: '22px', fontWeight: 700 }}
+                            />
+                        )}
+                        {/* eslint-disable-next-line react/prop-types */}
+                        {booking.return_id && booking.return_confirmed && (
+                            <Chip
+                                icon={<CheckCircle sx={{ fontSize: '13px !important' }} />}
+                                label="Return Confirmed"
+                                size="small"
+                                color="success"
+                                sx={{ fontSize: '10px', height: '22px', fontWeight: 700 }}
+                            />
+                        )}
                     </div>
                     <div className="absolute top-4 left-4">
                         <span className="bg-black/50 text-white px-3 py-1 rounded-full text-[10px] backdrop-blur-md">
