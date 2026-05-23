@@ -2,24 +2,8 @@ import { Link } from 'react-router-dom';
 import moment from 'moment';
 import useAxiosPublic from '../../hooks/useAxiosPublic';
 import { useQuery } from '@tanstack/react-query';
-import { 
-    Grid, 
-    Box, 
-    Typography, 
-    Button, 
-    TextField, 
-    InputAdornment, 
-    Chip,
-    Avatar
-} from '@mui/material';
-import { 
-    Search, 
-    CalendarMonth, 
-    Person, 
-    DirectionsCar, 
-    ArrowForward,
-    FilterList
-} from '@mui/icons-material';
+import { Grid, Typography, Button, TextField, InputAdornment, Avatar, Chip } from '@mui/material';
+import { Search, CalendarMonth, Person, DirectionsCar, ArrowForward, FilterList, LocalShipping, HourglassBottom, CheckCircle } from '@mui/icons-material';
 import { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Loader from '../../components/Loader';
@@ -138,10 +122,30 @@ const ActiveBookings = () => {
                         alt={booking.model}
                         className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
                     />
-                    <div className="absolute top-4 right-4">
+                    <div className="absolute top-4 right-4 flex flex-col items-end gap-1">
                         <span className={`px-3 py-1 rounded-full text-xs font-bold border ${getStatusStyles(booking.status)} backdrop-blur-sm shadow-sm`}>
                             {displayStatus}
                         </span>
+                        {/* eslint-disable-next-line react/prop-types */}
+                        {booking.pickup_id && !booking.pickup_confirmed && (
+                            <Chip
+                                icon={<HourglassBottom sx={{ fontSize: '13px !important' }} />}
+                                label="Pickup Pending"
+                                size="small"
+                                color="warning"
+                                sx={{ fontSize: '10px', height: '22px', fontWeight: 700 }}
+                            />
+                        )}
+                        {/* eslint-disable-next-line react/prop-types */}
+                        {booking.pickup_id && booking.pickup_confirmed && (
+                            <Chip
+                                icon={<CheckCircle sx={{ fontSize: '13px !important' }} />}
+                                label="Pickup Confirmed"
+                                size="small"
+                                color="success"
+                                sx={{ fontSize: '10px', height: '22px', fontWeight: 700 }}
+                            />
+                        )}
                     </div>
                     <div className="absolute top-4 left-4">
                         <span className="bg-black/50 text-white px-3 py-1 rounded-full text-[10px] backdrop-blur-md">

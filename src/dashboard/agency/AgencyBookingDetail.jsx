@@ -1,34 +1,37 @@
 import { useState, useEffect } from 'react';
 import { Link, useLocation, useParams, useNavigate } from 'react-router-dom';
 import moment from 'moment';
-import { 
-    Box, 
-    Button, 
-    Typography, 
-    Paper, 
-    Grid, 
-    Divider, 
-    CircularProgress, 
+import {
+    Box,
+    Button,
+    Typography,
+    Paper,
+    Grid,
+    Divider,
+    CircularProgress,
     Chip,
-    Avatar,
-    IconButton
+    Avatar
 } from '@mui/material';
 import useAxiosPublic from '../../hooks/useAxiosPublic';
 import toast from 'react-hot-toast';
-import { 
-    Person, 
-    DirectionsCar, 
-    Event, 
-    Payment, 
-    Description, 
+import {
+    Person,
+    DirectionsCar,
+    Event,
+    Payment,
     Share,
     ArrowBack,
     CheckCircle,
     Cancel,
     ReportProblem,
     LocationOn,
-    AccessTime
+    AccessTime,
+    LocalShipping,
+    LocalGasStation,
+    Speed,
+    HourglassBottom
 } from '@mui/icons-material';
+import PickupFormModal from './PickupFormModal';
 
 const AgencyBookingDetail = () => {
     const { id } = useParams();
@@ -39,6 +42,7 @@ const AgencyBookingDetail = () => {
     const [bookingData, setBookingData] = useState(location.state?.booking || null);
     const [loading, setLoading] = useState(!location.state?.booking);
     const [updating, setUpdating] = useState(false);
+    const [pickupModalOpen, setPickupModalOpen] = useState(false);
 
     useEffect(() => {
         if (!bookingData && id) {
@@ -96,28 +100,41 @@ const AgencyBookingDetail = () => {
 
     const statusConfig = getStatusConfig(bookingData.status);
 
+    const hoursToPickup = bookingData.start_ts
+        ? (new Date(bookingData.start_ts) - new Date()) / (1000 * 60 * 60)
+        : Infinity;
+    const canInitiatePickup =
+        bookingData.status === 'Confirmed' &&
+        bookingData.initial_payment === true &&
+        hoursToPickup <= 2 &&
+        !bookingData.pickup_id;
+
+    const vehicleName = bookingData.brand && bookingData.model
+        ? `${bookingData.brand} ${bookingData.model}`
+        : null;
+
     return (
         <div className="p-4 md:p-8 bg-gray-50/50 min-h-screen">
             <div className="max-w-6xl mx-auto">
                 {/* Navigation & Actions Header */}
                 <div className="mb-8 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-                    <Button 
+                    <Button
                         onClick={() => navigate(-1)}
                         startIcon={<ArrowBack />}
-                        sx={{ 
-                            color: 'gray', 
+                        sx={{
+                            color: 'gray',
                             textTransform: 'none',
                             '&:hover': { color: '#F58300', background: 'transparent' }
                         }}
                     >
                         Back to Bookings
                     </Button>
-                    
+
                     <div className="flex flex-wrap gap-3">
                         {bookingData.status === 'Requested' && (
-                            <Button 
-                                variant="contained" 
-                                color="success" 
+                            <Button
+                                variant="contained"
+                                color="success"
                                 startIcon={<CheckCircle />}
                                 onClick={() => handleUpdateStatus('Confirmed')}
                                 disabled={updating}
@@ -126,10 +143,52 @@ const AgencyBookingDetail = () => {
                                 Confirm Booking
                             </Button>
                         )}
+
+                        {/* Pickup button: visible 2 hrs before pickup, payment done, no existing pickup */}
+                        {canInitiatePickup && (
+                            <Button
+                                variant="contained"
+                                startIcon={<LocalShipping />}
+                                onClick={() => setPickupModalOpen(true)}
+                                disabled={updating}
+                                sx={{
+                                    borderRadius: '10px',
+                                    textTransform: 'none',
+                                    px: 3,
+                                    fontWeight: 700,
+                                    backgroundColor: '#F58300',
+                                    '&:hover': { backgroundColor: '#d17000' },
+                                    boxShadow: '0 4px 14px -4px rgba(245,131,0,0.5)'
+                                }}
+                            >
+                                Initiate Pickup
+                            </Button>
+                        )}
+
+                        {/* Pickup already submitted — show badge */}
+                        {bookingData.pickup_id && !bookingData.pickup_confirmed && (
+                            <Chip
+                                icon={<HourglassBottom />}
+                                label="Pickup Submitted — Awaiting Customer"
+                                color="warning"
+                                variant="outlined"
+                                sx={{ fontWeight: 600, borderRadius: '10px', px: 1 }}
+                            />
+                        )}
+                        {bookingData.pickup_id && bookingData.pickup_confirmed && (
+                            <Chip
+                                icon={<CheckCircle />}
+                                label="Pickup Confirmed by Customer"
+                                color="success"
+                                variant="outlined"
+                                sx={{ fontWeight: 600, borderRadius: '10px', px: 1 }}
+                            />
+                        )}
+
                         {['Requested', 'Confirmed'].includes(bookingData.status) && (
-                            <Button 
-                                variant="outlined" 
-                                color="error" 
+                            <Button
+                                variant="outlined"
+                                color="error"
                                 startIcon={<Cancel />}
                                 onClick={() => handleUpdateStatus('Cancelled')}
                                 disabled={updating}
@@ -138,11 +197,11 @@ const AgencyBookingDetail = () => {
                                 Cancel
                             </Button>
                         )}
-                        <Button 
+                        <Button
                             component={Link}
                             to="/dashboard/report-damage"
                             state={{ booking: bookingData }}
-                            variant="outlined" 
+                            variant="outlined"
                             color="warning"
                             startIcon={<ReportProblem />}
                             sx={{ borderRadius: '10px', textTransform: 'none', px: 3 }}
@@ -242,6 +301,78 @@ const AgencyBookingDetail = () => {
                                 </Grid>
                             </Grid>
                         </Paper>
+
+                        {/* Pickup Info Card — shown after pickup is initiated */}
+                        {bookingData.pickup_id && (
+                            <Paper elevation={0} className={`p-6 rounded-3xl mb-6 border ${
+                                bookingData.pickup_confirmed
+                                    ? 'border-green-200 bg-green-50/40'
+                                    : 'border-orange-200 bg-orange-50/40'
+                            }`}>
+                                <Typography variant="h6" fontWeight="bold" className="flex items-center gap-2 mb-5">
+                                    <Avatar sx={{
+                                        bgcolor: bookingData.pickup_confirmed ? '#16a34a' : '#F58300',
+                                        width: 32, height: 32
+                                    }}>
+                                        {bookingData.pickup_confirmed
+                                            ? <CheckCircle fontSize="small" />
+                                            : <LocalShipping fontSize="small" />
+                                        }
+                                    </Avatar>
+                                    Pickup Information
+                                    <Chip
+                                        label={bookingData.pickup_confirmed ? 'Customer Confirmed' : 'Awaiting Customer'}
+                                        size="small"
+                                        color={bookingData.pickup_confirmed ? 'success' : 'warning'}
+                                        sx={{ ml: 'auto', fontWeight: 700 }}
+                                    />
+                                </Typography>
+
+                                <Grid container spacing={2}>
+                                    <Grid item xs={6} sm={3}>
+                                        <div className="bg-white rounded-xl p-3 border border-gray-100 text-center">
+                                            <LocalGasStation sx={{ color: '#F58300', fontSize: 20 }} />
+                                            <p className="text-xs text-gray-400 uppercase font-bold mt-1">Fuel Level</p>
+                                            <p className="font-extrabold text-gray-800 text-lg">{bookingData.pickup_fuel_level}%</p>
+                                        </div>
+                                    </Grid>
+                                    <Grid item xs={6} sm={3}>
+                                        <div className="bg-white rounded-xl p-3 border border-gray-100 text-center">
+                                            <Speed sx={{ color: '#3b82f6', fontSize: 20 }} />
+                                            <p className="text-xs text-gray-400 uppercase font-bold mt-1">Odometer</p>
+                                            <p className="font-extrabold text-gray-800 text-lg">{bookingData.pickup_odometer?.toLocaleString()} km</p>
+                                        </div>
+                                    </Grid>
+                                    {bookingData.pickup_early_fee > 0 && (
+                                        <Grid item xs={6} sm={3}>
+                                            <div className="bg-white rounded-xl p-3 border border-yellow-100 text-center">
+                                                <p className="text-xs text-yellow-600 uppercase font-bold">Early Fee</p>
+                                                <p className="font-extrabold text-yellow-700 text-lg">৳{bookingData.pickup_early_fee}</p>
+                                            </div>
+                                        </Grid>
+                                    )}
+                                    {bookingData.pickup_fuel_charge > 0 && (
+                                        <Grid item xs={6} sm={3}>
+                                            <div className="bg-white rounded-xl p-3 border border-red-100 text-center">
+                                                <p className="text-xs text-red-500 uppercase font-bold">Fuel Charge</p>
+                                                <p className="font-extrabold text-red-600 text-lg">৳{bookingData.pickup_fuel_charge}</p>
+                                            </div>
+                                        </Grid>
+                                    )}
+                                </Grid>
+
+                                {bookingData.pickup_notes && (
+                                    <div className="mt-4 p-3 bg-white rounded-xl border border-gray-100">
+                                        <p className="text-xs text-gray-400 uppercase font-bold mb-1">Notes</p>
+                                        <p className="text-sm text-gray-700 italic">&quot;{bookingData.pickup_notes}&quot;</p>
+                                    </div>
+                                )}
+
+                                <p className="text-xs text-gray-400 mt-3 text-right">
+                                    Submitted: {moment(bookingData.pickup_time).format('DD MMM YYYY, hh:mm A')}
+                                </p>
+                            </Paper>
+                        )}
 
                         {/* Vehicle Info Card */}
                         <Paper elevation={0} className="p-6 rounded-3xl border border-gray-100 mb-6">
@@ -370,6 +501,22 @@ const AgencyBookingDetail = () => {
                     </Grid>
                 </Grid>
             </div>
+
+            {/* Pickup Form Modal */}
+            <PickupFormModal
+                open={pickupModalOpen}
+                onClose={() => setPickupModalOpen(false)}
+                bookingId={bookingData.booking_id}
+                vehicleName={vehicleName}
+                onSuccess={() => {
+                    setBookingData(prev => ({
+                        ...prev,
+                        pickup_id: 'pending',
+                        pickup_confirmed: false
+                    }));
+                    fetchBooking();
+                }}
+            />
         </div>
     );
 };
