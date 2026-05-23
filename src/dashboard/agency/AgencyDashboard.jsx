@@ -277,48 +277,6 @@ const DonutLabel = ({ cx, cy, total }) => (
     </text>
 );
 
-// ─── Onboarding Checklist ─────────────────────────────────────────────────────
-
-const OnboardingChecklist = ({ stats, navigate }) => {
-    const steps = [
-        { label: 'Agency profile created', done: true },
-        { label: 'Add your first vehicle', done: (stats?.carCount + stats?.bikeCount) > 0, action: () => navigate('/dashboard/agency/add-cars') },
-        { label: 'Add a driver (optional)', done: stats?.driverCount > 0, action: () => navigate('/dashboard/agency/drivers') },
-        { label: 'Complete agency verification', done: stats?.verified === true },
-        { label: 'Receive your first booking', done: stats?.totalBookings > 0 },
-    ];
-    const doneCount = steps.filter(s => s.done).length;
-    const pct = (doneCount / steps.length) * 100;
-
-    if (doneCount === steps.length) return null;
-
-    return (
-        <div className="bg-white rounded-2xl shadow-sm border border-orange-100 p-5 mb-6">
-            <div className="flex items-center justify-between mb-3">
-                <h3 className="font-bold text-gray-800 text-sm">Complete Your Agency Setup</h3>
-                <span className="text-xs text-gray-500">{doneCount}/{steps.length} done</span>
-            </div>
-            <div className="h-2 bg-gray-100 rounded-full mb-4 overflow-hidden">
-                <div className="h-full bg-orange-500 rounded-full transition-all" style={{ width: `${pct}%` }} />
-            </div>
-            <div className="space-y-2">
-                {steps.map((step, i) => (
-                    <button
-                        key={i}
-                        onClick={step.action}
-                        disabled={step.done || !step.action}
-                        className={`flex items-center gap-3 w-full text-left px-2 py-1.5 rounded-lg transition-colors ${!step.done && step.action ? 'hover:bg-orange-50 cursor-pointer' : 'cursor-default'}`}
-                    >
-                        <span className={`w-5 h-5 rounded-full flex items-center justify-center flex-shrink-0 text-[10px] font-bold ${step.done ? 'bg-green-500 text-white' : 'border-2 border-gray-300 text-gray-400'}`}>
-                            {step.done ? '✓' : ''}
-                        </span>
-                        <span className={`text-xs font-medium ${step.done ? 'text-gray-400 line-through' : 'text-gray-700'}`}>{step.label}</span>
-                    </button>
-                ))}
-            </div>
-        </div>
-    );
-};
 
 // ─── Empty State ──────────────────────────────────────────────────────────────
 
@@ -537,9 +495,6 @@ const AgencyDashboard = () => {
                     </button>
                 </div>
             </div>
-
-            {/* ── Onboarding checklist (new agencies) ── */}
-            {stats && <OnboardingChecklist stats={stats} navigate={navigate} />}
 
             {/* ── Alert Banners ── */}
             <AnimatePresence>

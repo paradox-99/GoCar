@@ -7,6 +7,7 @@ import useRole from "../../hooks/useRole";
 import useAxiosPublic from "../../hooks/useAxiosPublic";
 import PickupDetailsModal from "./PickupDetailsModal";
 import ReturnDetailsModal from "./ReturnDetailsModal";
+import ReviewModal from "./ReviewModal";
 import { useQueryClient } from "@tanstack/react-query";
 
 const BookingCard = ({ booking }) => {
@@ -16,6 +17,7 @@ const BookingCard = ({ booking }) => {
   const queryClient = useQueryClient();
   const [pickupModalOpen, setPickupModalOpen] = useState(false);
   const [returnModalOpen, setReturnModalOpen] = useState(false);
+  const [reviewModalOpen, setReviewModalOpen] = useState(false);
 
   const getStatusBadge = (status) => {
     const lowerStatus = status?.toLowerCase() || "pending";
@@ -223,17 +225,59 @@ const BookingCard = ({ booking }) => {
             </Button>
           )}
 
+          {/* Review button: shown for Completed bookings after final payment */}
+          {booking.status === 'Completed' && booking.final_payment && (
+            booking.reviewed ? (
+              <Button
+                variant="outlined"
+                fullWidth
+                disabled
+                startIcon={<span style={{ fontSize: 16 }}>✓</span>}
+                sx={{
+                  py: 1,
+                  fontWeight: 600,
+                  fontSize: "14px",
+                  textTransform: "none",
+                  borderColor: "#16a34a",
+                  color: "#16a34a",
+                  "&.Mui-disabled": { borderColor: "#16a34a", color: "#16a34a", opacity: 0.7 }
+                }}
+              >
+                Review Submitted
+              </Button>
+            ) : (
+              <Button
+                variant="contained"
+                fullWidth
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setReviewModalOpen(true);
+                }}
+                sx={{
+                  background: "#f58300",
+                  py: 1,
+                  fontWeight: 700,
+                  fontSize: "14px",
+                  textTransform: "none",
+                  "&:hover": { background: "#e07b00" }
+                }}
+              >
+                ★ Leave a Review
+              </Button>
+            )
+          )}
+
           <Button
             variant="contained"
             fullWidth
             onClick={handleNavigateDetail}
             sx={{
-              background: "#f58300",
+              background: "#1e293b",
               py: 1,
               fontWeight: 600,
               fontSize: "14px",
               textTransform: "none",
-              "&:hover": { background: "#e07b00" }
+              "&:hover": { background: "#0f172a" }
             }}
           >
             View Trip Details
@@ -266,6 +310,16 @@ const BookingCard = ({ booking }) => {
           }}
         />
       )}
+
+      {/* Review Modal */}
+      <ReviewModal
+        open={reviewModalOpen}
+        onClose={() => setReviewModalOpen(false)}
+        booking={booking}
+        onReviewed={() => {
+          queryClient.invalidateQueries(['userBookings']);
+        }}
+      />
     </div>
   );
 };
@@ -307,6 +361,11 @@ BookingCard.propTypes = {
     return_notes: PropTypes.string,
     return_confirmed: PropTypes.bool,
     final_payment: PropTypes.bool,
+    reviewed: PropTypes.bool,
+    vehicle_id: PropTypes.string,
+    vehicle_type: PropTypes.string,
+    agency_id: PropTypes.string,
+    driver_name: PropTypes.string,
   }).isRequired,
 };
 

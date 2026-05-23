@@ -4,6 +4,7 @@ import moment from 'moment';
 import { Dialog, DialogTitle, DialogContent, DialogActions, Button } from '@mui/material';
 import useAxiosPublic from '../../hooks/useAxiosPublic';
 import toast from 'react-hot-toast';
+import ReviewModal from './ReviewModal';
 
 const BookingDetails = () => {
      const location = useLocation();
@@ -14,6 +15,8 @@ const BookingDetails = () => {
      const [isLoading, setIsLoading] = useState(false);
      const [message, setMessage] = useState({ type: '', text: '' });
      const [cancelReason, setCancelReason] = useState('');
+     const [reviewModalOpen, setReviewModalOpen] = useState(false);
+     const [reviewed, setReviewed] = useState(!!bookingData?.reviewed);
      const axiosPublic = useAxiosPublic();
 
      if (!bookingData) {
@@ -98,7 +101,24 @@ const BookingDetails = () => {
                          <h1 className="text-3xl font-bold mb-2">Booking Details</h1>
                          <p className="text-blue-100">Booking ID: {bookingData.booking_id || bookingData._id || 'N/A'}</p>
                     </div>
-                    <div className="flex gap-3">
+                    <div className="flex gap-3 flex-wrap justify-end">
+                         {bookingData.status === 'Completed' && bookingData.final_payment && (
+                              reviewed ? (
+                                   <button
+                                        disabled
+                                        className="bg-green-600 opacity-70 text-white font-semibold px-6 py-2 rounded-lg cursor-default"
+                                   >
+                                        ✓ Review Submitted
+                                   </button>
+                              ) : (
+                                   <button
+                                        onClick={() => setReviewModalOpen(true)}
+                                        className="bg-orange-500 hover:bg-orange-600 text-white font-semibold px-6 py-2 rounded-lg transition-colors shadow-lg"
+                                   >
+                                        ★ Leave a Review
+                                   </button>
+                              )
+                         )}
                          {bookingData.status === 'Confirmed' && !bookingData.initial_payment && (
                               <button
                                    onClick={async () => {
@@ -354,6 +374,14 @@ const BookingDetails = () => {
                          )}
                     </div>
                </div>
+
+               {/* Review Modal */}
+               <ReviewModal
+                    open={reviewModalOpen}
+                    onClose={() => setReviewModalOpen(false)}
+                    booking={bookingData}
+                    onReviewed={() => setReviewed(true)}
+               />
 
                {/* Confirmation Dialog */}
                <Dialog open={openDialog} onClose={handleCloseDialog} maxWidth="sm" fullWidth>
