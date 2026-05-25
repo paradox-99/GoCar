@@ -858,7 +858,7 @@ const AgencyDamageReports = () => {
 
     const [page, setPage] = useState(0);
     const [limit, setLimit] = useState(10);
-    const [filters, setFilters] = useState({ search: '', status: '', severity: '', damage_type: '', car_id: '', payment_status: '', startDate: '', endDate: '', costRange: '', quickFilter: 'open' });
+    const [filters, setFilters] = useState({ search: '', status: '', severity: '', damage_type: '', car_id: '', payment_status: '', startDate: '', endDate: '', costRange: '', quickFilter: 'all' });
     const [selectedRows, setSelectedRows] = useState(new Set());
     const [bulkStatus, setBulkStatus] = useState('Under Review');
     const [bulkNotes, setBulkNotes] = useState('');

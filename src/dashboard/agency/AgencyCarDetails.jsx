@@ -53,6 +53,9 @@ const AgencyCarDetails = () => {
     // Local copy of car so UI reflects updates immediately
     const [car, setCar] = useState(location.state?.car ?? null);
 
+    console.log(car);
+    
+
     // Status
     const [selectedStatus, setSelectedStatus] = useState(car?.status ?? "");
     const [statusLoading, setStatusLoading] = useState(false);
@@ -88,7 +91,7 @@ const AgencyCarDetails = () => {
     const handleStatusUpdate = async () => {
         setStatusLoading(true);
         try {
-            await axiosPublic.patch(`carRoutes/updateCarInfo/${car.car_id}`, { status: selectedStatus });
+            await axiosPublic.patch(`carRoutes/updateCarInfo/${car.vehicle_id }`, { status: selectedStatus });
             setCar(prev => ({ ...prev, status: selectedStatus }));
             toast.success("Status updated successfully.");
         } catch {
@@ -107,7 +110,7 @@ const AgencyCarDetails = () => {
         }
         setPriceLoading(true);
         try {
-            await axiosPublic.patch(`carRoutes/updateCarInfo/${car.car_id}`, { rental_price: parsed });
+            await axiosPublic.patch(`carRoutes/updateCarInfo/${car.vehicle_id }`, { rental_price: parsed });
             setCar(prev => ({ ...prev, rental_price: parsed }));
             toast.success("Price updated successfully.");
             setPriceOpen(false);
@@ -126,7 +129,7 @@ const AgencyCarDetails = () => {
         }
         setAboutLoading(true);
         try {
-            await axiosPublic.patch(`carRoutes/updateCarInfo/${car.car_id}`, { about: newAbout.trim() });
+            await axiosPublic.patch(`carRoutes/updateCarInfo/${car.vehicle_id }`, { about: newAbout.trim() });
             setCar(prev => ({ ...prev, about: newAbout.trim() }));
             toast.success("Description updated successfully.");
             setAboutOpen(false);
@@ -197,7 +200,7 @@ const AgencyCarDetails = () => {
                     {/* Specifications */}
                     <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-5">
                         <h2 className="text-sm font-bold text-gray-500 uppercase tracking-wide mb-1">Specifications</h2>
-                        <SpecRow label="Car ID" value={car.car_id} />
+                        <SpecRow label="Vehicle ID" value={car.vehicle_id} />
                         <SpecRow label="Brand" value={car.brand} />
                         <SpecRow label="Model" value={car.model} />
                         <SpecRow label="Build Year" value={car.build_year} />
