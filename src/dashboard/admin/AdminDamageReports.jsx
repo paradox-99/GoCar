@@ -1,26 +1,23 @@
-import React, { useState, useMemo } from 'react';
+/* eslint-disable react/prop-types */
+import { useState } from 'react';
 import {
     Box, Typography, Paper, Grid, Card, CardContent, Button, Stack,
     IconButton, Divider, MenuItem, Select, FormControl, TextField,
     Chip, useTheme, Avatar, Tooltip, Table, TableBody, TableCell,
     TableContainer, TableHead, TableRow, TablePagination, Alert,
-    Dialog, DialogTitle, DialogContent, DialogActions, LinearProgress,
-    Fade, Tab, Tabs, InputAdornment, Badge, Checkbox
-} from '@mui/material';
+    Dialog, DialogTitle, DialogContent, DialogActions, LinearProgress, Tab, Tabs, Checkbox } from '@mui/material';
 import {
-    Warning, Info, CheckCircle, ErrorOutline, Search, FilterList,
-    Download, Visibility, Edit, Forward, MoreVert, Close, 
+    Warning, CheckCircle, ErrorOutline, Search, FilterList,
+    Download, Visibility, Edit, Forward, Close, 
     CalendarToday, DirectionsCar, MonetizationOn, History, 
-    Business, Person, Assignment, Payments, Settings
-} from '@mui/icons-material';
+    Person, Assignment } from '@mui/icons-material';
 import moment from 'moment';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import useAxiosPublic from '../../hooks/useAxiosPublic';
 import toast from 'react-hot-toast';
 import {
     BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip as ChartTooltip,
-    Legend, ResponsiveContainer, PieChart, Pie, Cell, LineChart, Line, AreaChart, Area
-} from 'recharts';
+    Legend, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
 
 // --- Theme Colors ---
 const COLORS = {
@@ -45,7 +42,6 @@ const STATUS_MAP = {
 };
 
 const AdminDamageReports = () => {
-    const theme = useTheme();
     const axiosPublic = useAxiosPublic();
     const queryClient = useQueryClient();
 
@@ -427,11 +423,11 @@ const ReportOverviewTab = ({ report }) => {
 
                 <Box>
                     <Typography variant="subtitle2" color="textSecondary" gutterBottom>PHOTOS GALLERY</Typography>
-                    {report.photos ? (
+                    {report.photos && report.photos.length > 0 ? (
                         <Grid container spacing={2}>
-                            {report.photos.split(',').map((url, i) => (
+                            {(Array.isArray(report.photos) ? report.photos : report.photos.split(',')).map((url, i) => (
                                 <Grid item xs={4} key={i}>
-                                    <Avatar src={url} variant="rounded" sx={{ width: '100%', height: 200, cursor: 'pointer' }} onClick={() => window.open(url)} />
+                                    <Avatar src={url.trim()} variant="rounded" sx={{ width: '100%', height: 200, cursor: 'pointer' }} onClick={() => window.open(url.trim())} />
                                 </Grid>
                             ))}
                         </Grid>

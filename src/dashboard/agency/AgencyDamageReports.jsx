@@ -1091,16 +1091,16 @@ const AgencyDamageReports = () => {
                                 {/* Status */}
                                 <div><StatusBadge status={r.status} /></div>
                                 {/* Actions — rendered as a separate full-width row overlay trick */}
-                                <div className="flex items-center gap-1">
-                                    <button onClick={() => openModal('detail', r.damage_id)} title="View Details" className="p-1.5 hover:bg-gray-100 rounded-lg text-gray-400 hover:text-orange-500 transition-colors"><Eye size={14} /></button>
-                                    <button onClick={() => openModal('status', r)} title="Update Status/Cost" className="p-1.5 hover:bg-gray-100 rounded-lg text-gray-400 hover:text-orange-500 transition-colors"><Edit2 size={14} /></button>
+                                <div className="flex items-center gap-2">
+                                    <button onClick={() => openModal('detail', r.damage_id)} title="View Details" className="px-5 py-2 hover:bg-gray-100 rounded-lg text-gray-400 hover:text-orange-500 transition-colors"><Eye size={16} /></button>
+                                    <button onClick={() => openModal('status', r)} title="Update Status/Cost" className="px-5 py-2 hover:bg-gray-100 rounded-lg text-gray-400 hover:text-orange-500 transition-colors"><Edit2 size={16} /></button>
                                     {r.estimated_cost > 0 && !r.is_paid && (
-                                        <button onClick={() => openModal('charge', r)} title="Charge Customer" className="p-1.5 hover:bg-orange-100 rounded-lg text-orange-500 transition-colors"><DollarSign size={14} /></button>
+                                        <button onClick={() => openModal('charge', r)} title="Charge Customer" className="px-3 py-2 hover:bg-orange-100 rounded-lg text-orange-500 transition-colors"><DollarSign size={16} /></button>
                                     )}
                                     {r.status !== 'Resolved' ? (
-                                        <button onClick={() => openModal('advance', r)} title="Quick Advance Status" className="p-1.5 hover:bg-gray-100 rounded-lg text-gray-400 hover:text-green-500 transition-colors"><ArrowRight size={14} /></button>
+                                        <button onClick={() => openModal('advance', r)} title="Quick Advance Status" className="px-5 py-2 hover:bg-gray-100 rounded-lg text-gray-400 hover:text-green-500 transition-colors"><ArrowRight size={16} /></button>
                                     ) : (
-                                        <button disabled title="Already Resolved" className="p-1.5 rounded-lg text-gray-200 cursor-not-allowed"><ArrowRight size={14} /></button>
+                                        <button disabled title="Already Resolved" className="px-5 py-2 rounded-lg text-gray-200 cursor-not-allowed"><ArrowRight size={16} /></button>
                                     )}
                                 </div>
                             </div>
