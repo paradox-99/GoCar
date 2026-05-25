@@ -8,6 +8,7 @@ import useAxiosPublic from "../../hooks/useAxiosPublic";
 import PickupDetailsModal from "./PickupDetailsModal";
 import ReturnDetailsModal from "./ReturnDetailsModal";
 import ReviewModal from "./ReviewModal";
+import DamageReportModal from "./DamageReportModal";
 import { useQueryClient } from "@tanstack/react-query";
 
 const BookingCard = ({ booking }) => {
@@ -18,6 +19,7 @@ const BookingCard = ({ booking }) => {
   const [pickupModalOpen, setPickupModalOpen] = useState(false);
   const [returnModalOpen, setReturnModalOpen] = useState(false);
   const [reviewModalOpen, setReviewModalOpen] = useState(false);
+  const [damageModalOpen, setDamageModalOpen] = useState(false);
 
   const getStatusBadge = (status) => {
     const lowerStatus = status?.toLowerCase() || "pending";
@@ -181,6 +183,28 @@ const BookingCard = ({ booking }) => {
             </Button>
           )}
 
+          {/* Report Damage: shown for Running bookings */}
+          {booking.status === 'Running' && (
+            <Button
+              variant="contained"
+              fullWidth
+              onClick={(e) => {
+                e.stopPropagation();
+                setDamageModalOpen(true);
+              }}
+              sx={{
+                background: "#ef4444",
+                py: 1,
+                fontWeight: 700,
+                fontSize: "14px",
+                textTransform: "none",
+                "&:hover": { background: "#dc2626" }
+              }}
+            >
+              ⚠ Report Damage
+            </Button>
+          )}
+
           {/* View Return Details: shown for Running bookings where agency has submitted return */}
           {booking.status === 'Running' && booking.return_id && (
             <Button
@@ -317,6 +341,16 @@ const BookingCard = ({ booking }) => {
         onClose={() => setReviewModalOpen(false)}
         booking={booking}
         onReviewed={() => {
+          queryClient.invalidateQueries(['userBookings']);
+        }}
+      />
+
+      {/* Damage Report Modal */}
+      <DamageReportModal
+        open={damageModalOpen}
+        onClose={() => setDamageModalOpen(false)}
+        booking={booking}
+        onSubmitted={() => {
           queryClient.invalidateQueries(['userBookings']);
         }}
       />

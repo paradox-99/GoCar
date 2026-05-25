@@ -5,6 +5,7 @@ import { Dialog, DialogTitle, DialogContent, DialogActions, Button } from '@mui/
 import useAxiosPublic from '../../hooks/useAxiosPublic';
 import toast from 'react-hot-toast';
 import ReviewModal from './ReviewModal';
+import DamageReportModal from './DamageReportModal';
 
 const BookingDetails = () => {
      const location = useLocation();
@@ -17,6 +18,7 @@ const BookingDetails = () => {
      const [cancelReason, setCancelReason] = useState('');
      const [reviewModalOpen, setReviewModalOpen] = useState(false);
      const [reviewed, setReviewed] = useState(!!bookingData?.reviewed);
+     const [damageModalOpen, setDamageModalOpen] = useState(false);
      const axiosPublic = useAxiosPublic();
 
      if (!bookingData) {
@@ -148,6 +150,14 @@ const BookingDetails = () => {
                                    className="bg-green-500 hover:bg-green-600 disabled:bg-green-300 text-white font-semibold px-6 py-2 rounded-lg transition-colors shadow-lg"
                               >
                                    {isLoading ? 'Processing...' : `Pay Initial 50% (৳${bookingData.total_cost * 0.5})`}
+                              </button>
+                         )}
+                         {bookingData.status === 'Running' && (
+                              <button
+                                   onClick={() => setDamageModalOpen(true)}
+                                   className="bg-red-500 hover:bg-red-600 text-white font-semibold px-6 py-2 rounded-lg transition-colors shadow-lg"
+                              >
+                                   ⚠ Report Damage
                               </button>
                          )}
                          {canCancel && (
@@ -381,6 +391,13 @@ const BookingDetails = () => {
                     onClose={() => setReviewModalOpen(false)}
                     booking={bookingData}
                     onReviewed={() => setReviewed(true)}
+               />
+
+               {/* Damage Report Modal */}
+               <DamageReportModal
+                    open={damageModalOpen}
+                    onClose={() => setDamageModalOpen(false)}
+                    booking={bookingData}
                />
 
                {/* Confirmation Dialog */}
