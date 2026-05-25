@@ -2,20 +2,13 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
-import {
-    BarChart, Bar, AreaChart, Area, XAxis, YAxis, CartesianGrid,
-    Tooltip as RTooltip, ResponsiveContainer
-} from 'recharts';
-import {
-    Car, AlertTriangle, X, RefreshCw, Search, Download, LayoutGrid, List,
-    ChevronLeft, ChevronRight, Eye, Phone, MapPin, Calendar, DollarSign,
-    CheckCircle, TrendingUp, TrendingDown, Copy, Star, Info, ChevronDown,
-    ChevronUp, Clock, Bell, AlertCircle
+import { AreaChart, Area, XAxis, YAxis, CartesianGrid,
+    Tooltip as RTooltip, ResponsiveContainer } from 'recharts';
+import { Car, AlertTriangle, X, RefreshCw, Search, Download, LayoutGrid, List, ChevronLeft, ChevronRight, Eye, Phone, MapPin, Calendar, DollarSign,
+    CheckCircle, TrendingUp, TrendingDown, Copy, Star, ChevronDown,
+    ChevronUp, Clock, Bell, AlertCircle, CheckCheck, XCircle, Inbox
 } from 'lucide-react';
-import {
-    format, formatDistanceToNow, differenceInMinutes, differenceInHours,
-    differenceInDays, parseISO, isValid, isToday, isTomorrow
-} from 'date-fns';
+import { format, formatDistanceToNow, differenceInMinutes, parseISO, isValid, isToday} from 'date-fns';
 import { motion, AnimatePresence } from 'framer-motion';
 import toast from 'react-hot-toast';
 import useAuth from '../../hooks/useAuth';
@@ -623,6 +616,163 @@ const TripCard = ({ trip, now, onView }) => {
     );
 };
 
+// ─── Trip Requests Panel ──────────────────────────────────────────────────────
+
+const TripRequestsPanel = ({ driverId, onResponded }) => {
+    const axiosPublic = useAxiosPublic();
+    const [responding, setResponding] = useState({});
+    const [rejectNote, setRejectNote] = useState({});
+    const [showNoteFor, setShowNoteFor] = useState(null);
+
+    const { data: requests = [], isLoading, refetch } = useQuery({
+        queryKey: ['driverRequests', driverId],
+        queryFn: async () => {
+            const r = await axiosPublic.get(`/driverTrips/requests/${driverId}`, { withCredentials: true });
+            return r.data;
+        },
+        enabled: !!driverId,
+        refetchInterval: 30000,
+    });
+
+    const respond = async (assignmentId, action, note) => {
+        setResponding(s => ({ ...s, [assignmentId]: action }));
+        try {
+            await axiosPublic.post(`/driverTrips/requests/${assignmentId}/respond`, { action, driver_note: note || undefined }, { withCredentials: true });
+            toast.success(action === 'accept' ? '✅ Trip accepted!' : '❌ Trip rejected');
+            refetch();
+            onResponded?.();
+        } catch (err) {
+            toast.error(err?.response?.data?.error || 'Failed to respond');
+        } finally {
+            setResponding(s => ({ ...s, [assignmentId]: null }));
+            setShowNoteFor(null);
+        }
+    };
+
+    if (isLoading) return (
+        <div className="bg-white rounded-2xl border border-gray-100 p-5 space-y-3">
+            <div className="flex items-center gap-2 mb-1"><Inbox size={16} className="text-orange-500"/><span className="font-bold text-gray-700">Trip Requests</span></div>
+            {[1,2].map(i => <Skel key={i} className="h-28 rounded-xl"/>)}
+        </div>
+    );
+
+    if (!requests.length) return (
+        <div className="bg-white rounded-2xl border border-dashed border-gray-200 p-8 text-center">
+            <Inbox size={36} className="mx-auto mb-2 text-gray-300"/>
+            <p className="text-sm font-semibold text-gray-500">No pending trip requests</p>
+            <p className="text-xs text-gray-400 mt-1">New requests from customers will appear here.</p>
+        </div>
+    );
+
+    return (
+        <div className="bg-white rounded-2xl border border-orange-100 shadow-sm overflow-hidden">
+            <div className="flex items-center justify-between px-5 py-4 border-b border-orange-50 bg-orange-50/60">
+                <div className="flex items-center gap-2">
+                    <Inbox size={16} className="text-orange-500"/>
+                    <span className="font-bold text-gray-800">Trip Requests</span>
+                    <span className="bg-orange-500 text-white text-xs font-bold px-2 py-0.5 rounded-full">{requests.length}</span>
+                </div>
+                <button onClick={() => refetch()} className="p-1.5 rounded-lg hover:bg-orange-100 text-gray-400">
+                    <RefreshCw size={13}/>
+                </button>
+            </div>
+
+            <div className="divide-y divide-gray-50">
+                {requests.map(req => (
+                    <div key={req.assignment_id} className="p-4 hover:bg-gray-50/50 transition-colors">
+                        <div className="flex gap-3">
+                            {/* Vehicle image */}
+                            <div className="w-20 h-16 rounded-xl overflow-hidden bg-gray-100 flex-shrink-0">
+                                {req.vehicle_image
+                                    ? <img src={req.vehicle_image} alt="" className="w-full h-full object-cover"/>
+                                    : <div className="w-full h-full flex items-center justify-center"><Car size={20} className="text-gray-300"/></div>
+                                }
+                            </div>
+
+                            {/* Details */}
+                            <div className="flex-1 min-w-0">
+                                <div className="flex items-start justify-between gap-2">
+                                    <div>
+                                        <p className="font-bold text-gray-800 text-sm">{req.brand} {req.model}</p>
+                                        <p className="text-xs text-gray-400">{req.agency_name || 'Agency'} · {req.car_type}</p>
+                                    </div>
+                                    <span className="text-[10px] text-gray-400 whitespace-nowrap flex-shrink-0">
+                                        {formatDistanceToNow(new Date(req.assigned_at), { addSuffix: true })}
+                                    </span>
+                                </div>
+
+                                <div className="mt-1.5 flex flex-wrap gap-x-4 gap-y-1 text-xs text-gray-600">
+                                    <span className="flex items-center gap-1"><Calendar size={10}/>{fmtDateTime(req.start_ts)} → {fmtDateTime(req.end_ts)}</span>
+                                    <span className="flex items-center gap-1"><Clock size={10}/>{req.total_rent_hours} hrs</span>
+                                    {req.estimated_destination && <span className="flex items-center gap-1"><MapPin size={10} className="shrink-0"/><span className="truncate max-w-32">{req.estimated_destination}</span></span>}
+                                </div>
+
+                                <div className="mt-1.5 flex items-center gap-3">
+                                    <div className="flex items-center gap-1.5">
+                                        <div className="w-5 h-5 rounded-full bg-orange-100 flex items-center justify-center text-[10px] font-bold text-orange-600">
+                                            {(req.customer_name || '?').charAt(0)}
+                                        </div>
+                                        <span className="text-xs font-semibold text-gray-700">{req.customer_name}</span>
+                                        {req.customer_phone && (
+                                            <a href={`tel:${req.customer_phone}`} className="text-xs text-blue-500 hover:underline">{req.customer_phone}</a>
+                                        )}
+                                    </div>
+                                    <span className="ml-auto text-sm font-black text-green-600">{fmtMoney(req.driver_cost)}</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Reject note input */}
+                        {showNoteFor === req.assignment_id && (
+                            <div className="mt-3 flex gap-2">
+                                <input
+                                    value={rejectNote[req.assignment_id] || ''}
+                                    onChange={e => setRejectNote(s => ({ ...s, [req.assignment_id]: e.target.value }))}
+                                    placeholder="Reason for rejection (optional)"
+                                    className="flex-1 text-xs px-3 py-2 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-300"
+                                />
+                                <button
+                                    onClick={() => respond(req.assignment_id, 'reject', rejectNote[req.assignment_id])}
+                                    disabled={!!responding[req.assignment_id]}
+                                    className="px-4 py-2 text-xs font-bold bg-red-500 hover:bg-red-600 text-white rounded-xl disabled:opacity-50"
+                                >
+                                    {responding[req.assignment_id] === 'reject' ? '…' : 'Confirm'}
+                                </button>
+                                <button onClick={() => setShowNoteFor(null)} className="px-3 py-2 text-xs border border-gray-200 rounded-xl hover:bg-gray-50">
+                                    Cancel
+                                </button>
+                            </div>
+                        )}
+
+                        {/* Action buttons */}
+                        {showNoteFor !== req.assignment_id && (
+                            <div className="mt-3 flex gap-2">
+                                <button
+                                    onClick={() => respond(req.assignment_id, 'accept')}
+                                    disabled={!!responding[req.assignment_id]}
+                                    className="flex-1 flex items-center justify-center gap-1.5 py-2 text-xs font-bold bg-green-500 hover:bg-green-600 text-white rounded-xl disabled:opacity-50 transition-colors"
+                                >
+                                    {responding[req.assignment_id] === 'accept'
+                                        ? <><RefreshCw size={12} className="animate-spin"/> Accepting…</>
+                                        : <><CheckCheck size={12}/> Accept Trip</>
+                                    }
+                                </button>
+                                <button
+                                    onClick={() => setShowNoteFor(req.assignment_id)}
+                                    disabled={!!responding[req.assignment_id]}
+                                    className="flex-1 flex items-center justify-center gap-1.5 py-2 text-xs font-bold border border-red-300 text-red-500 hover:bg-red-50 rounded-xl disabled:opacity-50 transition-colors"
+                                >
+                                    <XCircle size={12}/> Reject
+                                </button>
+                            </div>
+                        )}
+                    </div>
+                ))}
+            </div>
+        </div>
+    );
+};
+
 // ─── Earnings Summary Panel ───────────────────────────────────────────────────
 
 const EarningsSummaryPanel = ({ driverId }) => {
@@ -939,6 +1089,14 @@ const DriverTrips = () => {
 
                 {/* Countdown Widget */}
                 {banners?.nextTrip && <CountdownWidget nextTrip={banners.nextTrip}/>}
+
+                {/* Trip Requests */}
+                {driverId && (
+                    <TripRequestsPanel
+                        driverId={driverId}
+                        onResponded={refresh}
+                    />
+                )}
 
                 {/* Filter Bar */}
                 <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-4 space-y-3">
