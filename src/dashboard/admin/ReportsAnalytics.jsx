@@ -1,27 +1,17 @@
-import React, { useState, useMemo } from 'react';
-import {
-    Box, Typography, Paper, Grid, Card, CardContent, Button, Stack,
-    Tabs, Tab, IconButton, Divider, MenuItem, Select, FormControl,
-    TextField, Chip, useTheme, Skeleton, Table, TableBody,
-    TableCell, TableContainer, TableHead, TableRow, TablePagination,
-    Menu, Fade, Avatar, Rating, ToggleButton, ToggleButtonGroup, Tooltip
-} from '@mui/material';
-import {
-    FileDownload, TrendingUp, TrendingDown, MonetizationOn, 
+import { useState, useMemo } from 'react';
+import { Box, Typography, Paper, Grid, Card, CardContent, Button, Stack,
+    Tabs, Tab, MenuItem, TextField, Chip, useTheme, Skeleton, Table, TableBody,
+    TableCell, TableContainer, TableHead, TableRow, Menu, Avatar, ToggleButton, ToggleButtonGroup, Tooltip } from '@mui/material';
+import { FileDownload, TrendingUp, TrendingDown, MonetizationOn, 
     BookOnline, Cancel, People, Business, DirectionsCar, 
-    AccessTime, Star, Warning, History, CheckCircleOutline,
-    TwoWheeler, Shield, LocalGasStation, Settings, BarChart as BarChartIcon,
-    CalendarToday
-} from '@mui/icons-material';
-import {
-    AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip as RechartsTooltip,
+    AccessTime, Star, History, CheckCircleOutline,
+    TwoWheeler, CalendarToday } from '@mui/icons-material';
+import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip as RechartsTooltip,
     ResponsiveContainer, BarChart, Bar, PieChart, Pie, Cell,
-    Legend, LineChart, Line, ComposedChart
-} from 'recharts';
+    Legend, LineChart, Line} from 'recharts';
 import moment from 'moment';
 import useAxiosPublic from '../../hooks/useAxiosPublic';
 import { useQuery } from '@tanstack/react-query';
-import toast from 'react-hot-toast';
 
 // Custom Colors
 const COLORS = {
@@ -39,7 +29,6 @@ const COLORS = {
 };
 
 const ReportsAnalytics = () => {
-    const theme = useTheme();
     const axiosPublic = useAxiosPublic();
     const [activeTab, setActiveTab] = useState(0);
     const [dateRange, setDateRange] = useState('This Month');
@@ -74,7 +63,7 @@ const ReportsAnalytics = () => {
     const { data: analyticsData, isLoading } = useQuery({
         queryKey: ['admin-analytics', activeTab, start.format(), end.format()],
         queryFn: async () => {
-            const res = await axiosPublic.get(`analytics/${endpoints[activeTab]}`, {
+            const res = await axiosPublic.get(`admin-analytics/${endpoints[activeTab]}`, {
                 params: {
                     startDate: start.format('YYYY-MM-DD HH:mm:ss'),
                     endDate: end.format('YYYY-MM-DD HH:mm:ss')
@@ -187,7 +176,7 @@ const KPICard = ({ title, value, icon, color, trend, subValue }) => (
                 )}
             </Box>
             <Typography variant="caption" fontWeight="bold" color="textSecondary" sx={{ textTransform: 'uppercase', letterSpacing: '0.05em' }}>{title}</Typography>
-            <Typography variant="h4" fontWeight="900" sx={{ mt: 0.5, color: '#1e293b' }}>{value}</Typography>
+            <Typography variant="h5" fontWeight="800" sx={{ mt: 0.5, color: '#1e293b' }}>{value}</Typography>
             {subValue && <Typography variant="caption" color="textSecondary" sx={{ mt: 0.5, display: 'block' }}>{subValue}</Typography>}
         </CardContent>
     </Card>

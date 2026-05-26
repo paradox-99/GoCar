@@ -222,7 +222,7 @@ Dedicated analytics views per domain:
 | **Bookings** | Booking volume, completion rate, average duration |
 | **Cancellations** | Cancellation rate, reasons, patterns |
 | **Drivers** | Active driver count, top earners, trip completion rate |
-| **Agencies** | Fleet utilisation, revenue per agency, rating trends |
+| **Agencies** | Fleet utilization, revenue per agency, rating trends |
 | **Vehicles** | Most-booked vehicles, availability rate, damage frequency |
 
 Data can be filtered by date range and exported.
@@ -257,15 +257,10 @@ From `/dashboard/admin/settings`:
 
 ### Dashboard Home
 
-![Admin Dashboard](screenshots/admin_dashboard.png)
+![Admin Dashboard](screenshots/admin-dashboard-1.png)
 
----
-
-### KPI Cards & Revenue Chart
-
-| KPI Overview | Revenue Chart |
+| ![Admin Dashboard](screenshots/admin-dashboard-2.png) | ![Admin Dashboard](screenshots/admin-dashboard-3.png) |
 |---|---|
-| ![KPIs](screenshots/admin_kpis.png) | ![Revenue](screenshots/admin_revenue_chart.png) |
 
 ---
 
