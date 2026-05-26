@@ -45,16 +45,16 @@ const Banner = () => {
                <div className="absolute bottom-10 left-10 w-32 h-32 bg-orange-500/10 rounded-full blur-3xl animate-pulse" style={{animationDelay: '1s'}}></div>
                
                <div className="relative z-1">
-                    <h1 className="text-3xl md:text-5xl lg:text-6xl xl:text-7xl font-bold w-full max-w-3xl text-black drop-shadow-2xl leading-tight mb-4">Drive Your Way, Anytime, Anywhere</h1>
-                    <p className="text-lg md:text-xl lg:text-2xl max-w-2xl text-gray-700 drop-shadow-lg mb-8">Affordable Car Rentals Made Simple - Explore, Book, and Go!</p>
+                    <h1 className="text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-bold w-full max-w-xl text-black drop-shadow-lg leading-tight mb-3">Drive Your Way, Anytime, Anywhere</h1>
+                    <p className="text-sm md:text-base lg:text-lg max-w-lg text-gray-600 drop-shadow mb-6">Affordable Car Rentals Made Simple — Explore, Book, and Go!</p>
                     <div className="flex flex-col sm:flex-row gap-3">
-                         <Button variant="contained" sx={{ 
+                         <Button variant="contained" href="/search" sx={{ 
                               background: '#F58300', 
                               color: 'white', 
                               fontWeight: 700,
-                              fontSize: '1rem',
-                              px: 5,
-                              py: 1.5,
+                              fontSize: 16,
+                              px: 4,
+                              py: 1,
                               borderRadius: '8px',
                               boxShadow: '0 8px 24px rgba(245, 131, 0, 0.35)',
                               transition: 'all 0.3s ease',
@@ -64,13 +64,13 @@ const Banner = () => {
                                    transform: 'translateY(-2px)'
                               }
                          }}>Start Booking Now</Button>
-                         <Button variant="outlined" sx={{ 
+                         <Button variant="outlined" href="/about" sx={{ 
                               color: 'black',
                               borderColor: 'rgba(0, 0, 0, 0.5)',
                               fontWeight: 600,
-                              fontSize: '1rem',
-                              px: 5,
-                              py: 1.5,
+                              fontSize: 16,
+                              px: 4,
+                              py: 1,
                               borderRadius: '8px',
                               transition: 'all 0.3s ease',
                               '&:hover': { 
@@ -81,8 +81,8 @@ const Banner = () => {
                     </div>
                </div>
 
-               <div className="mt-10 md:mt-5 flex flex-col items-center md:items-start relative z-1">
-                    <div className="flex flex-col xl:flex-row gap-4 max-w-6xl bg-white/5 backdrop-blur-2xl p-8 rounded-3xl border border-white/10 shadow-2xl">
+               <div className="mt-6 md:mt-4 flex flex-col items-center md:items-start relative z-1">
+                    <div className="flex flex-col xl:flex-row gap-4 max-w-5xl bg-white/10 backdrop-blur-2xl p-5 rounded-2xl border border-white/20 shadow-xl">
                          <div >
                               <h3 className="font-semibold text-black mb-5 text-sm uppercase tracking-wider">📍 Pickup Location</h3>
                               <AddressSearch
@@ -106,7 +106,7 @@ const Banner = () => {
                               background: '#F58300', 
                               color: 'white', 
                               fontWeight: 700,
-                              fontSize: '1.1rem',
+                              fontSize: 16,
                               px: 6,
                               py: 1.5,
                               borderRadius: '8px',

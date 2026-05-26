@@ -604,7 +604,7 @@ const TripCard = ({ trip, now, onView }) => {
                 </div>
             </div>
             <div className="px-4 py-3 border-t border-gray-50 flex items-center justify-between">
-                <span className="text-xs text-gray-400 border border-orange-200 px-2 py-0.5 rounded-full text-orange-600">
+                <span className="text-xs border border-orange-200 px-2 py-0.5 rounded-full text-orange-600">
                     {trip.total_rent_hours ? `${trip.total_rent_hours} hrs` : '—'}
                 </span>
                 <button onClick={() => onView(trip.booking_id)}
