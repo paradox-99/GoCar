@@ -309,3 +309,7 @@ Signup flows are multi-step, with separate flows for each role:
 | Damage Report (If any during the trip) | Final Payment |
 |---|---|
 | ![Booking](docs/screenshots/damage_report.png) | ![Payment](docs/screenshots/final_payment.png) |
+
+| User Review |
+|---|
+| ![Booking](docs/screenshots/submit_review.png) |

@@ -96,7 +96,7 @@ Multi-step registration flow with email verification:
 5. Upload profile photo
 6. Review and confirm
 
-State for each step is persisted in Redux (`userSignUpSlice`) so users can navigate back without losing data.
+![Sign up](screenshots/signup.png)
 
 ---
 
@@ -121,6 +121,8 @@ Users can save cars to a favourites list (the cart). From `/dashboard/user/my-ca
 - Remove individually or clear all
 - Persisted in the backend per user
 
+![User Favourite](screenshots/user_favourite.png)
+
 ---
 
 ### Booking
@@ -131,7 +133,9 @@ The booking flow from the car detail page:
 2. Choose pickup location (map)
 3. Optionally select a driver from the agency's available drivers
 4. Review booking summary (total cost, deposit)
-5. Confirm booking — triggers availability check before finalising
+5. Confirm booking — triggers availability check before finalizing
+
+![User Bookings](screenshots/user_bookings.png)
 
 ---
 
@@ -158,6 +162,8 @@ Users can submit damage reports before or after a trip:
 
 During a trip, the user confirms the pickup condition recorded by the agency/driver, and similarly confirms the return condition at drop-off.
 
+![Damage Reports](screenshots/user_damage.png)
+
 ---
 
 ### Reviews
@@ -170,6 +176,8 @@ After a completed booking, users can submit reviews for:
 
 Reviews are accessible from `/dashboard/user/my-reviews` and can be submitted via the booking detail page or `/dashboard/user/reviews/new`.
 
+![User Review](screenshots/user_review.png)
+
 ---
 
 ### Profile
@@ -181,6 +189,8 @@ Manage all personal details from `/dashboard/user/myprofile`:
 - **Address** — searchable with map
 - **Profile photo** — upload or replace
 - **Driving license** — upload and track verification status
+
+![User Profile](screenshots/user_profile.png)
 
 ---
 
@@ -200,71 +210,3 @@ Real-time notification feed at `/dashboard/notifications` and in the top navbar 
 ### Dashboard Home
 
 ![User Dashboard](screenshots/user_dashboard.png)
-
----
-
-### Browse & Search
-
-| Search Page | Map Location Selector |
-|---|---|
-| ![Search](screenshots/user_search.png) | ![Map](screenshots/user_map_select.png) |
-
----
-
-### Car Detail Page
-
-![Car Detail](screenshots/user_car_detail.png)
-
----
-
-### Booking Flow
-
-| Date Selection | Driver Selection | Summary |
-|---|---|---|
-| ![Dates](screenshots/user_booking_dates.png) | ![Driver](screenshots/user_booking_driver.png) | ![Summary](screenshots/user_booking_summary.png) |
-
----
-
-### Payment
-
-| Payment Gateway | Success Page |
-|---|---|
-| ![Payment](screenshots/user_payment.png) | ![Success](screenshots/user_payment_success.png) |
-
----
-
-### My Bookings
-
-| Booking List | Booking Detail |
-|---|---|
-| ![List](screenshots/user_bookings_list.png) | ![Detail](screenshots/user_booking_detail.png) |
-
----
-
-### Favourites
-
-![Favourite Cars](screenshots/user_favourites.png)
-
----
-
-### Damage Report
-
-![Damage Report](screenshots/user_damage_report.png)
-
----
-
-### Reviews
-
-| My Reviews | Submit Review |
-|---|---|
-| ![My Reviews](screenshots/user_my_reviews.png) | ![Submit](screenshots/user_submit_review.png) |
-
----
-
-### Profile
-
-![Profile](screenshots/user_profile.png)
-
----
-
-> Replace placeholder paths with actual screenshots once captured.
