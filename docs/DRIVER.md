@@ -177,7 +177,8 @@ From `/dashboard/driver/profile`:
 
 ### Dashboard Home
 
-![Driver Dashboard](screenshots/driver_dashboard.png)
+| ![Driver Dashboard](screenshots/dv-dashboard-1.png) | ![Driver Dashboard](screenshots/dv-dashboard-2.png) |
+|---|---|
 
 ---
 
@@ -185,40 +186,16 @@ From `/dashboard/driver/profile`:
 
 | All Trips | Trip Detail |
 |---|---|
-| ![Trips](screenshots/driver_trips.png) | ![Detail](screenshots/driver_trip_detail.png) |
-
----
-
-### Pending Trip Requests
-
-![Trip Requests](screenshots/driver_trip_requests.png)
-
----
-
-### Pickup Form
-
-![Pickup](screenshots/driver_pickup.png)
-
----
-
-### Return Form
-
-![Return](screenshots/driver_return.png)
+| ![Trips](screenshots/dv-trips.png) | ![Detail](screenshots/dv-trip-details.png) |
 
 ---
 
 ### Reviews
 
-![Driver Reviews](screenshots/driver_reviews.png)
+![Driver Reviews](screenshots/dv-reviews.png)
 
 ---
 
 ### Profile
 
-| Personal Info | License Info |
-|---|---|
-| ![Personal](screenshots/driver_profile_personal.png) | ![License](screenshots/driver_profile_license.png) |
-
----
-
-> Replace placeholder paths with actual screenshots once captured.
+![Personal](screenshots/dv-profile.png)
