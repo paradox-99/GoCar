@@ -268,82 +268,123 @@ From `/dashboard/admin/settings`:
 
 | User List | User Detail |
 |---|---|
-| ![Users](screenshots/admin_users.png) | ![Detail](screenshots/admin_user_detail.png) |
-
----
-
-### Vehicle Management
-
-| Vehicle List | Vehicle Detail |
-|---|---|
-| ![Vehicles](screenshots/admin_vehicles.png) | ![Detail](screenshots/admin_vehicle_detail.png) |
+| ![Users](screenshots/admin-user-1.png) | ![Detail](screenshots/admin-user-2.png) |
 
 ---
 
 ### Agency Management
 
-| Agency List | Agency Detail |
+| Car List | Car Details |
 |---|---|
-| ![Agencies](screenshots/admin_agencies.png) | ![Detail](screenshots/admin_agency_detail.png) |
+| ![Agencies](screenshots/admin-agency-1.png) | ![Detail](screenshots/admin-agency-2.png) |
+
+---
+
+### Vehicle Management
+
+| Car List | Car Details |
+|---|---|
+| ![Vehicles](screenshots/admin-car-1.png) | ![Detail](screenshots/admin-car-2.png) |
+
+| Bike List | Bike Details |
+|---|---|
+| ![Vehicles](screenshots/admin-bike-1.png) | ![Detail](screenshots/admin-bike-2.png) |
 
 ---
 
 ### Driver Management
 
-| Driver List | Driver Detail |
+| Driver List | Driver Details |
 |---|---|
-| ![Drivers](screenshots/admin_drivers.png) | ![Detail](screenshots/admin_driver_detail.png) |
+| ![Drivers](screenshots/admin-driver-1.png) | ![Detail](screenshots/admin-driver-2.png) |
 
 ---
 
 ### Booking Management
 
-![Bookings](screenshots/admin_bookings.png)
+| Booking List | Booking Details |
+|---|---|
+| ![Bookings](screenshots/admin-booking-1.png) | ![Details](screenshots/admin-booking-2.png) |
 
 ---
 
 ### Payments
+| Payment Analytics |
+|---|
+|![Payments](screenshots/admin-payments-1.png)|
 
-| Payment List | Payment Analytics |
+| Payment List | Payment Details |
 |---|---|
-| ![Payments](screenshots/admin_payments.png) | ![Analytics](screenshots/admin_payment_analytics.png) |
+| ![Payments](screenshots/admin-payments-2.png) | ![Details](screenshots/admin-payments-3.png) |
 
 ---
 
 ### Review Moderation
 
-![Reviews](screenshots/admin_reviews.png)
+| Review Analytics |
+|---|
+|![Payments](screenshots/admin-review-1.png)|
+
+| Review List | Review Details |
+|---|---|
+| ![Review](screenshots/admin-review-2.png) | ![Details](screenshots/admin-review-3.png) |
+
 
 ---
 
 ### Damage Reports
 
+| Review Analytics |
+|---|
+|![Damage](screenshots/admin-damage-2.png)|
+
 | Damage List | Damage Detail |
 |---|---|
-| ![Damage](screenshots/admin_damage.png) | ![Detail](screenshots/admin_damage_detail.png) |
+| ![Damage](screenshots/admin-damage-1.png) | ![Detail](screenshots/admin-damage-3.png) |
 
 ---
 
 ### License Approvals
 
-![License Approvals](screenshots/admin_license_approvals.png)
+| License List | License Details |
+|---|---|
+| ![License](screenshots/admin-license-1.png) | ![Detail](screenshots/admin-license-2.png) |
 
 ---
 
 ### Analytics & Reports
 
-| Revenue | Bookings | Vehicles |
-|---|---|---|
-| ![Revenue](screenshots/admin_analytics_revenue.png) | ![Bookings](screenshots/admin_analytics_bookings.png) | ![Vehicles](screenshots/admin_analytics_vehicles.png) |
+| Revenue | Revenue |
+|---|---|
+| ![Revenue](screenshots/admin-report-1.png) | ![Bookings](screenshots/admin-report-2.png) | 
+
+| Bookings | Bookings |
+|---|---|
+|![Vehicles](screenshots/admin-report-3.png) | ![Vehicles](screenshots/admin-report-4.png) |
+
+| Drivers | Cancellation |
+|---|---|
+|![Vehicles](screenshots/admin-report-5.png) |![Vehicles](screenshots/admin-report-6.png) |
+---
+
+### Notifications
+
+| Notifications Analytics | Notifications List |
+|---|---|
+| ![Notifications](screenshots/admin-notification-1.png) | ![Notifications](screenshots/admin-notification-2.png) | 
+
+| Notifications Details | Admin through Notification |
+|---|---|
+|![Notifications](screenshots/admin-notification-3.png) | ![Notifications](screenshots/admin-notification-4.png) |
 
 ---
 
 ### Platform Settings
 
-| Profile | Activity Log |
+| Profile |
+|---|
+| ![Settings](screenshots/admin-setting-1.png) |
+
+| Activity Log | Platform Settings  |
 |---|---|
-| ![Settings](screenshots/admin_settings.png) | ![Log](screenshots/admin_activity_log.png) |
-
----
-
-> Replace placeholder paths with actual screenshots once captured.
+| ![Log](screenshots/admin-setting-3.png) | ![Log](screenshots/admin-setting-2.png) |
