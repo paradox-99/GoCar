@@ -9,7 +9,6 @@ Documentation for the **Agency** role. Agencies are rental businesses that list 
 - [Overview](#overview)
 - [Routes](#routes)
 - [Features](#features)
-  - [Sign Up](#sign-up)
   - [Dashboard](#dashboard)
   - [Fleet Management](#fleet-management)
   - [Bookings](#bookings)
@@ -17,7 +16,6 @@ Documentation for the **Agency** role. Agencies are rental businesses that list 
   - [Damage Reports](#damage-reports)
   - [Reviews & Ratings](#reviews--ratings)
   - [Profile Management](#profile-management)
-  - [Notifications & Chat](#notifications--chat)
 - [Screenshots](#screenshots)
 
 ---
@@ -170,63 +168,65 @@ From `/dashboard/agency/profile`:
 
 ---
 
-### Notifications & Chat
-
-- Real-time notifications for new bookings, payments, and damage updates at `/dashboard/notifications`
-- In-app SendBird messaging at `/dashboard/chat` — communicate directly with users and drivers per booking
-
----
-
 ## Screenshots
 
 ### Dashboard Home
 
-![Agency Dashboard](screenshots/agency_dashboard.png)
+| ![Agency Dashboard](screenshots/agency_dashboard-1.png) | ![Agency Dashboard](screenshots/agency_dashboard-2.png) |
+|---|---|
+| ![Agency Dashboard](screenshots/agency_dashboard-3.png) | ![Agency Dashboard](screenshots/agency_dashboard-4.png) |
 
 ---
 
 ### Fleet Management
 
-| Vehicle List | Vehicle Detail | Add Vehicle |
-|---|---|---|
-| ![Fleet](screenshots/agency_fleet.png) | ![Detail](screenshots/agency_vehicle_detail.png) | ![Add](screenshots/agency_add_vehicle.png) |
+| Vehicle List | Vehicle Detail | 
+|---|---|
+| ![Fleet](screenshots/agency_vehicles.png) | ![Detail](screenshots/agency_vehicle_details.png) |
 
+| Add Vehicle | Add Vehicle |
+|---|---|
+| ![Add](screenshots/ag_add_v.png) | ![Add](screenshots/ag-add-v2.png) |
 ---
 
 ### Bookings
 
 | Booking List | Booking Detail |
 |---|---|
-| ![Bookings](screenshots/agency_bookings.png) | ![Detail](screenshots/agency_booking_detail.png) |
+| ![Bookings](screenshots/ag-bookings.png) | ![Detail](screenshots/ag-booking-details.png) |
 
 ---
 
 ### Driver Management
 
-![Drivers](screenshots/agency_drivers.png)
+| Driver List | Driver Detail |
+|---|---|
+| ![Bookings](screenshots/ag-drivers.png) | ![Detail](screenshots/ag-driver-details.png) |
+
+| Add Driver |
+|---|
+|![Bookings](screenshots/ag-add-driver.png)|
 
 ---
 
 ### Damage Reports
 
-| Damage List | Damage Detail | Pickup Form |
-|---|---|---|
-| ![Damage](screenshots/agency_damage_list.png) | ![Detail](screenshots/agency_damage_detail.png) | ![Pickup](screenshots/agency_pickup_form.png) |
+| Damage List | Damage Detail |
+|---|---|
+| ![Damage](screenshots/ag-damage.png) | ![Detail](screenshots/ag-damage-details.png) |
 
 ---
 
 ### Reviews
 
-![Agency Reviews](screenshots/agency_reviews.png)
+| Agency Review | Agency Review |
+|---|---|
+| ![Review](screenshots/ag-review.png) | ![Review](screenshots/ag-review2.png) |
 
 ---
 
 ### Profile
 
-| Owner Profile | Agency Info |
-|---|---|
-| ![Owner](screenshots/agency_owner_profile.png) | ![Agency](screenshots/agency_info.png) |
-
----
-
-> Replace placeholder paths with actual screenshots once captured.
+| Profile |
+|---|
+| ![Owner](screenshots/ag-profile.png) |
