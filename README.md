@@ -274,20 +274,38 @@ Signup flows are multi-step, with separate flows for each role:
 
 ### Home Page
 
-| Banner | Car Types | Top Brands |
-|---|---|---|
-| ![Banner](docs/screenshots/home_banner.png) | ![Car Types](docs/screenshots/home_car_types.png) | ![Brands](docs/screenshots/home_brands.png) |
+| Banner | Car Types |
+|---|---|
+| ![Banner](docs/screenshots/home_banner.png) | ![Car Types](docs/screenshots/home_car_types.png) |
+
+| Car Types | FQA |
+|---|---|
+| ![Brands](docs/screenshots/home_brands.png) | ![Car Types](docs/screenshots/home_fqa.png) |
 
 ### Search & Browse
 
-| Search Page | Map Selector | Search Result |
-|---|---|---|
-| ![Search](docs/screenshots/search.png) | ![Map](docs/screenshots/map_select.png) | ![Details](docs/screenshots/search_result.png) |
+| Search Page | Map Selector | 
+|---|---|
+| ![Search](docs/screenshots/search.png) | ![Map](docs/screenshots/map_select.png) |
+
+| Search Result | Car Details |
+|---|---|
+| ![Details](docs/screenshots/search_result.png) | ![Car Types](docs/screenshots/car_details.png) |
 
 ### Booking Flow
 
-| Booking Form | Payment | Confirmation |
-|---|---|---|
-| ![Booking](docs/screenshots/booking_form.png) | ![Payment](docs/screenshots/payment.png) | ![Confirmation](docs/screenshots/booking_success.png) |
+| Booking Details | Agency Confirmation |
+|---|---|
+| ![Booking](docs/screenshots/booking_page.png) | ![Payment](docs/screenshots/agency_booking_confirmation.png) |
 
-> Replace placeholder paths with actual screenshots once captured.
+| User Email Confirmation | Initial Payment (50%) |
+|---|---|
+| ![Booking](docs/screenshots/user_email_confirmation.png) | ![Payment](docs/screenshots/initial_payment.png) |
+
+| Pickup Details | Return Details |
+|---|---|
+| ![Booking](docs/screenshots/pickup.png) | ![Payment](docs/screenshots/return.png) |
+
+| Damage Report (If any during the trip) | Final Payment |
+|---|---|
+| ![Booking](docs/screenshots/damage_report.png) | ![Payment](docs/screenshots/final_payment.png) |
