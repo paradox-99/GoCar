@@ -1,17 +1,9 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect } from 'react';
 import useAxiosPublic from '../../hooks/useAxiosPublic';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import {
-    Box, Paper, Table, TableBody, TableCell, TableHead, TableRow, TableContainer, TablePagination,
-    IconButton, Chip, Typography, Tooltip, Dialog, DialogTitle, DialogContent, DialogActions,
-    Button, TextField, Select, MenuItem, FormControl, InputLabel, Tabs, Tab, Grid, Card, CardContent,
-    Alert, AlertTitle, Avatar, Divider, tableCellClasses, Stack, Checkbox, Collapse, LinearProgress
-} from '@mui/material';
-import {
-    Delete, Search, Download, Person, Business, DirectionsCar, 
-    Visibility, Warning, Close, LocationOn, Map as MapIcon, ContentCopy,
-    Verified, Public, WrongLocation
-} from '@mui/icons-material';
+import { Box, Paper, Table, TableBody, TableCell, TableHead, TableRow, TableContainer, TablePagination, IconButton, Chip, Typography, Tooltip, Dialog, DialogTitle, DialogContent, DialogActions, Button, TextField, Select, MenuItem, FormControl, InputLabel, Tabs, Tab, Grid, Card, CardContent, Alert, AlertTitle, Avatar, Divider, tableCellClasses, Stack, Checkbox, LinearProgress} from '@mui/material';
+import { Delete, Search, Download, Person, Business, DirectionsCar, 
+    Visibility,  Close, LocationOn, Map as MapIcon, Verified, Public } from '@mui/icons-material';
 import { styled } from '@mui/material/styles';
 import toast from 'react-hot-toast';
 import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet';

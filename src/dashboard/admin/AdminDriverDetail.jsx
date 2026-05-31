@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react';
 import { useParams, Link, useLocation } from 'react-router-dom';
-import { Box, Typography, Paper, Grid, Divider, Avatar, Chip, Button, CircularProgress } from '@mui/material';
+import { Box, Typography, Paper, Grid, Divider, Avatar, Chip, CircularProgress } from '@mui/material';
 import useAxiosPublic from '../../hooks/useAxiosPublic';
 import moment from 'moment';
-import { Person, Email, Phone, CalendarToday, Verified, History, Badge, MonetizationOn } from '@mui/icons-material';
+import { Email, Phone, CalendarToday, History, Badge, MonetizationOn } from '@mui/icons-material';
 import toast from 'react-hot-toast';
 
 const AdminDriverDetail = () => {

@@ -3,7 +3,7 @@ import { useParams, Link, useLocation } from 'react-router-dom';
 import { Box, Typography, Paper, Grid, Divider, Avatar, Chip, Button, CircularProgress } from '@mui/material';
 import useAxiosPublic from '../../hooks/useAxiosPublic';
 import moment from 'moment';
-import { Business, Person, Email, Phone, LocationOn, DirectionsCar, TwoWheeler, Verified, History } from '@mui/icons-material';
+import { Business,  Email, Phone, LocationOn, DirectionsCar, TwoWheeler} from '@mui/icons-material';
 import toast from 'react-hot-toast';
 
 const AdminAgencyDetail = () => {

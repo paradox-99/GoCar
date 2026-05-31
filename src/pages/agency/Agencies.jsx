@@ -42,7 +42,7 @@ const Agencies = () => {
 
      if (isPending) {
           return (
-               <div className="pt-28 max-w-[1360px] mx-4 md:mx-8 xl:mx-auto">
+               <div className="pt-28 max-w-[1360px] mx-4 md:mx-8 xl:mx-auto mb-5">
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                          {[...Array(6)].map((_, i) => (
                               <div key={i} className="bg-white rounded-xl shadow-md p-4 space-y-4">
@@ -161,7 +161,7 @@ const Agencies = () => {
                                         </div>
                                    </div>
                                    <h3 className="text-xl font-bold text-gray-700">No agencies found</h3>
-                                   <p className="text-gray-500 mb-6">Try adjusting your search term to find what you're looking for.</p>
+                                   <p className="text-gray-500 mb-6">Try adjusting your search term to find what you&apos;re looking for.</p>
                                    <button 
                                         onClick={() => setSearchTerm("")}
                                         className="text-primary font-bold hover:underline"

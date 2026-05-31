@@ -395,7 +395,6 @@ const DashBoardLayout = () => {
           <div className="flex relative">
                <div className="w-[17%] fixed inset-y-0 left-0 z-40 bg-[#313131] lg:flex flex-col hidden max-h-screen border-r border-[#444]">
                     <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column', height: '100%', color: 'white', overflow: 'hidden' }}>
-                         {/* Scrollable Main Nav */}
                          <div className="flex-1 overflow-y-auto custom-scrollbar">
                               <div className="flex justify-center flex-col items-center my-6">
                                    <figure>
