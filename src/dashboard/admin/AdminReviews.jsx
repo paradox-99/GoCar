@@ -8,11 +8,7 @@ import {
     Alert, AlertTitle, Avatar, Divider, tableCellClasses, Stack, Rating as MuiRating, Collapse,
     LinearProgress
 } from '@mui/material';
-import {
-    Info, Delete, Search, Download, Star, StarBorder, Person, Business, 
-    FilterList, Warning, Close, Analytics, Visibility, TrendingUp, TrendingDown,
-    EmojiFlags, CheckCircle, DirectionsCar, TwoWheeler, History, Badge
-} from '@mui/icons-material';
+import { Delete, Search, Download, Star, StarBorder, Warning, Close, Analytics, Visibility, TrendingDown, EmojiFlags, CheckCircle, History } from '@mui/icons-material';
 import { styled } from '@mui/material/styles';
 import toast from 'react-hot-toast';
 import moment from 'moment';
