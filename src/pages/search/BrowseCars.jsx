@@ -64,8 +64,7 @@ const BrowseCars = () => {
                     });
                     setAllCars(Array.isArray(res.data) ? res.data : []);
                 } else {
-                    const res = await axiosPublic.get('/carRoutes/getAllCars');
-                    setAllCars(Array.isArray(res.data) ? res.data : []);
+                    setAllCars([]);
                 }
             } catch {
                 setAllCars([]);

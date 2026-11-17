@@ -82,7 +82,7 @@ this by digitizing the entire rental lifecycle from booking to return.
 
 ## Live Demo
 
-> **Deployed URL:** `https://dz3uon99ksdwo.cloudfront.net/`
+> **Deployed URL:** `https://gocar-99.web.app/`
 
 ### Demo Accounts
 
